@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NBI.01 / Plan Assignment Console / Rev. 2026-04</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Major+Mono+Display&family=Space+Mono:wght@400;700&display=swap" />
+
+  <style>
+    /* ============================================================
+       RETRO-FUTURISTIC / CALM SYNTHWAVE
+       NBI.01 Plan Assignment Console — Rev. 2026-04
+       Palette: warm cream, deep teal-black, rust, muted teal, burnt butter.
+       ============================================================ */
+
+    :root{
+      color-scheme: light;
+      /* Warm Console (default) */
+      --bg:            #ede6d3;
+      --bg-panel:      #e3dac3;
+      --bg-panel-2:    #d9cfb4;
+      --ink:           #1a1f1d;
+      --ink-soft:      #3c4541;
+      --ink-mute:      #6a6f69;
+      --rust:          #c65a2e;
+      --rust-deep:     #a04620;
+      --teal:          #2d8e8a;
+      --teal-deep:     #1f6562;
+      --butter:        #b8882e;     /* darkened for 4.5:1 on cream */
+      --butter-soft:   #d4a854;
+      --rule:          rgba(26,31,29,.18);
+      --rule-strong:   rgba(26,31,29,.32);
+      --rule-faint:    rgba(26,31,29,.08);
+      --row-hover:     rgba(45,142,138,.12);
+      --field-bg:      #f5efde;
+      --field-border:  rgba(26,31,29,.28);
+      --gutter-bg:     rgba(26,31,29,.04);
+
+      --scanline-color: rgba(26,31,29,.35);
+      --scanline-opacity: .035;
+
+      --mono: "Space Mono", "IBM Plex Mono", ui-monospace, monospace;
+      --sans: "DM Sans", "Work Sans", system-ui, -apple-system, sans-serif;
+      --display: "Major Mono Display", "Space Mono", monospace;
+    }
+
+    body[data-theme="deep"]{
+      color-scheme: dark;
+      --bg:            #0b1619;
+      --bg-panel:      #10201f;
+      --bg-panel-2:    #142a28;
+      --ink:           #dcd2bb;
+      --ink-soft:      #b8ad94;
+      --ink-mute:      #8a8168;
+      --rust:          #e47a4f;
+      --rust-deep:     #c65a2e;
+      --teal:          #5fb9b3;
+      --teal-deep:     #2d8e8a;
+      --butter:        #d4a854;
+      --butter-soft:   #e8c77a;
+      --rule:          rgba(220,210,187,.18);
+      --rule-strong:   rgba(220,210,187,.32);
+      --rule-faint:    rgba(220,210,187,.08);
+      --row-hover:     rgba(95,185,179,.14);
+      --field-bg:      #0f2321;
+      --field-border:  rgba(220,210,187,.24);
+      --gutter-bg:     rgba(220,210,187,.04);
+
+      --scanline-color: rgba(220,210,187,.55);
+      --scanline-opacity: .04;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ margin:0; padding:0; }
+    body{
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:var(--sans);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+      font-size:17.5px;
+      line-height:1.5;
+    }
+
+    /* Subtle scanline / grid overlay */
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          var(--scanline-color) 0px,
+          var(--scanline-color) 1px,
+          transparent 1px,
+          transparent 3px
+        );
+      opacity:var(--scanline-opacity);
+      pointer-events:none;
+      z-index:100;
+      mix-blend-mode:multiply;
+    }
+    body[data-theme="deep"]::before{ mix-blend-mode:screen; }
+
+    /* ============================================================
+       BAND STRUCTURE
+       ============================================================ */
+    .sticky-stack{
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: var(--bg);
+      box-shadow: 0 1px 0 var(--rule);
+    }
+    .sticky-stack::after{
+      /* soft fade into the table area so rows scrolling under feel layered, not harsh */
+      content:"";
+      position:absolute;
+      left:0; right:0; bottom:-14px; height:14px;
+      background: linear-gradient(to bottom, var(--bg-panel) 0%, transparent 100%);
+      pointer-events:none;
+      opacity:.55;
+    }
+
+    .console{
+      max-width:1480px;
+      margin:0 auto;
+      padding:0;
+      border-left:1px solid var(--rule-faint);
+      border-right:1px solid var(--rule-faint);
+      min-height:100vh;
+      background:var(--bg);
+      position:relative;
+    }
+
+    .band{
+      padding: 18px 32px;
+      position:relative;
+    }
+    .band + .band{
+      border-top: 2px solid var(--rust);
+    }
+    .band.subtle + .band.subtle{
+      border-top: 1px solid var(--rule);
+    }
+
+    /* ============================================================
+       MASTHEAD BAND
+       ============================================================ */
+    .masthead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:24px;
+      padding: 14px 32px;
+      background:var(--bg-panel);
+      position:relative;
+    }
+    .masthead::after{
+      content:"";
+      position:absolute;
+      left:0; right:0; bottom:-2px;
+      height:2px;
+      background:var(--rust);
+    }
+
+    .mast-left{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      min-width:0;
+    }
+    .sigil{
+      width:38px; height:38px;
+      border:1.5px solid var(--ink);
+      border-radius:50%;
+      display:grid; place-items:center;
+      font-family:var(--display);
+      font-size:17.5px;
+      color:var(--ink);
+      position:relative;
+      flex-shrink:0;
+    }
+    .sigil::after{
+      content:"";
+      position:absolute; inset:3px;
+      border:1px solid var(--rule);
+      border-radius:50%;
+    }
+
+    .mast-title{
+      font-family:var(--display);
+      font-size:19px;
+      letter-spacing:.04em;
+      color:var(--ink);
+      text-transform:lowercase;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .mast-stencil{
+      font-family:var(--mono);
+      font-size:13px;
+      letter-spacing:.34em;
+      text-transform:uppercase;
+      color:var(--ink-soft);
+      padding: 4px 10px;
+      border:1px solid var(--rule-strong);
+      border-radius:2px;
+      white-space:nowrap;
+    }
+    .mast-stencil .sep{ color:var(--rust); margin:0 6px; font-weight:700; }
+
+    .mast-right{
+      display:flex; align-items:center; gap:10px;
+      flex-shrink:0;
+    }
+
+    .btn{
+      display:inline-flex; align-items:center; gap:8px;
+      height:34px; padding: 0 14px;
+      font-family:var(--mono);
+      font-size:14px;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+      border:1px solid var(--field-border);
+      background:var(--field-bg);
+      color:var(--ink);
+      cursor:pointer;
+      border-radius:2px;
+      transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+      user-select:none;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+    .btn:hover{
+      background:var(--ink);
+      color:var(--bg);
+      border-color:var(--ink);
+      /* hover snaps: no transition */
+      transition:none;
+    }
+    .btn:focus-visible{
+      outline:2px solid var(--rust);
+      outline-offset:2px;
+    }
+    .btn.accent{
+      background:var(--rust);
+      color:#fff;
+      border-color:var(--rust-deep);
+    }
+    .btn.accent:hover{
+      background:var(--rust-deep);
+      color:#fff;
+      border-color:var(--rust-deep);
+    }
+    .btn svg{ flex-shrink:0; }
+
+    .file-input{
+      position:absolute; width:1px; height:1px;
+      padding:0; margin:-1px; overflow:hidden;
+      clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+
+    /* ============================================================
+       GAUGES BAND (metrics)
+       ============================================================ */
+    .gauges-band{
+      background:var(--bg);
+      padding: 22px 32px;
+      display:grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      gap: 32px;
+      align-items:start;
+    }
+
+    .strapline{
+      min-width:0;
+    }
+    .strapline-eye{
+      font-family:var(--mono);
+      font-size:12.5px;
+      letter-spacing:.32em;
+      text-transform:uppercase;
+      color:var(--ink-mute);
+      margin-bottom:10px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .strapline-eye .tick{
+      display:inline-block;
+      width:18px; height:1px;
+      background:var(--rust);
+    }
+    .strapline h1{
+      font-family:var(--display);
+      font-size:clamp(28px, 3.3vw, 44px);
+      letter-spacing:.04em;
+      color:var(--ink);
+      margin: 0 0 10px;
+      line-height:1.1;
+      text-transform:lowercase;
+      font-weight:400;
+    }
+    .strapline p{
+      margin:0;
+      color:var(--ink-soft);
+      font-size:16.5px;
+      max-width:58ch;
+      line-height:1.5;
+    }
+    .strapline p b{
+      color:var(--ink);
+      font-weight:600;
+      border-bottom:1px dotted var(--rust);
+    }
+
+    .gauges{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(150px, 180px));
+      gap:10px;
+    }
+    .gauge{
+      border:1px solid var(--rule-strong);
+      background:var(--bg-panel);
+      padding: 10px 12px 12px;
+      display:flex; flex-direction:column; gap:6px;
+      position:relative;
+      border-radius:2px;
+    }
+    .gauge::before{
+      content:"";
+      position:absolute;
+      top:-1px; left:-1px;
+      width:10px; height:10px;
+      border-top:1.5px solid var(--rust);
+      border-left:1.5px solid var(--rust);
+    }
+    .gauge::after{
+      content:"";
+      position:absolute;
+      bottom:-1px; right:-1px;
+      width:10px; height:10px;
+      border-bottom:1.5px solid var(--rust);
+      border-right:1.5px solid var(--rust);
+    }
+    .gauge-label{
+      font-family:var(--mono);
+      font-size:12px;
+      letter-spacing:.28em;
+      text-transform:uppercase;
+      color:var(--ink-mute);
+    }
+    .gauge-row{
+      display:flex; align-items:baseline; justify-content:space-between;
+      gap:8px;
+    }
+    .gauge-value{
+      font-family:var(--mono);
+      font-size:38px;
+      font-weight:700;
+      color:var(--ink);
+      letter-spacing:-.01em;
+      line-height:1;
+      font-variant-numeric: tabular-nums;
+    }
+    .gauge-arc{
+      display:flex; gap:2px;
+      align-items:flex-end;
+      height:18px;
+    }
+    .gauge-arc i{
+      display:block;
+      width:3px;
+      background:var(--rule-strong);
+      border-radius:1px;
+    }
+    .gauge-arc i.on{ background:var(--teal); }
+    .gauge-arc i:nth-child(1){ height:30%; }
+    .gauge-arc i:nth-child(2){ height:45%; }
+    .gauge-arc i:nth-child(3){ height:60%; }
+    .gauge-arc i:nth-child(4){ height:75%; }
+    .gauge-arc i:nth-child(5){ height:90%; }
+    .gauge-arc i:nth-child(6){ height:100%; }
+
+    .gauge-sub{
+      font-family:var(--mono);
+      font-size:12px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      color:var(--ink-mute);
+    }
+
+    /* ============================================================
+       QUERY CONSOLE BAND
+       ============================================================ */
+    .query-band{
+      background:var(--bg-panel);
+      padding: 18px 32px;
+      display:grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap:24px;
+      align-items:end;
+    }
+    @media (max-width: 820px){
+      .query-band{ grid-template-columns: 1fr; gap:14px; }
+    }
+
+    .query-console{
+      position:relative;
+      border:1.5px solid var(--ink);
+      border-radius:2px;
+      background:var(--field-bg);
+      padding: 0;
+    }
+    .query-head{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 6px 12px 4px;
+      border-bottom:1px solid var(--rule);
+      gap:12px;
+    }
+    .query-head-label{
+      font-family:var(--mono);
+      font-size:12.5px;
+      letter-spacing:.32em;
+      text-transform:uppercase;
+      color:var(--ink);
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .query-head-label::before{
+      content:"";
+      width:4px; height:10px;
+      background:var(--rust);
+    }
+    .query-status{
+      font-family:var(--mono);
+      font-size:12.5px;
+      letter-spacing:.28em;
+      text-transform:uppercase;
+      color:var(--teal-deep);
+      display:inline-flex; align-items:center; gap:6px;
+    }
+    body[data-theme="deep"] .query-status{ color:var(--teal); }
+    .query-status .dot{
+      width:8px; height:8px;
+      border-radius:50%;
+      background:var(--teal);
+      box-shadow: 0 0 0 0 rgba(45,142,138,.4);
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{ box-shadow: 0 0 0 0 rgba(45,142,138,.5); }
+      50%    { box-shadow: 0 0 0 6px rgba(45,142,138,0);  }
+    }
+    .query-status.searching{ color:var(--rust-deep); }
+    body[data-theme="deep"] .query-status.searching{ color:var(--rust); }
+    .query-status.searching .dot{
+      background:var(--rust);
+      animation-name: pulseRust;
+    }
+    @keyframes pulseRust{
+      0%,100%{ box-shadow: 0 0 0 0 rgba(198,90,46,.5); }
+      50%    { box-shadow: 0 0 0 6px rgba(198,90,46,0);  }
+    }
+
+    .query-input-wrap{
+      display:flex; align-items:center;
+      padding: 4px 14px 6px;
+    }
+    .query-input-wrap .prompt{
+      font-family:var(--mono);
+      font-size:19px;
+      color:var(--rust);
+      margin-right:10px;
+      font-weight:700;
+      user-select:none;
+    }
+    .query-input-wrap input{
+      flex:1;
+      border:0;
+      background:transparent;
+      outline:none;
+      font-family:var(--mono);
+      font-size:19px;
+      color:var(--ink);
+      padding: 8px 0;
+      letter-spacing:.01em;
+      caret-color:var(--rust);
+    }
+    .query-input-wrap input::placeholder{
+      color:var(--ink-mute);
+      letter-spacing:.02em;
+    }
+
+    .query-meta{
+      display:flex; align-items:center; gap:10px;
+      justify-content:flex-end;
+    }
+    .sort-chip{
+      font-family:var(--mono);
+      font-size:12.5px;
+      letter-spacing:.24em;
+      text-transform:uppercase;
+      color:var(--ink-soft);
+      padding: 8px 10px;
+      border:1px dashed var(--rule-strong);
+      border-radius:2px;
+      background:transparent;
+      white-space:nowrap;
+      flex:1;
+      min-width:0;
+      text-align:center;
+    }
+    .sort-chip b{ color:var(--rust); font-weight:700; }
+
+    /* ============================================================
+       SLASH COMMAND DROPDOWN
+       ============================================================ */
+    .slash-menu{
+      position:absolute;
+      top: calc(100% + 4px);
+      left:-1.5px; right:-1.5px;
+      background:var(--field-bg);
+      border:1.5px solid var(--ink);
+      border-radius:2px;
+      z-index:40;
+      box-shadow: 0 12px 28px -16px rgba(0,0,0,.35);
+      max-height: 280px;
+      overflow:auto;
+    }
+    .slash-menu[hidden]{ display:none; }
+    .slash-menu-head{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 6px 12px;
+      border-bottom:1px solid var(--rule);
+      background:var(--bg-panel);
+    }
+    .slash-menu-head .lbl{
+      font-family:var(--mono);
+      font-size:12.5px;
+      letter-spacing:.32em;
+      text-transform:uppercase;
+      color:var(--ink);
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .slash-menu-head .lbl::before{
+      content:""; width:4px; height:10px; background:var(--teal);
+    }
+    .slash-menu-head .hint{
+      font-family:var(--mono);
+      font-size:11px;
+      letter-spacing:.24em;
+      text-transform:uppercase;
+      color:var(--ink-mute);
+    }
+    .slash-menu-head .hint kbd{
+      font-family:var(--mono);
+      font-size:11px;
+      padding:1px 5px;
+      border:1px solid var(--rule-strong);
+      border-radius:2px;
+      background:var(--bg);
+      color:var(--ink-soft);
+      letter-spacing:.12em;
+      margin: 0 2px;
+    }
+    .slash-opt{
+      display:flex; align-items:baseline; gap:14px;
+      padding: 9px 14px;
+      cursor:pointer;
+      border-bottom:1px solid var(--rule-faint);
+      font-family:var(--mono);
+      font-size:16.5px;
+      color:var(--ink);
+      background:transparent;
+      width:100%;
+      border-left:0; border-right:0; border-top:0;
+      text-align:left;
+    }
+    .slash-opt:last-child{ border-bottom:0; }
+    .slash-opt .code{
+      color:var(--rust);
+      font-weight:700;
+      min-width: 64px;
+      letter-spacing:.04em;
+    }
+    .slash-opt .label{
+      font-family:var(--sans);
+      font-size:15px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--ink-soft);
+      flex:1;
+    }
+    .slash-opt .count{
+      font-family:var(--mono);
+      font-size:12.5px;
+      color:var(--ink-mute);
+      letter-spacing:.16em;
+    }
+    .slash-opt.active,
+    .slash-opt:hover{
+      background:var(--row-hover);
+      color:var(--ink);
+    }
+    .slash-opt.active .label,
+    .slash-opt:hover .label{ color:var(--ink); }
+    body[data-theme="deep"] .slash-opt.active,
+    body[data-theme="deep"] .slash-opt:hover{
+      background: rgba(45,142,138,.18);
+    }
+    .slash-empty{
+      padding: 14px;
+      font-family:var(--mono);
+      font-size:15px;
+      color:var(--ink-mute);
+      text-align:center;
+      letter-spacing:.12em;
+    }
+
+    /* ============================================================
+       FILTER CHIPS ROW
+       ============================================================ */
+    .chips-row{
+      padding: 0 32px 14px;
+      background:var(--bg-panel);
+      display:flex; flex-wrap:wrap; gap:8px;
+      border-bottom:2px solid var(--rust);
+    }
+    .chips-row[hidden]{ display:none; }
+    .filter-chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 5px 4px 5px 10px;
+      border:1px solid var(--rust);
+      border-radius:2px;
+      background: rgba(198,90,46,.08);
+      font-family:var(--mono);
+      font-size:14px;
+      letter-spacing:.04em;
+      color:var(--ink);
+      white-space:nowrap;
+    }
+    body[data-theme="deep"] .filter-chip{
+      background: rgba(198,90,46,.14);
+    }
+    .filter-chip .ck{
+      color:var(--rust);
+      font-weight:700;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-size:12.5px;
+    }
+    .filter-chip .cv{
+      color:var(--ink);
+    }
+    .filter-chip button.cx{
+      border:0;
+      background:transparent;
+      color:var(--rust);
+      cursor:pointer;
+      padding: 0 6px;
+      font-family:var(--mono);
+      font-size:15px;
+      line-height:1;
+      letter-spacing:0;
+    }
+    .filter-chip button.cx:hover{ color:var(--rust-deep); }
+    .filter-chip button.cx:focus-visible{
+      outline:2px solid var(--rust);
+      outline-offset:2px;
+    }
+    .chips-clear{
+      margin-left:auto;
+      font-family:var(--mono);
+      font-size:12.5px;
+      letter-spacing:.24em;
+      text-transform:uppercase;
+      color:var(--ink-mute);
+      background:transparent;
+      border:0;
+      cursor:pointer;
+      padding: 5px 6px;
+    }
+    .chips-clear:hover{ color:var(--rust); }
+
+    /* ============================================================
+       TABLE BAND
+       ============================================================ */
+    .table-band{
+      padding: 0;
+      background:var(--bg);
+      position:relative;
+    }
+
+    .table-frame{
+      border:1px solid var(--rule);
+      margin: 14px 32px 20px;
+      background:var(--bg);
+      position:relative;
+    }
+    /* tiny corner brackets */
+    .table-frame::before,
+    .table-frame::after{
+      content:"";
+      position:absolute;
+      width:12px; height:12px;
+      border-color:var(--rust);
+      border-style:solid;
+    }
+    .table-frame::before{
+      top:-4px; left:-4px;
+      border-width:2px 0 0 2px;
+    }
+    .table-frame::after{
+      bottom:-4px; right:-4px;
+      border-width:0 2px 2px 0;
+    }
+
+    .table-frame-head{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 10px 16px;
+      border-bottom:1px solid var(--rule);
+      background:var(--bg-panel);
+    }
+    .table-frame-head .fh-left{
+      display:flex; gap:14px; align-items:center;
+      font-family:var(--mono);
+      font-size:12.5px;
+      letter-spacing:.28em;
+      text-transform:uppercase;
+      color:var(--ink-soft);
+    }
+    .table-frame-head .fh-right{
+      font-family:var(--mono);
+      font-size:12.5px;
+      letter-spacing:.28em;
+      text-transform:uppercase;
+      color:var(--ink-mute);
+      display:flex; gap:14px; align-items:center;
+    }
+    .table-frame-head .fh-right b{
+      color:var(--rust); font-weight:700;
+      font-variant-numeric:tabular-nums;
+    }
+
+    .table-scroll{
+      /* no overflow container — we need sticky thead to pin to the viewport
+         below the sticky-stack. Horizontal scroll, if needed, happens on the
+         console/body via min-width on the table. */
+      scrollbar-width: thin;
+      scrollbar-color: var(--rule-strong) transparent;
+    }
+    .table-scroll::-webkit-scrollbar{ width:10px; height:10px; }
+    .table-scroll::-webkit-scrollbar-thumb{ background:var(--rule-strong); }
+    .table-scroll::-webkit-scrollbar-track{ background:transparent; }
+
+    table{
+      width:100%;
+      min-width: 1420px;
+      border-collapse:separate;
+      border-spacing:0;
+    }
+
+    thead th{
+      position:sticky; top: var(--stack-h, 0px); z-index:20;
+      background:var(--bg);
+      padding: 14px 18px 12px;
+      text-align:center;
+      vertical-align:bottom;
+      border-bottom:1px solid var(--rule-strong);
+      box-shadow: 0 1px 0 var(--rule-strong), 0 4px 10px -6px rgba(0,0,0,.15);
+      font-weight:500;
+    }
+    thead th:first-child{
+      padding-left:14px;
+      background:var(--gutter-bg);
+      border-right:1px solid var(--rule-faint);
+      width:52px;
+    }
+
+    th button{
+      display:inline-flex; align-items:center; gap:8px;
+      background:none; border:0; padding:0;
+      font-family:var(--sans);
+      font-size:13px;
+      font-weight:600;
+      letter-spacing:.24em;
+      text-transform:uppercase;
+      color:var(--ink-soft);
+      cursor:pointer;
+      font-variant: all-small-caps;
+      transition: color 200ms ease;
+      text-align:center;
+    }
+    th button:hover{
+      color:var(--ink);
+      transition:none;
+    }
+
+    th.sort-active button{
+      color:var(--ink);
+      position:relative;
+    }
+    th.sort-active button::after{
+      content:"";
+      position:absolute;
+      left:0; right:0;
+      bottom:-12px;
+      height:2px;
+      background:var(--rust);
+    }
+
+    .sort-icon{
+      display:inline-flex; flex-direction:column; gap:2px;
+      opacity:.5;
+    }
+    .sort-icon svg{ display:block; }
+    .arrow-up, .arrow-down{ opacity:.35; }
+    th.sort-active[data-dir="asc"] .arrow-up{ opacity:1; color:var(--rust); }
+    th.sort-active[data-dir="desc"] .arrow-down{ opacity:1; color:var(--rust); }
+
+    tbody tr{
+      position:relative;
+      transition: background-color 200ms ease;
+    }
+    tbody td{
+      padding: 12px 14px;
+      border-bottom:1px solid var(--rule-faint);
+      vertical-align:middle;
+      font-size:14px;
+      color:var(--ink);
+    }
+    /* gutter cell (row number) */
+    tbody td.gutter{
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--ink-mute);
+      background:var(--gutter-bg);
+      text-align:right;
+      padding-right:12px;
+      border-right:1px solid var(--rule-faint);
+      letter-spacing:.05em;
+      font-variant-numeric:tabular-nums;
+      width:52px;
+    }
+
+    /* Every 5th row gets a double-line separator */
+    tbody tr.rule-double td{
+      border-bottom: 1px solid var(--rule);
+      box-shadow: inset 0 -3px 0 -2px var(--rule-faint);
+    }
+
+    /* Row hover: full-width tint band */
+    tbody tr:hover td{
+      background:var(--row-hover);
+      transition:none;
+    }
+
+    /* Cell type styles */
+    .cell-case{
+      font-family:var(--mono);
+      font-size:13.5px;
+      font-weight:700;
+      color:var(--ink);
+      letter-spacing:.02em;
+      white-space:nowrap;
+    }
+    .cell-case .case-prefix{
+      color:var(--rust);
+      margin-right:2px;
+    }
+
+    .cell-plan{
+      font-family:var(--sans);
+      font-size:14.5px;
+      font-weight:500;
+      color:var(--ink);
+      letter-spacing:-.005em;
+      line-height:1.3;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+
+    .person{
+      display:inline-flex; align-items:center; gap:9px;
+    }
+    .person-badge{
+      width:26px; height:26px;
+      border:1px solid var(--rule-strong);
+      border-radius:50%;
+      display:inline-grid; place-items:center;
+      font-family:var(--mono);
+      font-size:10px;
+      font-weight:700;
+      color:var(--ink-soft);
+      background:var(--bg-panel);
+      letter-spacing:.04em;
+      flex-shrink:0;
+    }
+    tbody tr:hover .person-badge{
+      border-color:var(--teal);
+      color:var(--teal-deep);
+      background:transparent;
+    }
+    body[data-theme="deep"] tbody tr:hover .person-badge{
+      color:var(--teal);
+    }
+    .person-name{
+      color:var(--ink);
+      font-size:14px;
+    }
+
+    .datepill{
+      display:inline-flex; align-items:center; gap:7px;
+      font-family:var(--mono);
+      font-size:13px;
+      color:var(--ink);
+      padding: 3px 8px 3px 7px;
+      border:1px solid var(--rule-strong);
+      background:transparent;
+      border-radius:2px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing:.02em;
+      white-space:nowrap;
+    }
+    .datepill::before{
+      content:"";
+      width:5px; height:5px;
+      background:var(--butter);
+      display:inline-block;
+    }
+
+    /* ============================================================
+       EMPTY STATE
+       ============================================================ */
+    .empty{
+      padding: 80px 24px;
+      text-align:center;
+    }
+    .empty-title{
+      font-family:var(--mono);
+      font-size:17.5px;
+      letter-spacing:.26em;
+      text-transform:uppercase;
+      color:var(--rust);
+      margin-bottom:14px;
+    }
+    .empty-sub{
+      font-family:var(--sans);
+      font-size:16.5px;
+      color:var(--ink-soft);
+      max-width:48ch;
+      margin: 0 auto;
+    }
+
+    /* ============================================================
+       TRANSMISSION CORNER
+       ============================================================ */
+    .transmission{
+      position:absolute;
+      bottom:10px; right:32px;
+      font-family:var(--mono);
+      font-size:11px;
+      letter-spacing:.32em;
+      text-transform:uppercase;
+      color:var(--ink-mute);
+      display:flex; align-items:center; gap:8px;
+      pointer-events:none;
+    }
+    .transmission .tbar{
+      display:inline-block;
+      width:24px; height:1px;
+      background:var(--ink-mute);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 960px){
+      .masthead{ padding: 12px 18px; flex-wrap:wrap; }
+      .mast-stencil{ display:none; }
+      .mast-title{ font-size:16.5px; }
+      .gauges-band{
+        grid-template-columns: 1fr;
+        padding: 18px 18px;
+        gap:20px;
+      }
+      .gauges{
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap:6px;
+      }
+      .gauge{ padding: 10px; }
+      .gauge-value{ font-size:28px; }
+      .query-band{
+        grid-template-columns: 1fr;
+        padding: 14px 18px;
+      }
+      .table-frame{ margin: 12px 14px 16px; }
+      .band{ padding: 14px 18px; }
+      .transmission{ right:14px; }
+    }
+    @media (max-width: 560px){
+      .gauges{
+        grid-template-columns: 1fr 1fr;
+      }
+      .strapline h1{ font-size:28px; }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *, *::before, *::after{
+        animation-duration: 0ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0ms !important;
+      }
+      body::before{ display:none; }
+      .query-status .dot{ animation:none; }
+    }
+  </style>
+</head>
+<body data-theme="warm">
+
+  <div class="console">
+
+    <!-- ================= STICKY TOP STACK ================= -->
+    <div class="sticky-stack">
+
+    <!-- ================= MASTHEAD ================= -->
+    <header class="masthead" role="banner">
+      <div class="mast-left">
+        <span class="sigil" aria-hidden="true">N</span>
+        <span class="mast-title">nbi. data consulting</span>
+        <span class="mast-stencil">
+          NBI.01<span class="sep">/</span>PLAN ASSIGNMENT CONSOLE<span class="sep">/</span>REV. 2026-04
+        </span>
+      </div>
+      <div class="mast-right">
+        <button class="btn" id="themeToggle" type="button" aria-label="Toggle console theme">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="5.5" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M8 2.5v11M2.5 8h11" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+          <span id="themeLabel">Deep Console</span>
+        </button>
+        <label class="btn accent" for="fileInput">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <rect x="1.5" y="4.5" width="13" height="8" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M4.5 4.5V2.5h7v2M6 8.5h4M6 10.5h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/>
+          </svg>
+          Load Cartridge
+        </label>
+        <input class="file-input" id="fileInput" type="file" accept=".csv" />
+      </div>
+    </header>
+
+    <!-- ================= GAUGES + STRAPLINE ================= -->
+    <section class="gauges-band" aria-label="Console summary">
+      <div class="strapline">
+        <div class="strapline-eye">
+          <span class="tick"></span>
+          TRANSMISSION 026 / FISCAL 2026 / PLAN ASSIGNMENT LEDGER
+        </div>
+        <h1>plan assignments</h1>
+        <p>
+          Consultants, transition managers, and effective dates across the active book — <b>load a cartridge</b> to replace the sample set.
+        </p>
+      </div>
+      <aside class="gauges" aria-label="Live summary">
+        <div class="gauge">
+          <span class="gauge-label">Plans in view</span>
+          <div class="gauge-row">
+            <span class="gauge-value" data-metric="plans" data-value="0">00</span>
+            <span class="gauge-arc" data-arc="plans" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i>
+            </span>
+          </div>
+          <span class="gauge-sub">Total / visible</span>
+        </div>
+        <div class="gauge">
+          <span class="gauge-label">Personnel</span>
+          <div class="gauge-row">
+            <span class="gauge-value" data-metric="consultants" data-value="0">00</span>
+            <span class="gauge-arc" data-arc="consultants" aria-hidden="true">
+              <i></i><i></i><i></i><i></i><i></i><i></i>
+            </span>
+          </div>
+          <span class="gauge-sub">Unique assigned</span>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ================= QUERY CONSOLE ================= -->
+    <section class="query-band" aria-label="Search and filters">
+      <div class="query-console">
+        <div class="query-head">
+          <span class="query-head-label" id="queryLabel">QUERY</span>
+          <span class="query-status" id="queryStatus">
+            <span class="dot" aria-hidden="true"></span>
+            <span id="queryStatusText">READY</span>
+          </span>
+        </div>
+        <div class="query-input-wrap">
+          <span class="prompt" aria-hidden="true">&gt;</span>
+          <input id="searchInput" type="search"
+            placeholder="search, or type / for filters…"
+            autocomplete="off" spellcheck="false" />
+        </div>
+        <div class="slash-menu" id="slashMenu" role="listbox" aria-label="Filter commands" hidden></div>
+      </div>
+      <div class="query-meta">
+        <span class="sort-chip" id="sortLabel">SORT <b>CASE №</b> / ASC</span>
+        <button class="btn" id="clearSearch" type="button">Clear</button>
+      </div>
+    </section>
+
+    <div class="chips-row" id="chipsRow" hidden aria-label="Active filters"></div>
+
+    </div><!-- /.sticky-stack -->
+
+    <!-- ================= TABLE ================= -->
+    <section class="table-band" aria-label="Plan assignment table">
+      <div class="table-frame">
+        <div class="table-frame-head">
+          <div class="fh-left">
+            <span>CH.01 // LEDGER</span>
+            <span style="color:var(--rust)">●</span>
+            <span>LIVE</span>
+          </div>
+          <div class="fh-right">
+            <span>RECORDS <b id="footerCount">00</b></span>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th aria-label="Row">
+                  <span style="font-family:var(--mono); font-size:12.5px; letter-spacing:.24em; color:var(--ink-mute);">№</span>
+                </th>
+                <th id="th-caseNumber">
+                  <button data-key="caseNumber" type="button">Case №
+                    <span class="sort-icon" aria-hidden="true">
+                      <svg class="arrow-up" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 0L7 5H0z" fill="currentColor"/></svg>
+                      <svg class="arrow-down" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 5L0 0h7z" fill="currentColor"/></svg>
+                    </span>
+                  </button>
+                </th>
+                <th id="th-planName">
+                  <button data-key="planName" type="button">Plan<br>Name
+                    <span class="sort-icon" aria-hidden="true">
+                      <svg class="arrow-up" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 0L7 5H0z" fill="currentColor"/></svg>
+                      <svg class="arrow-down" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 5L0 0h7z" fill="currentColor"/></svg>
+                    </span>
+                  </button>
+                </th>
+                <th id="th-dataConsultant">
+                  <button data-key="dataConsultant" type="button">Data Consultant
+                    <span class="sort-icon" aria-hidden="true">
+                      <svg class="arrow-up" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 0L7 5H0z" fill="currentColor"/></svg>
+                      <svg class="arrow-down" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 5L0 0h7z" fill="currentColor"/></svg>
+                    </span>
+                  </button>
+                </th>
+                <th id="th-transitionManager">
+                  <button data-key="transitionManager" type="button">Transition Mgr
+                    <span class="sort-icon" aria-hidden="true">
+                      <svg class="arrow-up" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 0L7 5H0z" fill="currentColor"/></svg>
+                      <svg class="arrow-down" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 5L0 0h7z" fill="currentColor"/></svg>
+                    </span>
+                  </button>
+                </th>
+                <th id="th-transitionConsultant">
+                  <button data-key="transitionConsultant" type="button">Transition Cons.
+                    <span class="sort-icon" aria-hidden="true">
+                      <svg class="arrow-up" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 0L7 5H0z" fill="currentColor"/></svg>
+                      <svg class="arrow-down" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 5L0 0h7z" fill="currentColor"/></svg>
+                    </span>
+                  </button>
+                </th>
+                <th id="th-effectiveDate">
+                  <button data-key="effectiveDate" type="button">Effective Date
+                    <span class="sort-icon" aria-hidden="true">
+                      <svg class="arrow-up" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 0L7 5H0z" fill="currentColor"/></svg>
+                      <svg class="arrow-down" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 5L0 0h7z" fill="currentColor"/></svg>
+                    </span>
+                  </button>
+                </th>
+                <th id="th-payrollVendor">
+                  <button data-key="payrollVendor" type="button">Payroll Vendor
+                    <span class="sort-icon" aria-hidden="true">
+                      <svg class="arrow-up" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 0L7 5H0z" fill="currentColor"/></svg>
+                      <svg class="arrow-down" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 5L0 0h7z" fill="currentColor"/></svg>
+                    </span>
+                  </button>
+                </th>
+                <th id="th-priorRecordKeeper">
+                  <button data-key="priorRecordKeeper" type="button">Prior Record Keeper
+                    <span class="sort-icon" aria-hidden="true">
+                      <svg class="arrow-up" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 0L7 5H0z" fill="currentColor"/></svg>
+                      <svg class="arrow-down" width="7" height="5" viewBox="0 0 7 5"><path d="M3.5 5L0 0h7z" fill="currentColor"/></svg>
+                    </span>
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+          <div id="emptyState" class="empty" hidden>
+            <div class="empty-title">// NO MATCHES IN CURRENT TRANSMISSION</div>
+            <div class="empty-sub">Nothing resolved against the active query. Adjust the parameter or clear the filter to restore the full ledger.</div>
+          </div>
+        </div>
+      </div>
+      <div class="transmission" aria-hidden="true">
+        <span class="tbar"></span>
+        TRANSMISSION RECEIVED · CH.01
+        <span class="tbar"></span>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    /* ============================================================
+       LOGIC PORT — from plan-assignment-mock.html
+       ============================================================ */
+    const themeKey = 'nbi-retrofuture-theme';
+
+    // ============================================================
+    // AUTO-LOAD CONFIG
+    // ============================================================
+    // Source folder: V:\CIT\Data Consultants\Projects\JA
+    // File name in that folder: change DATA_SOURCE_FILE below to match your export.
+    //
+    // NOTE on how browsers read this path:
+    //   • If this HTML is OPENED DIRECTLY from the V: drive (file:// URL), most
+    //     browsers block fetch() against file:// for security. Chrome/Edge will
+    //     fail; Firefox allows same-folder reads. For a reliable experience,
+    //     host this HTML + CSV behind a web server (IIS, nginx, SharePoint doc
+    //     library, internal static server, etc.) and the relative path below
+    //     will just work.
+    //   • If the HTML is SERVED OVER HTTP from a server that has V:\ mounted,
+    //     expose the folder as a web path (e.g. IIS virtual dir /ja-data/ →
+    //     V:\CIT\Data Consultants\Projects\JA) and set DATA_SOURCE_URL to that
+    //     web path instead.
+    //
+    // Current setting assumes the HTML lives inside the JA folder next to the
+    // CSV — so a simple relative filename works.
+    const DATA_SOURCE_FILE   = 'plan-assignments.csv'; // <-- rename if your export uses a different filename
+    const DATA_SOURCE_URL    = DATA_SOURCE_FILE;       // resolves relative to this HTML file's location
+    const AUTO_LOAD_ON_START = true;
+    const AUTO_REFRESH_MS    = 0; // set to e.g. 60000 for a 1-min refresh; 0 = off
+
+    const requiredHeaders = ['Case Number', 'Plan Name', 'Data Consultant', 'TM', 'TC', 'Effective Date'];
+
+    // Header aliases allow the import pipeline to accept common variants
+    // (e.g. "Prior Record Keeper" vs "Prior Recordkeeper", "TM" vs "Transition Manager").
+    const headerAliases = {
+      caseNumber: ['Case Number'],
+      planName: ['Plan Name'],
+      dataConsultant: ['Data Consultant'],
+      transitionManager: ['Transition Manager', 'Transistion Manager', 'TM'],
+      transitionConsultant: ['Transition Consultant', 'Transistion Consultant', 'TC'],
+      effectiveDate: ['Effective Date'],
+      payrollVendor: ['Payroll Vendor'],
+      priorRecordKeeper: ['Prior Record Keeper', 'Prior Recordkeeper']
+    };
+
+    const colLabels = {
+      caseNumber: 'CASE №',
+      planName: 'PLAN NAME',
+      dataConsultant: 'DATA CONS.',
+      transitionManager: 'TM',
+      transitionConsultant: 'TC',
+      effectiveDate: 'EFF. DATE',
+      payrollVendor: 'VENDOR',
+      priorRecordKeeper: 'PRIOR RK'
+    };
+
+    const dataConsultants = ['Ava Martin', 'Liam Brooks', 'Mia Patel', 'Noah Turner', 'Ella Kim', 'Mason Reed', 'Sofia Carter', 'Ethan Hayes'];
+    const transitionManagers = ['Grace Miller', 'Henry Collins', 'Isla Bennett', 'Jack Perry', 'Chloe Foster', 'Logan Diaz', 'Nora Simmons', 'Owen Price'];
+    const transitionConsultants = ['Zoe Bryant', 'Leo Sanders', 'Mila Ross', 'Wyatt Jenkins', 'Aria Bell', 'Isaac Fisher', 'Layla Cooper', 'Julian Cox'];
+    const planNames = ['Acorn Retirement Plan', 'Bridgeway Pension Plan', 'Crescent 401(k) Plan', 'Delta Group Savings Plan', 'Evergreen Trust Plan', 'Foundry Benefits Plan', 'Granite Employee Plan', 'Harbor Care Plan'];
+    const effectiveDates = ['2026-04-01', '2026-05-01', '2026-06-01', '2026-07-01'];
+    const payrollVendors = ['ADP', 'Paychex', 'Workday', 'Ceridian', 'Paycom', 'Gusto', 'UKG', 'Paylocity'];
+    const priorRecordKeepers = ['Fidelity', 'Vanguard', 'Empower', 'Principal', 'Transamerica', 'Voya', 'T. Rowe Price', 'John Hancock'];
+
+    const mockRecords = Array.from({ length: 60 }, (_, idx) => ({
+      caseNumber: `C-${String(26001 + idx).padStart(5, '0')}`,
+      planName: planNames[idx % planNames.length],
+      dataConsultant: dataConsultants[idx % dataConsultants.length],
+      transitionManager: transitionManagers[idx % transitionManagers.length],
+      transitionConsultant: transitionConsultants[idx % transitionConsultants.length],
+      effectiveDate: effectiveDates[idx % effectiveDates.length],
+      payrollVendor: payrollVendors[idx % payrollVendors.length],
+      priorRecordKeeper: priorRecordKeepers[(idx * 3) % priorRecordKeepers.length]
+    }));
+
+    let records = [...mockRecords];
+
+    const state = {
+      sortBy: 'caseNumber',
+      sortDir: 'asc',
+      search: '',
+      chips: [] // [{field:'dataConsultant', value:'Ava Martin'}]
+    };
+
+    // Slash command definitions — 8 fields available in this mock
+    const slashCommands = [
+      { code: 'CASE:', field: 'caseNumber',          label: 'Case Number' },
+      { code: 'PLAN:', field: 'planName',            label: 'Plan Name' },
+      { code: 'DC:',   field: 'dataConsultant',      label: 'Data Consultant' },
+      { code: 'TM:',   field: 'transitionManager',   label: 'Transition Manager' },
+      { code: 'TC:',   field: 'transitionConsultant',label: 'Transition Consultant' },
+      { code: 'DATE:', field: 'effectiveDate',       label: 'Effective Date' },
+      { code: 'VEN:',  field: 'payrollVendor',       label: 'Payroll Vendor' },
+      { code: 'RK:',   field: 'priorRecordKeeper',   label: 'Prior Record Keeper' }
+    ];
+
+    // Slash UI state
+    const slashState = {
+      mode: 'off',          // 'off' | 'menu' | 'value'
+      activeCmd: null,      // { code, field, label } when in 'value' mode
+      highlightIdx: 0,
+      options: []           // current rendered options
+    };
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function initials(name) {
+      return name.split(' ').map((p) => p[0]).slice(0, 2).join('');
+    }
+
+    function pad2(n){ return String(n).padStart(2,'0'); }
+
+    function setTheme(theme) {
+      document.body.dataset.theme = theme;
+      localStorage.setItem(themeKey, theme);
+      const label = document.getElementById('themeLabel');
+      if (label) label.textContent = theme === 'warm' ? 'Deep Console' : 'Warm Console';
+    }
+
+    function buildSearchIndex(record) {
+      return [record.caseNumber, record.planName, record.dataConsultant, record.transitionManager, record.transitionConsultant, record.effectiveDate, record.payrollVendor, record.priorRecordKeeper].join(' ').toLowerCase();
+    }
+
+    // Resolve a row value using the first matching header alias that exists
+    function getField(row, aliases) {
+      for (const key of aliases) {
+        if (row[key] != null && String(row[key]).trim() !== '') return String(row[key]).trim();
+      }
+      return '';
+    }
+
+    function splitCsvLine(line) {
+      const values = [];
+      let current = '';
+      let inQuotes = false;
+      for (let index = 0; index < line.length; index += 1) {
+        const char = line[index];
+        const next = line[index + 1];
+        if (char === '"') {
+          if (inQuotes && next === '"') { current += '"'; index += 1; }
+          else { inQuotes = !inQuotes; }
+        } else if (char === ',' && !inQuotes) {
+          values.push(current.trim()); current = '';
+        } else { current += char; }
+      }
+      values.push(current.trim());
+      return values;
+    }
+
+    function parseCsv(text) {
+      const lines = text.replace(/^\uFEFF/, '').split(/\r?\n/).filter((line) => line.trim().length > 0);
+      if (lines.length < 2) throw new Error('CSV must contain a header row and at least one data row.');
+      const headers = splitCsvLine(lines[0]);
+      const missingHeaders = requiredHeaders.filter((h) => !headers.includes(h));
+      if (missingHeaders.length) throw new Error(`Missing required headers: ${missingHeaders.join(', ')}`);
+      return lines.slice(1).map((line) => {
+        const values = splitCsvLine(line);
+        const row = Object.fromEntries(headers.map((header, index) => [header, values[index] || '']));
+        return {
+          caseNumber: getField(row, headerAliases.caseNumber),
+          planName: getField(row, headerAliases.planName),
+          dataConsultant: getField(row, headerAliases.dataConsultant),
+          transitionManager: getField(row, headerAliases.transitionManager),
+          transitionConsultant: getField(row, headerAliases.transitionConsultant),
+          effectiveDate: getField(row, headerAliases.effectiveDate),
+          payrollVendor: getField(row, headerAliases.payrollVendor),
+          priorRecordKeeper: getField(row, headerAliases.priorRecordKeeper)
+        };
+      }).filter((row) => Object.values(row).some(Boolean));
+    }
+
+    function getFilteredRecords() {
+      const searchTerm = state.search.trim().toLowerCase();
+
+      // Group chips by field: within-field OR, across-field AND
+      const groups = {};
+      state.chips.forEach((c) => {
+        if (!groups[c.field]) groups[c.field] = [];
+        groups[c.field].push(String(c.value).toLowerCase());
+      });
+
+      return records.filter((r) => {
+        // chip filter: AND across fields, OR within same field
+        for (const field in groups) {
+          const cellVal = String(r[field] || '').toLowerCase();
+          const anyMatch = groups[field].some((v) => {
+            if (field === 'effectiveDate') return cellVal.startsWith(v);
+            return cellVal === v || cellVal.includes(v);
+          });
+          if (!anyMatch) return false;
+        }
+        // free-text
+        if (searchTerm && !buildSearchIndex(r).includes(searchTerm)) return false;
+        return true;
+      });
+    }
+
+    // ============================================================
+    // SLASH FILTER ENGINE
+    // ============================================================
+    function uniqueFieldValues(field) {
+      const seen = new Set();
+      const out = [];
+      records.forEach((r) => {
+        const v = r[field];
+        if (v && !seen.has(v)) { seen.add(v); out.push(v); }
+      });
+      if (field === 'effectiveDate') {
+        out.sort();
+      } else {
+        out.sort((a, b) => String(a).localeCompare(String(b), undefined, { numeric: true }));
+      }
+      return out;
+    }
+
+    function formatDateLabel(iso) {
+      // "2026-04-01" -> "Apr 2026"
+      const m = /^(\d{4})-(\d{2})/.exec(iso);
+      if (!m) return iso;
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const mi = parseInt(m[2],10) - 1;
+      return `${months[mi] || m[2]} ${m[1]}`;
+    }
+
+    function getSlashMenu() { return document.getElementById('slashMenu'); }
+
+    function openSlashMenu() {
+      slashState.mode = 'menu';
+      slashState.activeCmd = null;
+      slashState.highlightIdx = 0;
+      renderSlashMenu('');
+    }
+
+    function enterValueMode(cmd) {
+      slashState.mode = 'value';
+      slashState.activeCmd = cmd;
+      slashState.highlightIdx = 0;
+      const input = document.getElementById('searchInput');
+      input.value = cmd.code + ' ';
+      input.focus();
+      renderSlashMenu('');
+    }
+
+    function closeSlashMenu() {
+      slashState.mode = 'off';
+      slashState.activeCmd = null;
+      slashState.options = [];
+      const menu = getSlashMenu();
+      menu.hidden = true;
+      menu.innerHTML = '';
+    }
+
+    function renderSlashMenu(filter) {
+      const menu = getSlashMenu();
+      const q = (filter || '').trim().toLowerCase();
+      let html = '';
+
+      if (slashState.mode === 'menu') {
+        const opts = slashCommands.filter((c) => {
+          if (!q) return true;
+          return c.code.toLowerCase().startsWith(q) || c.label.toLowerCase().includes(q);
+        });
+        slashState.options = opts;
+        if (slashState.highlightIdx >= opts.length) slashState.highlightIdx = 0;
+        html += `<div class="slash-menu-head">
+          <span class="lbl">Filter by field</span>
+          <span class="hint"><kbd>↑↓</kbd> nav <kbd>↵</kbd> pick <kbd>esc</kbd> exit</span>
+        </div>`;
+        if (!opts.length) {
+          html += `<div class="slash-empty">// no matching command</div>`;
+        } else {
+          opts.forEach((o, i) => {
+            html += `<button type="button" class="slash-opt ${i===slashState.highlightIdx?'active':''}" data-idx="${i}" role="option" aria-selected="${i===slashState.highlightIdx}">
+              <span class="code">${o.code}</span>
+              <span class="label">${o.label}</span>
+              <span class="count">${uniqueFieldValues(o.field).length}</span>
+            </button>`;
+          });
+        }
+      } else if (slashState.mode === 'value') {
+        const cmd = slashState.activeCmd;
+        const values = uniqueFieldValues(cmd.field);
+        const opts = values.filter((v) => {
+          if (!q) return true;
+          const hay = cmd.field === 'effectiveDate'
+            ? (String(v).toLowerCase() + ' ' + formatDateLabel(v).toLowerCase())
+            : String(v).toLowerCase();
+          return hay.includes(q);
+        });
+        slashState.options = opts.map((v) => ({ value: v }));
+        if (slashState.highlightIdx >= opts.length) slashState.highlightIdx = 0;
+        html += `<div class="slash-menu-head">
+          <span class="lbl">${cmd.code} ${cmd.label}</span>
+          <span class="hint"><kbd>↵</kbd> apply <kbd>esc</kbd> cancel</span>
+        </div>`;
+        if (!opts.length) {
+          html += `<div class="slash-empty">// no matching values — press ↵ to use as-is</div>`;
+        } else {
+          opts.forEach((v, i) => {
+            const display = cmd.field === 'effectiveDate' ? formatDateLabel(v) : v;
+            html += `<button type="button" class="slash-opt ${i===slashState.highlightIdx?'active':''}" data-idx="${i}" data-value="${String(v).replace(/"/g,'&quot;')}" role="option" aria-selected="${i===slashState.highlightIdx}">
+              <span class="code">${cmd.code}</span>
+              <span class="label">${display}</span>
+            </button>`;
+          });
+        }
+      }
+
+      menu.innerHTML = html;
+      menu.hidden = false;
+
+      // wire option clicks
+      menu.querySelectorAll('.slash-opt').forEach((btn) => {
+        btn.addEventListener('mousedown', (ev) => {
+          ev.preventDefault(); // don't blur input
+          const idx = parseInt(btn.dataset.idx, 10);
+          slashState.highlightIdx = idx;
+          confirmSlashSelection();
+        });
+        btn.addEventListener('mouseenter', () => {
+          const idx = parseInt(btn.dataset.idx, 10);
+          slashState.highlightIdx = idx;
+          updateSlashHighlight();
+        });
+      });
+    }
+
+    function updateSlashHighlight() {
+      const menu = getSlashMenu();
+      menu.querySelectorAll('.slash-opt').forEach((btn, i) => {
+        btn.classList.toggle('active', i === slashState.highlightIdx);
+        btn.setAttribute('aria-selected', i === slashState.highlightIdx);
+      });
+      const active = menu.querySelector('.slash-opt.active');
+      if (active) active.scrollIntoView({ block: 'nearest' });
+    }
+
+    function confirmSlashSelection() {
+      if (slashState.mode === 'menu') {
+        const cmd = slashState.options[slashState.highlightIdx];
+        if (cmd) enterValueMode(cmd);
+      } else if (slashState.mode === 'value') {
+        const input = document.getElementById('searchInput');
+        const cmd = slashState.activeCmd;
+        const opt = slashState.options[slashState.highlightIdx];
+        // typed text after the code prefix (for as-is fallback)
+        const prefix = cmd.code + ' ';
+        const typed = input.value.startsWith(prefix) ? input.value.slice(prefix.length).trim() : '';
+        let chosen;
+        if (opt) {
+          chosen = opt.value;
+        } else if (typed) {
+          chosen = typed;
+        } else {
+          return;
+        }
+        addChip(cmd.field, chosen);
+        input.value = '';
+        state.search = '';
+        closeSlashMenu();
+        setSearching(false);
+        render();
+      }
+    }
+
+    function addChip(field, value) {
+      const exists = state.chips.some((c) => c.field === field && String(c.value) === String(value));
+      if (exists) return;
+      state.chips.push({ field, value });
+      renderChips();
+    }
+
+    function removeChip(idx) {
+      state.chips.splice(idx, 1);
+      renderChips();
+      render();
+    }
+
+    function clearAllChips() {
+      state.chips = [];
+      renderChips();
+      render();
+    }
+
+    function renderChips() {
+      const row = document.getElementById('chipsRow');
+      if (!state.chips.length) {
+        row.hidden = true;
+        row.innerHTML = '';
+        return;
+      }
+      const fieldCode = {};
+      slashCommands.forEach((c) => { fieldCode[c.field] = c.code; });
+      let html = '';
+      state.chips.forEach((c, i) => {
+        const display = c.field === 'effectiveDate' ? formatDateLabel(c.value) : c.value;
+        html += `<span class="filter-chip">
+          <span class="ck">${fieldCode[c.field] || c.field}</span>
+          <span class="cv">${display}</span>
+          <button type="button" class="cx" data-idx="${i}" aria-label="Remove filter ${fieldCode[c.field] || c.field} ${display}">✕</button>
+        </span>`;
+      });
+      if (state.chips.length > 1) {
+        html += `<button type="button" class="chips-clear" id="chipsClearAll">Clear all</button>`;
+      }
+      row.innerHTML = html;
+      row.hidden = false;
+      row.querySelectorAll('.cx').forEach((btn) => {
+        btn.addEventListener('click', () => removeChip(parseInt(btn.dataset.idx, 10)));
+      });
+      const ca = document.getElementById('chipsClearAll');
+      if (ca) ca.addEventListener('click', clearAllChips);
+    }
+
+    function updateSortHeaders() {
+      document.querySelectorAll('th[id^="th-"]').forEach((th) => {
+        th.classList.remove('sort-active');
+        th.removeAttribute('data-dir');
+      });
+      const activeTh = document.getElementById(`th-${state.sortBy}`);
+      if (activeTh) {
+        activeTh.classList.add('sort-active');
+        activeTh.dataset.dir = state.sortDir;
+      }
+      const sortLabel = document.getElementById('sortLabel');
+      if (sortLabel) {
+        sortLabel.innerHTML = `SORT <b>${colLabels[state.sortBy]}</b> / ${state.sortDir === 'asc' ? 'ASC' : 'DESC'}`;
+      }
+    }
+
+    function renderCaseNumber(cn){
+      // split "C-26001" into rust prefix + mono body
+      const m = String(cn).match(/^([A-Za-z]+[-_]?)(.*)$/);
+      if (m) {
+        return `<span class="cell-case"><span class="case-prefix">${m[1]}</span>${m[2]}</span>`;
+      }
+      return `<span class="cell-case">${cn}</span>`;
+    }
+
+    function render() {
+      const filtered = getFilteredRecords();
+      filtered.sort((a, b) => {
+        const left = String(a[state.sortBy]);
+        const right = String(b[state.sortBy]);
+        const comparison = left.localeCompare(right, undefined, { numeric: true });
+        return state.sortDir === 'asc' ? comparison : -comparison;
+      });
+
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = filtered.map((record, i) => {
+        const doubleRule = ((i + 1) % 5 === 0 && i < filtered.length - 1) ? ' rule-double' : '';
+        return `
+        <tr class="${doubleRule}">
+          <td class="gutter">${pad2(i+1)}</td>
+          <td>${renderCaseNumber(record.caseNumber)}</td>
+          <td><span class="cell-plan">${record.planName}</span></td>
+          <td><span class="person"><span class="person-badge">${initials(record.dataConsultant)}</span><span class="person-name">${record.dataConsultant}</span></span></td>
+          <td><span class="person"><span class="person-badge">${initials(record.transitionManager)}</span><span class="person-name">${record.transitionManager}</span></span></td>
+          <td><span class="person"><span class="person-badge">${initials(record.transitionConsultant)}</span><span class="person-name">${record.transitionConsultant}</span></span></td>
+          <td><span class="datepill">${record.effectiveDate}</span></td>
+          <td>${record.payrollVendor || '&mdash;'}</td>
+          <td>${record.priorRecordKeeper || '&mdash;'}</td>
+        </tr>`;
+      }).join('');
+
+      document.getElementById('emptyState').hidden = filtered.length > 0;
+      const footerCount = document.getElementById('footerCount');
+      if (footerCount) footerCount.textContent = pad2(filtered.length);
+
+      updateSortHeaders();
+      updateGauges(filtered);
+    }
+
+    /* ==================== GAUGES ==================== */
+    function updateGaugeArc(name, fraction){
+      const arc = document.querySelector(`[data-arc="${name}"]`);
+      if (!arc) return;
+      const segs = arc.querySelectorAll('i');
+      const total = segs.length;
+      const lit = Math.round(fraction * total);
+      segs.forEach((s, i) => s.classList.toggle('on', i < lit));
+    }
+
+    // Track target values; count-up animations honor reduced motion.
+    const gaugeState = { plans: 0, consultants: 0, dates: 0 };
+    const gaugeAnim = { plans: null, consultants: null, dates: null };
+
+    function animateGauge(name, from, to, duration){
+      const el = document.querySelector(`[data-metric="${name}"]`);
+      if (!el) return;
+      if (gaugeAnim[name]) cancelAnimationFrame(gaugeAnim[name]);
+      if (prefersReducedMotion || duration <= 0 || from === to){
+        el.textContent = pad2(to);
+        return;
+      }
+      const start = performance.now();
+      function step(now){
+        const t = Math.min(1, (now - start) / duration);
+        // ease-out cubic
+        const eased = 1 - Math.pow(1 - t, 3);
+        const val = Math.round(from + (to - from) * eased);
+        el.textContent = pad2(val);
+        if (t < 1) gaugeAnim[name] = requestAnimationFrame(step);
+      }
+      gaugeAnim[name] = requestAnimationFrame(step);
+    }
+
+    function updateGauges(filtered){
+      const consultants = new Set();
+      filtered.forEach((r) => {
+        if (r.dataConsultant) consultants.add(r.dataConsultant);
+        if (r.transitionManager) consultants.add(r.transitionManager);
+        if (r.transitionConsultant) consultants.add(r.transitionConsultant);
+      });
+      const newPlans = filtered.length;
+      const newConsult = consultants.size;
+
+      animateGauge('plans', gaugeState.plans, newPlans, 250);
+      animateGauge('consultants', gaugeState.consultants, newConsult, 250);
+
+      const totalBase = Math.max(records.length, 1);
+      updateGaugeArc('plans', Math.min(1, newPlans / totalBase));
+      updateGaugeArc('consultants', Math.min(1, newConsult / 24));
+
+      gaugeState.plans = newPlans;
+      gaugeState.consultants = newConsult;
+    }
+
+    /* ==================== QUERY STATUS ==================== */
+    let searchDebounce = null;
+    function setSearching(isSearching){
+      const label = document.getElementById('queryLabel');
+      const status = document.getElementById('queryStatus');
+      const text = document.getElementById('queryStatusText');
+      if (isSearching){
+        label.textContent = 'SEARCHING…';
+        status.classList.add('searching');
+        text.textContent = 'ACTIVE';
+      } else {
+        label.textContent = 'QUERY';
+        status.classList.remove('searching');
+        text.textContent = 'READY';
+      }
+    }
+
+    /* ==================== INIT ==================== */
+    function measureStickyStack() {
+      const el = document.querySelector('.sticky-stack');
+      if (!el) return;
+      const h = Math.round(el.getBoundingClientRect().height);
+      document.documentElement.style.setProperty('--stack-h', h + 'px');
+    }
+
+    function init() {
+      setTheme(localStorage.getItem(themeKey) || 'warm');
+
+      // Measure sticky stack and keep in sync with size changes
+      measureStickyStack();
+      if (typeof ResizeObserver !== 'undefined') {
+        const ro = new ResizeObserver(measureStickyStack);
+        const stack = document.querySelector('.sticky-stack');
+        if (stack) ro.observe(stack);
+      }
+      window.addEventListener('resize', measureStickyStack);
+      window.addEventListener('load', measureStickyStack);
+
+      // Initial render WITHOUT count-up (so we can do the load animation after)
+      const filtered = getFilteredRecords();
+      // compute targets
+      const consultants = new Set();
+      const dates = new Set();
+      filtered.forEach((r) => {
+        if (r.dataConsultant) consultants.add(r.dataConsultant);
+        if (r.transitionManager) consultants.add(r.transitionManager);
+        if (r.transitionConsultant) consultants.add(r.transitionConsultant);
+        if (r.effectiveDate) dates.add(r.effectiveDate);
+      });
+
+      // Paint table and sort headers (but reset gauge state to 0 first so
+      // the update animates from 0 → target). We use a short delay to let
+      // the page paint, then fire the count-up.
+      gaugeState.plans = 0;
+      gaugeState.consultants = 0;
+      gaugeState.dates = 0;
+      render(); // this calls updateGauges from 0 → target with 250ms
+
+      // Override: re-fire with the designed 700ms load animation
+      gaugeState.plans = 0;
+      gaugeState.consultants = 0;
+      gaugeState.dates = 0;
+      document.querySelectorAll('[data-metric]').forEach(el => el.textContent = '00');
+      // Fire after next frame for visual effect.
+      requestAnimationFrame(() => {
+        animateGauge('plans', 0, filtered.length, 700);
+        animateGauge('consultants', 0, consultants.size, 700);
+        animateGauge('dates', 0, dates.size, 700);
+        gaugeState.plans = filtered.length;
+        gaugeState.consultants = consultants.size;
+        gaugeState.dates = dates.size;
+      });
+
+      document.getElementById('themeToggle').addEventListener('click', () => {
+        setTheme(document.body.dataset.theme === 'warm' ? 'deep' : 'warm');
+      });
+
+      document.getElementById('clearSearch').addEventListener('click', () => {
+        state.search = '';
+        state.chips = [];
+        document.getElementById('searchInput').value = '';
+        closeSlashMenu();
+        renderChips();
+        setSearching(false);
+        render();
+      });
+
+      const searchInput = document.getElementById('searchInput');
+
+      searchInput.addEventListener('input', (event) => {
+        const val = event.target.value;
+
+        // Slash command triggers
+        if (slashState.mode === 'off') {
+          if (val === '/') {
+            event.target.value = '';
+            openSlashMenu();
+            return;
+          }
+        } else if (slashState.mode === 'menu') {
+          // user is typing after a solo '/' — but we cleared it, so treat the whole value as filter
+          renderSlashMenu(val);
+          return;
+        } else if (slashState.mode === 'value') {
+          const prefix = slashState.activeCmd.code + ' ';
+          if (!val.startsWith(slashState.activeCmd.code)) {
+            // user deleted the prefix — exit value mode
+            closeSlashMenu();
+          } else {
+            const after = val.startsWith(prefix) ? val.slice(prefix.length) : val.slice(slashState.activeCmd.code.length);
+            renderSlashMenu(after);
+            return;
+          }
+        }
+
+        // normal free-text search
+        state.search = val;
+        setSearching(val.length > 0);
+        render();
+        if (searchDebounce) clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(() => {
+          if (state.search.length === 0) setSearching(false);
+        }, 600);
+      });
+
+      searchInput.addEventListener('keydown', (event) => {
+        // Open slash menu on `/` when input is empty
+        if (event.key === '/' && slashState.mode === 'off' && event.target.value === '') {
+          event.preventDefault();
+          openSlashMenu();
+          return;
+        }
+
+        if (slashState.mode === 'off') return;
+
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          closeSlashMenu();
+          event.target.value = '';
+          state.search = '';
+          setSearching(false);
+          render();
+          return;
+        }
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          if (slashState.options.length) {
+            slashState.highlightIdx = (slashState.highlightIdx + 1) % slashState.options.length;
+            updateSlashHighlight();
+          }
+          return;
+        }
+        if (event.key === 'ArrowUp') {
+          event.preventDefault();
+          if (slashState.options.length) {
+            slashState.highlightIdx = (slashState.highlightIdx - 1 + slashState.options.length) % slashState.options.length;
+            updateSlashHighlight();
+          }
+          return;
+        }
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          confirmSlashSelection();
+          return;
+        }
+        if (event.key === 'Tab' && slashState.mode === 'menu' && slashState.options.length) {
+          event.preventDefault();
+          confirmSlashSelection();
+          return;
+        }
+        if (event.key === 'Backspace' && slashState.mode === 'value') {
+          const v = event.target.value;
+          const prefix = slashState.activeCmd.code + ' ';
+          // if cursor is at prefix boundary, exit value mode
+          if (v === prefix || v === slashState.activeCmd.code) {
+            event.preventDefault();
+            event.target.value = '';
+            closeSlashMenu();
+          }
+        }
+        if (event.key === 'Backspace' && slashState.mode === 'menu' && event.target.value === '') {
+          event.preventDefault();
+          closeSlashMenu();
+        }
+      });
+
+      // click-away to close slash menu
+      document.addEventListener('mousedown', (ev) => {
+        if (slashState.mode === 'off') return;
+        const consoleEl = document.querySelector('.query-console');
+        if (consoleEl && !consoleEl.contains(ev.target)) {
+          closeSlashMenu();
+        }
+      });
+
+      // ============================================================
+      // AUTO-LOAD from DATA_SOURCE_URL
+      // ============================================================
+      async function autoLoadFromSource() {
+        try {
+          // cache-bust so refresh always pulls fresh data
+          const url = DATA_SOURCE_URL + (DATA_SOURCE_URL.includes('?') ? '&' : '?') + 't=' + Date.now();
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const text = await res.text();
+          records = parseCsv(text);
+          render();
+          console.info(`[auto-load] loaded ${records.length} records from ${DATA_SOURCE_URL}`);
+        } catch (err) {
+          console.warn(`[auto-load] falling back to mock data — ${err.message}`);
+        }
+      }
+
+      if (AUTO_LOAD_ON_START) {
+        autoLoadFromSource();
+        if (AUTO_REFRESH_MS > 0) setInterval(autoLoadFromSource, AUTO_REFRESH_MS);
+      }
+
+      document.getElementById('fileInput').addEventListener('change', async (event) => {
+        const [file] = event.target.files || [];
+        if (!file) return;
+        try {
+          records = parseCsv(await file.text());
+          state.search = '';
+          document.getElementById('searchInput').value = '';
+          setSearching(false);
+          render();
+        } catch (error) {
+          alert(`Import failed: ${error.message}`);
+        } finally {
+          event.target.value = '';
+        }
+      });
+
+      document.querySelectorAll('th button[data-key]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const key = button.dataset.key;
+          if (state.sortBy === key) {
+            state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+          } else {
+            state.sortBy = key;
+            state.sortDir = 'asc';
+          }
+          render();
+        });
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>

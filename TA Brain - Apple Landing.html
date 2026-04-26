@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>TA Brain · Apple-Inspired Landing</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta
+  name="description"
+  content="TA Brain and Profile Builder turn natural conversation into connected company intelligence."
+/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f5f5f7;
+    --panel:#ffffff;
+    --panel-2:#fbfbfd;
+    --ink:#1d1d1f;
+    --muted:#6e6e73;
+    --line:rgba(0,0,0,.08);
+    --line-strong:rgba(0,0,0,.12);
+    --blue:#0071e3;
+    --blue-2:#2997ff;
+    --shadow:0 20px 60px rgba(0,0,0,.08);
+    --radius:28px;
+    --max:1440px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:
+      radial-gradient(circle at top, rgba(41,151,255,.10), transparent 28%),
+      linear-gradient(180deg, #fbfbfd 0%, #f5f5f7 45%, #ffffff 100%);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+
+  a{text-decoration:none;color:inherit}
+  img,svg{display:block;max-width:100%}
+
+  .shell{
+    position:relative;
+    overflow:hidden;
+  }
+
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:40;
+    backdrop-filter:saturate(180%) blur(24px);
+    background:rgba(250,250,252,.78);
+    border-bottom:1px solid rgba(0,0,0,.06);
+  }
+
+  .topbar-inner{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 24px;
+    min-height:52px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:14px;
+    font-weight:600;
+  }
+
+  .brand-mark{
+    width:18px;
+    height:18px;
+    border-radius:5px;
+    background:linear-gradient(135deg, #8fd3ff 0%, #0071e3 60%, #0055b8 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.45);
+  }
+
+  .nav{
+    display:flex;
+    gap:22px;
+    color:var(--muted);
+    font-size:13px;
+  }
+
+  .nav a:hover{color:var(--ink)}
+
+  .nav-cta{
+    padding:10px 16px;
+    border-radius:999px;
+    background:var(--blue);
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+  }
+
+  .section{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:96px 24px;
+  }
+
+  .hero{
+    padding-top:72px;
+    text-align:center;
+  }
+
+  .eyebrow{
+    display:inline-block;
+    color:var(--blue);
+    font-size:17px;
+    font-weight:600;
+    letter-spacing:-.01em;
+    margin-bottom:18px;
+  }
+
+  h1,h2,h3{
+    letter-spacing:-.05em;
+    line-height:.95;
+    font-weight:700;
+  }
+
+  h1{
+    font-size:clamp(52px, 9vw, 120px);
+    max-width:12ch;
+    margin:0 auto;
+  }
+
+  h2{
+    font-size:clamp(38px, 6vw, 72px);
+    max-width:11ch;
+  }
+
+  h3{
+    font-size:clamp(24px, 2.2vw, 34px);
+  }
+
+  .subhead{
+    margin:24px auto 0;
+    max-width:36ch;
+    font-size:clamp(20px, 2vw, 28px);
+    line-height:1.32;
+    color:#424245;
+    letter-spacing:-.03em;
+  }
+
+  .hero-actions{
+    margin-top:34px;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:164px;
+    padding:14px 22px;
+    border-radius:999px;
+    font-size:17px;
+    font-weight:500;
+  }
+
+  .btn-primary{
+    background:var(--blue);
+    color:#fff;
+  }
+
+  .btn-secondary{
+    color:var(--blue);
+    background:rgba(0,113,227,.08);
+  }
+
+  .hero-panel{
+    margin-top:54px;
+    border-radius:40px;
+    background:
+      radial-gradient(circle at 50% 18%, rgba(41,151,255,.20), transparent 30%),
+      linear-gradient(180deg, #ffffff 0%, #f7f8fb 100%);
+    border:1px solid rgba(255,255,255,.9);
+    box-shadow:
+      0 40px 120px rgba(0,0,0,.10),
+      inset 0 1px 0 rgba(255,255,255,.9);
+    overflow:hidden;
+    min-height:640px;
+    position:relative;
+  }
+
+  .hero-panel::before{
+    content:"";
+    position:absolute;
+    inset:auto 10% 0;
+    height:180px;
+    background:radial-gradient(circle, rgba(41,151,255,.15), transparent 70%);
+    filter:blur(40px);
+  }
+
+  .hero-visual{
+    position:relative;
+    min-height:640px;
+    display:grid;
+    place-items:center;
+    padding:36px;
+  }
+
+  .glass-orb{
+    width:min(62vw, 660px);
+    aspect-ratio:1/1;
+    border-radius:50%;
+    position:relative;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,.98), rgba(255,255,255,.36) 20%, rgba(120,180,255,.18) 32%, rgba(0,113,227,.14) 46%, rgba(255,255,255,.06) 60%, rgba(255,255,255,0) 70%),
+      radial-gradient(circle at 65% 70%, rgba(255,255,255,.54), rgba(255,255,255,0) 40%),
+      linear-gradient(180deg, rgba(255,255,255,.78), rgba(198,221,255,.22));
+    box-shadow:
+      inset 0 10px 40px rgba(255,255,255,.68),
+      inset 0 -26px 50px rgba(0,113,227,.10),
+      0 40px 90px rgba(0,72,180,.16);
+    border:1px solid rgba(255,255,255,.9);
+  }
+
+  .glass-orb::before,
+  .glass-orb::after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+    inset:12%;
+  }
+
+  .glass-orb::before{
+    background:radial-gradient(circle at 50% 50%, rgba(255,255,255,0), rgba(255,255,255,.35) 55%, rgba(255,255,255,0) 72%);
+  }
+
+  .glass-orb::after{
+    inset:18%;
+    border:1px solid rgba(255,255,255,.58);
+  }
+
+  .orbit{
+    position:absolute;
+    inset:0;
+  }
+
+  .node{
+    position:absolute;
+    padding:10px 14px;
+    border-radius:999px;
+    background:rgba(255,255,255,.78);
+    backdrop-filter:blur(16px);
+    border:1px solid rgba(255,255,255,.85);
+    box-shadow:0 20px 40px rgba(0,0,0,.08);
+    font-size:14px;
+    color:#3a3a3c;
+    font-weight:600;
+  }
+
+  .node:nth-child(1){top:14%;left:10%}
+  .node:nth-child(2){top:20%;right:8%}
+  .node:nth-child(3){left:3%;bottom:23%}
+  .node:nth-child(4){right:4%;bottom:18%}
+  .node:nth-child(5){left:38%;bottom:6%}
+
+  .metrics{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-top:24px;
+  }
+
+  .metric{
+    background:rgba(255,255,255,.72);
+    border:1px solid rgba(255,255,255,.85);
+    border-radius:24px;
+    padding:24px;
+    box-shadow:var(--shadow);
+  }
+
+  .metric .k{
+    font-size:13px;
+    color:var(--muted);
+    margin-bottom:10px;
+  }
+
+  .metric .v{
+    font-size:32px;
+    letter-spacing:-.05em;
+    font-weight:700;
+  }
+
+  .metric .v small{
+    display:block;
+    font-size:15px;
+    line-height:1.35;
+    color:var(--muted);
+    font-weight:500;
+    margin-top:6px;
+  }
+
+  .centered{
+    text-align:center;
+  }
+
+  .centered h2,
+  .centered .copy{
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .copy{
+    margin-top:20px;
+    max-width:42ch;
+    color:#424245;
+    font-size:21px;
+    line-height:1.45;
+    letter-spacing:-.02em;
+  }
+
+  .comparison{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    margin-top:48px;
+  }
+
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,.94), rgba(248,248,250,.92));
+    border:1px solid rgba(255,255,255,.92);
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+
+  .card-copy{
+    padding:34px 34px 26px;
+  }
+
+  .card-copy p{
+    margin-top:14px;
+    color:var(--muted);
+    font-size:18px;
+    line-height:1.45;
+    letter-spacing:-.02em;
+  }
+
+  .card-visual{
+    min-height:360px;
+    position:relative;
+    background:
+      radial-gradient(circle at top, rgba(41,151,255,.15), transparent 35%),
+      linear-gradient(180deg, #f7f9fc 0%, #eef3f9 100%);
+    border-top:1px solid var(--line);
+    overflow:hidden;
+  }
+
+  .graph-shell{
+    position:absolute;
+    inset:28px;
+    border-radius:24px;
+    background:linear-gradient(180deg, rgba(255,255,255,.75), rgba(255,255,255,.52));
+    border:1px solid rgba(255,255,255,.85);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+  }
+
+  .graph-line{
+    position:absolute;
+    height:2px;
+    background:linear-gradient(90deg, rgba(0,113,227,.16), rgba(0,113,227,.42));
+    transform-origin:left center;
+  }
+
+  .dot{
+    position:absolute;
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:linear-gradient(180deg, #5ac8fa, #007aff);
+    box-shadow:0 0 0 8px rgba(0,122,255,.10);
+  }
+
+  .dot.big{
+    width:16px;
+    height:16px;
+    box-shadow:0 0 0 12px rgba(0,122,255,.08);
+  }
+
+  .wave-wrap{
+    position:absolute;
+    inset:28px;
+    border-radius:24px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(180deg, rgba(255,255,255,.68), rgba(241,246,252,.84));
+    border:1px solid rgba(255,255,255,.85);
+  }
+
+  .wave{
+    width:78%;
+    height:160px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+  }
+
+  .wave span{
+    width:8px;
+    border-radius:999px;
+    background:linear-gradient(180deg, #5ac8fa 0%, #007aff 100%);
+    animation:lift 1.6s ease-in-out infinite;
+  }
+
+  .steps{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-top:46px;
+  }
+
+  .step{
+    padding:28px;
+    border-radius:26px;
+    background:rgba(255,255,255,.78);
+    border:1px solid rgba(255,255,255,.9);
+    box-shadow:var(--shadow);
+  }
+
+  .step .num{
+    color:var(--blue);
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:14px;
+  }
+
+  .step p{
+    margin-top:10px;
+    color:var(--muted);
+    font-size:16px;
+    line-height:1.5;
+  }
+
+  .platform{
+    margin-top:48px;
+    border-radius:36px;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(41,151,255,.16), transparent 30%),
+      linear-gradient(180deg, #fdfdff 0%, #eef4fb 100%);
+    box-shadow:var(--shadow);
+    border:1px solid rgba(255,255,255,.92);
+    padding:38px;
+  }
+
+  .platform-grid{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:32px;
+    align-items:center;
+  }
+
+  .platform-stage{
+    aspect-ratio:16/10;
+    border-radius:28px;
+    background:linear-gradient(180deg, #f8fbff 0%, #edf2f8 100%);
+    border:1px solid rgba(0,0,0,.06);
+    position:relative;
+    overflow:hidden;
+  }
+
+  .platform-stage canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+  }
+
+  .pill-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+    margin-top:26px;
+  }
+
+  .pill{
+    padding:18px 20px;
+    border-radius:20px;
+    background:rgba(255,255,255,.76);
+    border:1px solid rgba(255,255,255,.9);
+    box-shadow:0 14px 34px rgba(0,0,0,.06);
+    font-weight:600;
+  }
+
+  .pill small{
+    display:block;
+    margin-bottom:8px;
+    color:var(--muted);
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.02em;
+    text-transform:uppercase;
+  }
+
+  .report{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    margin-top:48px;
+  }
+
+  .report-pane{
+    background:linear-gradient(180deg, #ffffff 0%, #f7f8fb 100%);
+    border-radius:30px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.92);
+    box-shadow:var(--shadow);
+  }
+
+  .report-top{
+    padding:18px 22px;
+    border-bottom:1px solid rgba(0,0,0,.06);
+    color:var(--muted);
+    font-size:14px;
+    background:rgba(255,255,255,.72);
+  }
+
+  .report-body{
+    padding:28px;
+  }
+
+  .terminal-line{
+    display:flex;
+    gap:12px;
+    font-size:15px;
+    line-height:1.8;
+    color:#3a3a3c;
+  }
+
+  .terminal-line .prompt{color:var(--blue);font-weight:700}
+
+  .report-copy p{
+    margin-top:14px;
+    font-size:18px;
+    line-height:1.5;
+    color:var(--muted);
+  }
+
+  .report-list{
+    margin-top:24px;
+    display:grid;
+    gap:14px;
+  }
+
+  .report-list div{
+    padding:18px 20px;
+    border-radius:18px;
+    background:rgba(0,113,227,.05);
+    color:#3a3a3c;
+    font-size:16px;
+    line-height:1.45;
+  }
+
+  .report-list strong{
+    display:block;
+    margin-bottom:4px;
+    color:var(--ink);
+  }
+
+  .final-cta{
+    text-align:center;
+    padding-top:56px;
+  }
+
+  .final-wrap{
+    background:
+      radial-gradient(circle at top, rgba(41,151,255,.18), transparent 34%),
+      linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+    border-radius:40px;
+    border:1px solid rgba(255,255,255,.92);
+    box-shadow:var(--shadow);
+    padding:72px 28px;
+  }
+
+  .final-wrap h2{
+    margin:0 auto;
+  }
+
+  footer{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:30px 24px 56px;
+    color:var(--muted);
+    font-size:13px;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+
+  @keyframes lift{
+    0%,100%{height:18%}
+    50%{height:100%}
+  }
+
+  @media (max-width:1100px){
+    .metrics,.steps,.comparison,.report,.platform-grid{grid-template-columns:1fr 1fr}
+  }
+
+  @media (max-width:820px){
+    .nav{display:none}
+    .metrics,.steps,.comparison,.report,.platform-grid,.pill-grid{grid-template-columns:1fr}
+    .hero-panel,.hero-visual{min-height:520px}
+    .glass-orb{width:min(86vw, 520px)}
+  }
+
+  @media (max-width:640px){
+    .section{padding:76px 20px}
+    .topbar-inner{padding:0 20px}
+    h1{max-width:10ch}
+    .subhead,.copy{font-size:19px}
+    .metric .v{font-size:28px}
+    .card-copy,.report-body{padding:24px}
+    .platform{padding:22px}
+    .final-wrap{padding:56px 22px}
+    .node{font-size:12px;padding:8px 11px}
+  }
+ </style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>TA Brain</span>
+      </div>
+      <nav class="nav" aria-label="Primary">
+        <a href="#overview">Overview</a>
+        <a href="#systems">Systems</a>
+        <a href="#network">Network</a>
+        <a href="#reports">Reports</a>
+      </nav>
+      <a class="nav-cta" href="#launch">Get started</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="section hero" id="overview">
+      <div class="eyebrow">TA Brain + Profile Builder</div>
+      <h1>One shared intelligence layer for the whole company.</h1>
+      <p class="subhead">
+        Turn a few minutes of natural conversation into structured, connected company knowledge your team can search, extend, and act on.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#launch">Get started</a>
+        <a class="btn btn-secondary" href="#systems">Learn more</a>
+      </div>
+
+      <div class="hero-panel">
+        <div class="hero-visual">
+          <div class="glass-orb" aria-hidden="true">
+            <div class="orbit">
+              <div class="node">Operations</div>
+              <div class="node">Compliance</div>
+              <div class="node">Client Service</div>
+              <div class="node">Leadership</div>
+              <div class="node">Audit</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <div class="k">Input</div>
+          <div class="v">~3 min<small>Natural conversation, not manual entry.</small></div>
+        </div>
+        <div class="metric">
+          <div class="k">Coverage</div>
+          <div class="v">6 teams<small>One connected system across departments.</small></div>
+        </div>
+        <div class="metric">
+          <div class="k">Output</div>
+          <div class="v">On demand<small>Reports generated from live knowledge.</small></div>
+        </div>
+        <div class="metric">
+          <div class="k">Status</div>
+          <div class="v">Ready<small>Built, tested, and ready to roll out.</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section centered">
+      <div class="eyebrow">Why it matters</div>
+      <h2>The company already knows the answer. It just cannot reach it fast enough.</h2>
+      <p class="copy">
+        TA Brain gives your team a shared place for process knowledge, edge cases, institutional memory, and generated outputs. Profile Builder makes contributing to that system feel as simple as talking through the work.
+      </p>
+    </section>
+
+    <section class="section" id="systems">
+      <div class="eyebrow">Two products. One system.</div>
+      <div class="comparison">
+        <article class="card">
+          <div class="card-copy">
+            <h3>TA Brain</h3>
+            <p>
+              A clean, connected workspace for the company’s knowledge. Processes, people, reports, and decisions become linked and searchable instead of scattered and fragile.
+            </p>
+          </div>
+          <div class="card-visual" aria-hidden="true">
+            <div class="graph-shell">
+              <div class="graph-line" style="left:18%;top:28%;width:26%;transform:rotate(18deg)"></div>
+              <div class="graph-line" style="left:42%;top:40%;width:20%;transform:rotate(-22deg)"></div>
+              <div class="graph-line" style="left:34%;top:58%;width:30%;transform:rotate(12deg)"></div>
+              <div class="graph-line" style="left:20%;top:56%;width:17%;transform:rotate(-26deg)"></div>
+              <div class="dot big" style="left:20%;top:24%"></div>
+              <div class="dot" style="left:44%;top:34%"></div>
+              <div class="dot" style="left:62%;top:29%"></div>
+              <div class="dot big" style="left:34%;top:56%"></div>
+              <div class="dot" style="left:60%;top:62%"></div>
+              <div class="dot" style="left:18%;top:70%"></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-copy">
+            <h3>Profile Builder</h3>
+            <p>
+              The simplest way to get expertise into the system. Open it, speak naturally, and let the product turn that input into structured company intelligence.
+            </p>
+          </div>
+          <div class="card-visual" aria-hidden="true">
+            <div class="wave-wrap">
+              <div class="wave" id="wave">
+                <span style="animation-delay:-.1s"></span>
+                <span style="animation-delay:-.3s"></span>
+                <span style="animation-delay:-.7s"></span>
+                <span style="animation-delay:-.2s"></span>
+                <span style="animation-delay:-.5s"></span>
+                <span style="animation-delay:-.4s"></span>
+                <span style="animation-delay:-.8s"></span>
+                <span style="animation-delay:-.35s"></span>
+                <span style="animation-delay:-.65s"></span>
+                <span style="animation-delay:-.15s"></span>
+                <span style="animation-delay:-.45s"></span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section centered">
+      <div class="eyebrow">How it works</div>
+      <h2>Talk naturally. Capture context. Make it useful everywhere.</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="num">01</div>
+          <h3>Open the app</h3>
+          <p>Start Profile Builder with no template, no setup, and no friction.</p>
+        </div>
+        <div class="step">
+          <div class="num">02</div>
+          <h3>Explain the work</h3>
+          <p>Walk through the process the way you would brief a new teammate.</p>
+        </div>
+        <div class="step">
+          <div class="num">03</div>
+          <h3>Structure it automatically</h3>
+          <p>The system turns speech into linked, queryable knowledge.</p>
+        </div>
+        <div class="step">
+          <div class="num">04</div>
+          <h3>Reuse it instantly</h3>
+          <p>Every team can access the same answer from the same source.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="network">
+      <div class="eyebrow">Connected by design</div>
+      <div class="platform">
+        <div class="platform-grid">
+          <div>
+            <h2>One knowledge network. More leverage in every department.</h2>
+            <p class="copy" style="margin-left:0;margin-right:0">
+              The point is not just storage. The point is continuity. When Operations updates a process, Audit benefits. When Compliance clarifies an edge case, Leadership can see the impact. The whole company works from a shared model.
+            </p>
+            <div class="pill-grid">
+              <div class="pill"><small>01</small>Conversions</div>
+              <div class="pill"><small>02</small>Operations</div>
+              <div class="pill"><small>03</small>Audit</div>
+              <div class="pill"><small>04</small>Compliance</div>
+              <div class="pill"><small>05</small>Client Service</div>
+              <div class="pill"><small>06</small>Leadership</div>
+            </div>
+          </div>
+          <div class="platform-stage">
+            <canvas id="network-canvas" aria-hidden="true"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="reports">
+      <div class="eyebrow">Output</div>
+      <div class="report">
+        <div class="report-pane">
+          <div class="report-top">Live generation</div>
+          <div class="report-body">
+            <div class="terminal-line"><span class="prompt">></span><span>Build a Q2 conversion-readiness report for leadership.</span></div>
+            <div class="terminal-line"><span class="prompt">+</span><span>Pulling live inputs across Conversions, Audit, and Compliance.</span></div>
+            <div class="terminal-line"><span class="prompt">+</span><span>Resolving linked context, open items, and executive summary.</span></div>
+            <div class="terminal-line"><span class="prompt">+</span><span>Formatting a polished output for review and distribution.</span></div>
+          </div>
+        </div>
+        <div class="report-copy">
+          <h2>Custom reports that feel generated from understanding, not assembled by hand.</h2>
+          <p>
+            Because the system already understands how the company connects, the report starts with context instead of cleanup. Ask for what you need and shape the result by audience, tone, depth, or format.
+          </p>
+          <div class="report-list">
+            <div><strong>Always current</strong>Built from the live knowledge layer rather than a stale copy.</div>
+            <div><strong>Easy to tailor</strong>Adjust for leadership, operations, audits, onboarding, or one-off requests.</div>
+            <div><strong>Gets smarter over time</strong>Every report can become another useful part of the system.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section final-cta" id="launch">
+      <div class="final-wrap">
+        <div class="eyebrow">Built and ready</div>
+        <h2>Give the company a system that remembers, connects, and scales with it.</h2>
+        <p class="copy">
+          TA Brain and Profile Builder are ready to launch. Your team brings the knowledge. The platform makes it usable everywhere.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="mailto:abacherlijoel@yahoo.com?subject=TA%20Brain%20launch">Schedule rollout</a>
+          <a class="btn btn-secondary" href="#overview">Back to top</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>TA Brain · Apple-inspired concept</span>
+    <span>2026 · Built for a calmer, clearer product story</span>
+  </footer>
+</div>
+
+<script>
+  (function(){
+    const canvas = document.getElementById('network-canvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const labels = ['Conversions','Operations','Audit','Compliance','Client Service','Leadership'];
+    let width = 0;
+    let height = 0;
+    let nodes = [];
+    let pulses = [];
+
+    function resize(){
+      const rect = canvas.getBoundingClientRect();
+      width = Math.max(1, Math.floor(rect.width * dpr));
+      height = Math.max(1, Math.floor(rect.height * dpr));
+      canvas.width = width;
+      canvas.height = height;
+      build();
+    }
+
+    function build(){
+      nodes = labels.map((label, i) => {
+        const angle = (Math.PI * 2 * i / labels.length) - Math.PI / 2;
+        const radius = Math.min(width, height) * 0.28;
+        return {
+          x: width / 2 + Math.cos(angle) * radius,
+          y: height / 2 + Math.sin(angle) * radius,
+          label
+        };
+      });
+    }
+
+    function drawNode(node){
+      const grad = ctx.createRadialGradient(node.x - 4 * dpr, node.y - 4 * dpr, 0, node.x, node.y, 18 * dpr);
+      grad.addColorStop(0, 'rgba(255,255,255,1)');
+      grad.addColorStop(.4, 'rgba(90,200,250,.95)');
+      grad.addColorStop(1, 'rgba(0,113,227,.9)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, 10 * dpr, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = 'rgba(29,29,31,.72)';
+      ctx.font = `${12 * dpr}px Inter, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText(node.label, node.x, node.y - 20 * dpr);
+    }
+
+    function spawnPulse(){
+      const a = Math.floor(Math.random() * nodes.length);
+      let b = Math.floor(Math.random() * nodes.length);
+      if (b === a) b = (b + 1) % nodes.length;
+      pulses.push({ a, b, t: 0, speed: 0.008 + Math.random() * 0.012 });
+    }
+
+    function frame(){
+      ctx.clearRect(0, 0, width, height);
+
+      const centerGlow = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, Math.min(width, height) * 0.4);
+      centerGlow.addColorStop(0, 'rgba(41,151,255,.16)');
+      centerGlow.addColorStop(1, 'rgba(41,151,255,0)');
+      ctx.fillStyle = centerGlow;
+      ctx.fillRect(0, 0, width, height);
+
+      for(let i = 0; i < nodes.length; i++){
+        for(let j = i + 1; j < nodes.length; j++){
+          const a = nodes[i];
+          const b = nodes[j];
+          ctx.strokeStyle = 'rgba(0,113,227,.16)';
+          ctx.lineWidth = 1.5 * dpr;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+
+      if(Math.random() < 0.045 && pulses.length < 10) spawnPulse();
+
+      pulses = pulses.filter(p => p.t < 1);
+      pulses.forEach(p => {
+        p.t += p.speed;
+        const a = nodes[p.a];
+        const b = nodes[p.b];
+        const x = a.x + (b.x - a.x) * p.t;
+        const y = a.y + (b.y - a.y) * p.t;
+        ctx.fillStyle = 'rgba(90,200,250,.95)';
+        ctx.beginPath();
+        ctx.arc(x, y, 4 * dpr, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      nodes.forEach(drawNode);
+      requestAnimationFrame(frame);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    frame();
+  })();
+</script>
+</body>
+</html>

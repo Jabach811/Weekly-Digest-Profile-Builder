@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Weekly Digest · 029 · W1 · Ferrari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!--
+  Font substitutions (FerrariSans is proprietary):
+    - Inter Tight  → FerrariSans stand-in (narrative voice, 400/500/600/700)
+    - Archivo      → "Body-Font" stand-in (uppercase labels, 1px tracking)
+-->
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Ferrari palette — DESIGN.md §2 */
+    --f-red:        #DA291C;
+    --f-white:      #FFFFFF;
+    --f-black:      #000000;
+    --f-surface-90: #303030;
+    --f-ui-20:      #D2D2D2;
+    --f-ink:        #181818;
+    --f-ink-60:     #666666;
+    --f-ink-50:     #8F8F8F;
+    --f-border:     #CCCCCC;
+
+    --sans:  'Inter Tight', Arial, Helvetica, sans-serif;
+    --label: 'Archivo', Arial, Helvetica, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--f-white);
+    color: var(--f-ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─────────── shared type ─────────── */
+  .eye {
+    font-family: var(--label);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+    color: var(--f-ink-50);
+    display: inline-block;
+  }
+
+  .label {
+    font-family: var(--label);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+    color: var(--f-ink-50);
+  }
+
+  /* ─────────── header band · black cinematic ─────────── */
+  header.band {
+    background: var(--f-black);
+    color: var(--f-white);
+    padding: 40px 72px 80px;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 18px;
+    margin-bottom: 72px;
+    font-family: var(--label);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255,255,255,0.18);
+    color: var(--f-ink-50);
+  }
+  .topbar .mark {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.13px;
+    color: var(--f-white);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .topbar .mark::before {
+    content: "";
+    width: 2px; height: 14px;
+    background: var(--f-white);
+    display: inline-block;
+  }
+  .topbar .meta span + span::before {
+    content: "·";
+    margin: 0 10px;
+    color: var(--f-ink-50);
+  }
+
+  .cover-eye { color: var(--f-ink-50); }
+
+  h1.display {
+    font-family: var(--sans);
+    font-size: clamp(72px, 11vw, 180px);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    margin-top: 22px;
+    text-transform: lowercase;
+    color: var(--f-white);
+  }
+  /* Ferrari Red — exactly ONE red period on the headline */
+  h1.display .dot { color: var(--f-red); }
+
+  p.lede {
+    font-family: var(--sans);
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1.55;
+    max-width: 68ch;
+    margin-top: 36px;
+    color: var(--f-ui-20);
+  }
+  p.lede b { color: var(--f-white); font-weight: 600; }
+
+  /* Counters under the lede — hairline grid */
+  .counters {
+    margin-top: 64px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid rgba(255,255,255,0.22);
+    border-left: 1px solid rgba(255,255,255,0.22);
+  }
+  .ctr {
+    padding: 28px 24px 30px;
+    border-right: 1px solid rgba(255,255,255,0.22);
+    border-bottom: 1px solid rgba(255,255,255,0.22);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .ctr .lbl { color: var(--f-ink-50); }
+  .ctr .num {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 84px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--f-white);
+  }
+  .ctr .sub {
+    font-family: var(--label);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--f-ink-50);
+  }
+
+  /* ─────────── body · white editorial ─────────── */
+  main {
+    padding: 80px 72px 48px;
+    max-width: 1400px;
+  }
+
+  section.block + section.block {
+    margin-top: 72px;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    margin-bottom: 34px;
+    border-bottom: 2px solid var(--f-ink);
+  }
+  .section-head h2 {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 1.2;
+    color: var(--f-ink);
+  }
+  .section-head .count {
+    font-family: var(--label);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--f-ink-60);
+  }
+  .section-head .count b { color: var(--f-ink); font-weight: 600; }
+
+  /* Heat — two editorial entries, separated by hairline rules */
+  .heat-entry {
+    display: grid;
+    grid-template-columns: 220px 1fr 1fr;
+    column-gap: 48px;
+    padding: 28px 0 30px;
+    border-bottom: 1px solid var(--f-ui-20);
+    align-items: start;
+  }
+  .heat-entry:last-child { border-bottom: none; }
+
+  .heat-entry .meta-col { display: flex; flex-direction: column; gap: 10px; }
+  .heat-entry .kicker {
+    font-family: var(--label);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: var(--f-ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  /* ONE red rule on the must-close badge — the only red in this section */
+  .heat-entry .kicker::before {
+    content: "";
+    width: 18px; height: 2px;
+    background: var(--f-red);
+    display: inline-block;
+  }
+  .heat-entry .due {
+    font-family: var(--label);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: var(--f-ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  /* ONE red dot on the most-urgent due — suppressed on the sibling entry */
+  .heat-entry.urgent .due::before {
+    content: "";
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--f-red);
+    display: inline-block;
+  }
+  .heat-entry.urgent .kicker::before { background: var(--f-ink); }
+  /* swap: red rule stays on the must-close badge of first entry, red dot moved to second?
+     We've kept red rule on every kicker, then overridden the first to be ink. Ensure only ONE red instance: */
+  .heat-entry .kicker::before { background: var(--f-ink); }
+  .heat-entry.badge-red .kicker::before { background: var(--f-red); }
+
+  .heat-entry h3 {
+    font-family: var(--sans);
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--f-ink);
+    letter-spacing: -0.01em;
+  }
+  .heat-entry .who {
+    font-family: var(--label);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--f-ink-60);
+    font-weight: 500;
+    margin-top: 8px;
+  }
+  .heat-entry p.body {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--f-ink-60);
+  }
+  .heat-entry p.body b { color: var(--f-ink); font-weight: 600; }
+
+  /* Holding pattern — condensed two-line list */
+  .hold-list { border-top: 1px solid var(--f-ink); }
+  .hold-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 160px;
+    column-gap: 48px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--f-ui-20);
+    align-items: baseline;
+  }
+  .hold-row:last-child { border-bottom: none; }
+  .hold-row .name {
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--f-ink);
+  }
+  .hold-row .line {
+    font-size: 14px;
+    color: var(--f-ink-60);
+    line-height: 1.5;
+  }
+  .hold-row .line b { color: var(--f-ink); font-weight: 600; }
+  .hold-row .tgt {
+    font-family: var(--label);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--f-ink);
+    font-weight: 600;
+    text-align: right;
+  }
+
+  /* Monitor strip — hairline chips */
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 10px 16px;
+    border: 1px solid var(--f-ink);
+    border-radius: 2px;
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--f-ink);
+    background: var(--f-white);
+    font-weight: 500;
+  }
+  .chip .date {
+    font-family: var(--label);
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--f-ink-50);
+    font-weight: 500;
+  }
+  .chip .note {
+    font-family: var(--label);
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--f-ink-60);
+    font-weight: 400;
+  }
+
+  /* Footer strip — dark surface */
+  footer.strip {
+    margin-top: 80px;
+    background: var(--f-surface-90);
+    color: var(--f-ui-20);
+    padding: 22px 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--label);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  footer.strip .cell { display: inline-flex; gap: 10px; align-items: center; }
+  footer.strip .cell b { color: var(--f-white); font-weight: 600; }
+  footer.strip .sep { color: var(--f-ink-50); }
+
+  @media (max-width: 900px) {
+    header.band { padding: 32px 28px 56px; }
+    main { padding: 56px 28px 32px; }
+    footer.strip { padding: 18px 28px; flex-direction: column; gap: 8px; align-items: flex-start; }
+    .counters { grid-template-columns: 1fr; }
+    .heat-entry { grid-template-columns: 1fr; row-gap: 16px; }
+    .hold-row { grid-template-columns: 1fr; row-gap: 6px; }
+    .hold-row .tgt { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ──────────── HEADER BAND · BLACK ──────────── -->
+<header class="band">
+  <div class="topbar">
+    <div class="mark">NBI · Weekly Digest</div>
+    <div class="meta">
+      <span>WD.029 · W1</span><span>APR 22 → APR 29</span><span>PRE-OOO</span>
+    </div>
+  </div>
+
+  <span class="eye cover-eye">Cycle 029 — Week 1 of 2 — Pre-OOO Push</span>
+  <h1 class="display">before i'm<br>out<span class="dot">.</span></h1>
+
+  <p class="lede">
+    Five working days before OOO. <b>Two open threads to close</b> &mdash; Pella's deferral report from the new ADP rep, and Haverhill's missing-participants list with Damien. Both wires land <b>5/1 mid-OOO</b>. Get the coverage pack airtight by Friday.
+  </p>
+
+  <div class="counters">
+    <div class="ctr">
+      <span class="label lbl">Must-close</span>
+      <div class="num">02</div>
+      <div class="sub">Before Friday</div>
+    </div>
+    <div class="ctr">
+      <span class="label lbl">Active</span>
+      <div class="num">04</div>
+      <div class="sub">Move this week</div>
+    </div>
+    <div class="ctr">
+      <span class="label lbl">Monitor</span>
+      <div class="num">06</div>
+      <div class="sub">Off the burner</div>
+    </div>
+  </div>
+</header>
+
+<!-- ──────────── BODY · WHITE EDITORIAL ──────────── -->
+<main>
+
+  <!-- HEAT -->
+  <section class="block">
+    <div class="section-head">
+      <h2>This week's heat</h2>
+      <span class="count">Must-close · <b>02</b></span>
+    </div>
+
+    <article class="heat-entry badge-red">
+      <div class="meta-col">
+        <span class="kicker">Must-close · 01</span>
+        <span class="due">Due Fri Apr 24</span>
+      </div>
+      <div>
+        <h3>Pella SC</h3>
+        <div class="who">ADP rep · Records · Me</div>
+      </div>
+      <p class="body">Deferral report from the <b>new ADP rep</b>. Population already in our system, so records side is straightforward. This is the one thread <b>coverage shouldn't have to chase</b>.</p>
+    </article>
+
+    <article class="heat-entry urgent">
+      <div class="meta-col">
+        <span class="kicker">Must-close · 02</span>
+        <span class="due">Due Fri Apr 24</span>
+      </div>
+      <div>
+        <h3>Haverhill <span style="color: var(--f-ink-50); font-weight: 400;">(Havern)</span></h3>
+        <div class="who">Damien · Records · Me</div>
+      </div>
+      <p class="body">Final sweep on Damien's missing-participant list. AQT flags placed; base file loaded. <b>Hand-off doc is the lever</b> &mdash; coverage needs to know who to escalate if a name resurfaces.</p>
+    </article>
+  </section>
+
+  <!-- HOLDING PATTERN -->
+  <section class="block">
+    <div class="section-head">
+      <h2>Holding pattern</h2>
+      <span class="count">Active · <b>02</b></span>
+    </div>
+
+    <div class="hold-list">
+      <div class="hold-row">
+        <span class="name">Callidi Tas</span>
+        <span class="line">Cleanup continues, blocked on <b>client DOB + DOH</b>.</span>
+        <span class="tgt">Close Target 5 / 06</span>
+      </div>
+      <div class="hold-row">
+        <span class="name">ISD Denver</span>
+        <span class="line">Intake. Nudge for <b>deferral file</b> this week; policy framing draft when there's a window.</span>
+        <span class="tgt">Intake</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MONITOR -->
+  <section class="block">
+    <div class="section-head">
+      <h2>Monitor</h2>
+      <span class="count">Off the burner · <b>06</b></span>
+    </div>
+
+    <div class="chip-row">
+      <span class="chip">Stoutco <span class="date">7/01</span><span class="note">client mtg next wk</span></span>
+      <span class="chip">Bonnier <span class="date">7/01</span><span class="note">quiet</span></span>
+      <span class="chip">Leiby's Dairy <span class="date">8/01</span></span>
+      <span class="chip">Prime Healthcare <span class="date">8/01</span><span class="note">on hold</span></span>
+      <span class="chip">Canam Bridges <span class="date">10/01</span></span>
+      <span class="chip">Canam Buildings <span class="date">10/01</span></span>
+    </div>
+  </section>
+
+</main>
+
+<!-- ──────────── FOOTER STRIP · DARK SURFACE ──────────── -->
+<footer class="strip">
+  <div class="cell"><span>Compiled</span><b>2026-04-22</b></div>
+  <div class="cell"><span>Operator</span><b>Joel</b></div>
+  <div class="cell"><span>Next compile · W2</span><b>Apr 29</b></div>
+</footer>
+
+</body>
+</html>

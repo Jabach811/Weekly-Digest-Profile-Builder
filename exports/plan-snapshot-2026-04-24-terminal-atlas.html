@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plan Snapshot · 2026-04-24 · Terminal Atlas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #071018;
+      --bg-2: #0b1622;
+      --panel: rgba(10, 20, 32, 0.92);
+      --panel-2: rgba(16, 29, 44, 0.88);
+      --ink: #edf6ff;
+      --muted: #9db1c6;
+      --line: rgba(237, 246, 255, 0.12);
+      --line-strong: rgba(237, 246, 255, 0.22);
+      --cyan: #4fe1d4;
+      --blue: #5aa0ff;
+      --amber: #f0c15b;
+      --green: #5cd088;
+      --red: #ff6b63;
+      --title-size: clamp(2rem, 5.8vw, 4.8rem);
+      --h2-size: clamp(1.2rem, 2.6vw, 2rem);
+      --h3-size: clamp(0.95rem, 1.45vw, 1.15rem);
+      --body-size: clamp(0.76rem, 0.98vw, 0.95rem);
+      --small-size: clamp(0.63rem, 0.8vw, 0.78rem);
+      --pad: clamp(1rem, 3vw, 2.4rem);
+      --gap: clamp(0.65rem, 1.25vw, 0.95rem);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%; margin: 0; overflow-x: hidden;
+      background:
+        radial-gradient(circle at top center, rgba(79,225,212,0.16), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(90,160,255,0.14), transparent 24%),
+        linear-gradient(180deg, #040c13 0%, var(--bg) 100%);
+      color: var(--ink); font-family: Inter, sans-serif; scroll-snap-type: y mandatory; scroll-behavior: smooth;
+    }
+    .progress-bar { position: fixed; top: 0; left: 0; height: 4px; width: 0; background: linear-gradient(90deg, var(--cyan), var(--blue), var(--green)); z-index: 1000; transition: width 220ms ease; }
+    .nav-dots { position: fixed; right: 0.8rem; top: 50%; transform: translateY(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 0.45rem; }
+    .nav-dots button { width: 0.76rem; height: 0.76rem; border-radius: 999px; border: 1px solid rgba(255,255,255,0.28); background: rgba(255,255,255,0.07); cursor: pointer; }
+    .nav-dots button.active { background: var(--cyan); border-color: var(--cyan); transform: scale(1.12); }
+    .slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; position: relative; display: flex; flex-direction: column; }
+    .slide::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.55; background-image: linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.016) 1px, transparent 1px); background-size: 100% 2rem, 2rem 100%; }
+    .slide-content { flex: 1; max-height: 100%; overflow: hidden; position: relative; z-index: 1; padding: var(--pad); display: flex; flex-direction: column; gap: var(--gap); }
+    .masthead, .footerline { display: flex; justify-content: space-between; align-items: center; font-family: "IBM Plex Mono", monospace; font-size: var(--small-size); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .masthead { padding-bottom: 0.7rem; border-bottom: 1px solid var(--line-strong); }
+    .brand { display: inline-flex; align-items: center; gap: 0.6rem; color: var(--ink); font-weight: 600; }
+    .brand::before { content: ""; width: 1.4rem; height: 0.28rem; border-radius: 999px; background: linear-gradient(90deg, var(--cyan), var(--blue)); }
+    h1, h2, h3 { margin: 0; }
+    h1, h2 { font-family: "Space Grotesk", sans-serif; letter-spacing: -0.04em; }
+    h1 { font-size: var(--title-size); line-height: 0.92; max-width: 11ch; font-weight: 700; }
+    h1 .accent { color: var(--cyan); }
+    h2 { font-size: var(--h2-size); line-height: 0.98; font-weight: 700; }
+    h3 { font-size: var(--h3-size); line-height: 1.1; font-weight: 800; text-transform: uppercase; }
+    p, li { margin: 0; font-size: var(--body-size); line-height: 1.42; }
+    .lede { max-width: 64ch; color: #d5e3f0; font-size: clamp(0.93rem, 1.15vw, 1.05rem); line-height: 1.52; }
+    .hero-grid, .two-grid, .metric-grid, .atlas-grid, .window-grid, .check-grid { display: grid; gap: 0.8rem; min-height: 0; }
+    .hero-grid { grid-template-columns: 1.08fr 0.92fr; flex: 1; }
+    .two-grid, .atlas-grid, .check-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .metric-grid, .window-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .panel { background: linear-gradient(180deg, rgba(255,255,255,0.025), transparent 34%), var(--panel); border: 1px solid var(--line); box-shadow: 0 24px 80px rgba(0,0,0,0.26); min-height: 0; display: flex; flex-direction: column; }
+    .panel-header { padding: 0.72rem 0.9rem; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 0.45rem; }
+    .panel-body { padding: 0.9rem; display: grid; gap: 0.68rem; min-height: 0; }
+    .metric { background: var(--panel-2); border: 1px solid var(--line); padding: 0.75rem; display: grid; gap: 0.28rem; }
+    .metric .k, .mini, .tag { font-family: "IBM Plex Mono", monospace; font-size: var(--small-size); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .metric .n { font-family: "Space Grotesk", sans-serif; font-size: clamp(1.85rem, 3.6vw, 2.9rem); line-height: 0.9; font-weight: 700; }
+    .tagline { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.44rem; border: 1px solid currentColor; font-family: "IBM Plex Mono", monospace; font-size: var(--small-size); text-transform: uppercase; letter-spacing: 0.08em; color: currentColor; }
+    .is-cyan { color: var(--cyan); } .is-blue { color: var(--blue); } .is-amber { color: var(--amber); } .is-green { color: var(--green); } .is-red { color: var(--red); }
+    .trace { display: grid; gap: 0.3rem; padding-left: 0.9rem; border-left: 0.2rem solid rgba(79,225,212,0.18); }
+    .trace p { color: #d7e5f2; }
+    .atlas-card { background: var(--panel-2); border: 1px solid var(--line); padding: 0.82rem; display: grid; gap: 0.36rem; }
+    .atlas-card .route { font-family: "IBM Plex Mono", monospace; font-size: var(--small-size); color: var(--cyan); text-transform: uppercase; letter-spacing: 0.08em; }
+    .window { background: var(--panel-2); border: 1px solid var(--line); padding: 0.8rem; display: grid; gap: 0.34rem; }
+    .window .date { font-family: "IBM Plex Mono", monospace; font-size: var(--small-size); color: var(--amber); text-transform: uppercase; letter-spacing: 0.08em; }
+    .list { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.46rem; }
+    .list li { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem; }
+    .dot { width: 0.55rem; height: 0.55rem; border-radius: 999px; margin-top: 0.34rem; background: var(--cyan); }
+    .checklist { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+    .checklist li { display: grid; grid-template-columns: auto 1fr; gap: 0.52rem; padding-bottom: 0.45rem; border-bottom: 1px dashed var(--line); }
+    .box { width: 1rem; height: 1rem; border: 1px solid var(--line-strong); margin-top: 0.18rem; }
+    @media (max-width: 980px) {
+      .hero-grid, .two-grid, .metric-grid, .atlas-grid, .window-grid, .check-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-height: 700px) {
+      :root { --pad: clamp(0.8rem, 2.8vw, 1.9rem); --gap: clamp(0.45rem, 0.95vw, 0.8rem); --title-size: clamp(1.7rem, 4.1vw, 3.5rem); --body-size: clamp(0.7rem, 0.94vw, 0.9rem); }
+    }
+    @media (max-height: 600px) { .nav-dots { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="progress-bar"></div>
+  <nav class="nav-dots" aria-label="Slide navigation"></nav>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Terminal Atlas</span><span>snapshot 2026-04-24</span></div>
+    <div class="hero-grid">
+      <article class="panel"><div class="panel-body">
+        <div class="mini">atlas overview</div>
+        <h1>the routes are <span class="accent">clearer</span> now.</h1>
+        <p class="lede">This atlas views the plans as a system map: stable routes, fault routes, schedule routes, and horizon routes. The recent quantifier work made the map tighter because quiet plans now have dates and open-item counts instead of vague distance words.</p>
+        <div class="metric-grid">
+          <div class="metric"><span class="k">total</span><span class="n">13</span></div>
+          <div class="metric"><span class="k">active</span><span class="n">7</span></div>
+          <div class="metric"><span class="k">quiet by evidence</span><span class="n">6</span></div>
+          <div class="metric"><span class="k">named contradictions</span><span class="n">5</span></div>
+        </div>
+      </div></article>
+      <article class="panel"><div class="panel-header"><h3>Atlas legend</h3><span class="tagline is-cyan">map</span></div><div class="panel-body">
+        <div class="trace"><strong>Green routes</strong><p>Improved or de-risked work packets.</p></div>
+        <div class="trace"><strong>Red routes</strong><p>Current blockers and active fault lines.</p></div>
+        <div class="trace"><strong>Amber routes</strong><p>Contradictions, missing identifiers, and verification threads.</p></div>
+        <div class="trace"><strong>Blue / horizon routes</strong><p>Active steady work and future windows that matter later.</p></div>
+      </div></article>
+    </div>
+    <div class="footerline"><span>slides 01 / 08</span><span>terminal atlas</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Green Routes</span><span>improved state</span></div>
+    <h2>What got cleaner</h2>
+    <div class="atlas-grid">
+      <article class="atlas-card"><span class="route">callidi / improved</span><h3>External system block cleared</h3><p>Balances loaded, dummy reversal completed, $11M restored, 29 ref numbers reversed.</p></article>
+      <article class="atlas-card"><span class="route">haverhill / improved</span><h3>Pre-wire state is stable</h3><p>Base file loaded, AQT fix explained, flags placed. Remaining work is communication and coverage.</p></article>
+      <article class="atlas-card"><span class="route">tmg / improved</span><h3>Fix path validated</h3><p>Self-calculated YOS matched vendor records, making the next load more trustworthy.</p></article>
+      <article class="atlas-card"><span class="route">note</span><h3>Cleaner is not complete</h3><p>These routes are safer, not closed.</p></article>
+    </div>
+    <div class="footerline"><span>slides 02 / 08</span><span>green routes</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Red Routes</span><span>active pressure</span></div>
+    <h2>Current fault routes</h2>
+    <div class="two-grid">
+      <article class="panel"><div class="panel-header"><h3>Primary fault routes</h3><span class="tagline is-red">live</span></div><div class="panel-body">
+        <div class="trace"><strong>Callidi</strong><p>XKB/XKC not landing in Transact Detail; loans and elections are downstream.</p></div>
+        <div class="trace"><strong>COCC</strong><p>Routing defect and payroll cleanup active; residual dividends expected week of 4/27.</p></div>
+        <div class="trace"><strong>Pella</strong><p>Deferral report still missing with 5/1 only 7 days out from 4/24.</p></div>
+        <div class="trace"><strong>TMG</strong><p>~300 participant flip still needs the Monday YOS load.</p></div>
+      </div></article>
+      <article class="panel"><div class="panel-header"><h3>Secondary active routes</h3><span class="tagline is-blue">steady</span></div><div class="panel-body">
+        <div class="trace"><strong>Banyan</strong><p>Setup work sits in front of 5/14-5/27 and 6/1.</p></div>
+        <div class="trace"><strong>Haverhill</strong><p>5/1 asset day during OOO; email and handoff remain.</p></div>
+        <div class="trace"><strong>ISD</strong><p>Policy logic still unsettled even though the plan is quieter.</p></div>
+      </div></article>
+    </div>
+    <div class="footerline"><span>slides 03 / 08</span><span>red routes</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Amber Routes</span><span>verification layer</span></div>
+    <h2>Open contradiction map</h2>
+    <article class="panel"><div class="panel-header"><h3>Verification routes</h3><span class="tagline is-amber">pending</span></div><div class="panel-body">
+      <ul class="list">
+        <li><span class="dot"></span><span><strong>Banyan</strong> case number claim collides with Canam Bridges.</span></li>
+        <li><span class="dot"></span><span><strong>Banyan</strong> display name still needs confirmation.</span></li>
+        <li><span class="dot"></span><span><strong>Callidi</strong> older loan issue may or may not equal the XKB/XKC fault.</span></li>
+        <li><span class="dot"></span><span><strong>Callidi</strong> DOB/DOH closure still not explicitly stated.</span></li>
+        <li><span class="dot"></span><span><strong>COCC</strong> and <strong>TMG</strong> case numbers remain TBD.</span></li>
+      </ul>
+    </div></article>
+    <div class="footerline"><span>slides 04 / 08</span><span>amber routes</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Schedule Map</span><span>route timing</span></div>
+    <h2>The next stops</h2>
+    <div class="window-grid">
+      <article class="window"><span class="date">4/24 or 4/27</span><h3>COCC + Pella</h3><p>Routing fix and escalation targets.</p></article>
+      <article class="window"><span class="date">4/27-5/1</span><h3>Haverhill</h3><p>OOO coverage interval.</p></article>
+      <article class="window"><span class="date">5/1</span><h3>Pella + Haverhill</h3><p>Liquidation and asset day.</p></article>
+      <article class="window"><span class="date">5/14-5/27</span><h3>Banyan</h3><p>Limited-access window.</p></article>
+      <article class="window"><span class="date">5/28</span><h3>Banyan</h3><p>Blackout lifts.</p></article>
+      <article class="window"><span class="date">6/1</span><h3>Banyan</h3><p>Wire / asset transfer.</p></article>
+      <article class="window"><span class="date">7/1</span><h3>ISD / Stoutco / Bonnier</h3><p>July routes.</p></article>
+      <article class="window"><span class="date">8/1 + 10/1</span><h3>Prime / Leibys / Canam</h3><p>Later horizon routes.</p></article>
+    </div>
+    <div class="footerline"><span>slides 05 / 08</span><span>schedule map</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Quiet Routes</span><span>evidenced quiet</span></div>
+    <h2>What is quiet because the file says so</h2>
+    <div class="atlas-grid">
+      <article class="atlas-card"><span class="route">prime / hold</span><h3>No active work on file between 4/22 and 8/1 unless the schedule moves.</h3></article>
+      <article class="atlas-card"><span class="route">bonnier / future</span><h3>7/1 window. Open items on file: 0 as of 4/22.</h3></article>
+      <article class="atlas-card"><span class="route">stoutco / future</span><h3>7/1 window. No kickoff meeting yet; 0 open items on file.</h3></article>
+      <article class="atlas-card"><span class="route">leibys / future</span><h3>8/1 window. Meeting canceled 4/22; no active work before August unless schedule moves.</h3></article>
+      <article class="atlas-card"><span class="route">canam bridges / future</span><h3>10/1 window. Monitor only for movement.</h3></article>
+      <article class="atlas-card"><span class="route">canam bldgs / future</span><h3>10/1 window. Open items on file: 0 as of 4/22.</h3></article>
+    </div>
+    <div class="footerline"><span>slides 06 / 08</span><span>quiet routes</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Carry Map</span><span>next moves</span></div>
+    <h2>What to carry forward</h2>
+    <div class="check-grid">
+      <article class="panel"><div class="panel-header"><h3>Carry list</h3><span class="tagline is-red">act</span></div><div class="panel-body">
+        <ul class="checklist">
+          <li><span class="box"></span><span>Fix <strong>COCC</strong> routing and verify payroll cleanup.</span></li>
+          <li><span class="box"></span><span>Resolve <strong>Callidi</strong> XKB/XKC and run loans.</span></li>
+          <li><span class="box"></span><span>Pull <strong>Pella</strong> deferral report via Sally / the right contact.</span></li>
+          <li><span class="box"></span><span>Send <strong>Haverhill</strong> NBI email and finish OOO handoff.</span></li>
+          <li><span class="box"></span><span>Load <strong>TMG</strong> YOS and verify flips for ~300.</span></li>
+          <li><span class="box"></span><span>Confirm <strong>Banyan</strong> case number and naming.</span></li>
+        </ul>
+      </div></article>
+      <article class="panel"><div class="panel-header"><h3>Atlas read</h3><span class="tagline is-green">summary</span></div><div class="panel-body">
+        <p>The map is tighter because quiet plans now behave like quiet coordinates instead of vague paragraphs, while active uncertainty sits in named routes that can be worked directly.</p>
+      </div></article>
+    </div>
+    <div class="footerline"><span>slides 07 / 08</span><span>carry map</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Theme Note</span><span>instrument note</span></div>
+    <article class="panel"><div class="panel-body">
+      <h2>Terminal atlas is best for the fastest clean scan.</h2>
+      <p class="lede">This version trades drama for clarity. It is the easiest of the three to use as a recurring working map when the goal is “show me the routes, the stops, and the faults fast.”</p>
+    </div></article>
+    <div class="footerline"><span>slides 08 / 08</span><span>terminal atlas complete</span></div>
+  </div></section>
+
+  <script>
+    class SlidePresentation {
+      constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.progressBar = document.querySelector('.progress-bar');
+        this.navDotsContainer = document.querySelector('.nav-dots');
+        this.currentSlide = 0;
+        this.setupNavDots(); this.setupObservers(); this.setupEvents(); this.updateUI(0);
+      }
+      setupNavDots() {
+        this.navDotsContainer.innerHTML = '';
+        this.slides.forEach((_, i) => {
+          const dot = document.createElement('button');
+          dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+          dot.addEventListener('click', () => this.goToSlide(i));
+          this.navDotsContainer.appendChild(dot);
+        });
+      }
+      setupObservers() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => { if (entry.isIntersecting) this.updateUI(this.slides.indexOf(entry.target)); });
+        }, { threshold: 0.55 });
+        this.slides.forEach((slide) => observer.observe(slide));
+      }
+      setupEvents() {
+        document.addEventListener('keydown', (event) => {
+          if (['ArrowDown','ArrowRight',' ','PageDown'].includes(event.key)) { event.preventDefault(); this.goToSlide(Math.min(this.currentSlide + 1, this.slides.length - 1)); }
+          if (['ArrowUp','ArrowLeft','PageUp'].includes(event.key)) { event.preventDefault(); this.goToSlide(Math.max(this.currentSlide - 1, 0)); }
+        });
+      }
+      goToSlide(index) { this.slides[index].scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }
+      updateUI(index) {
+        this.currentSlide = index;
+        this.progressBar.style.width = `${((index + 1) / this.slides.length) * 100}%`;
+        Array.from(this.navDotsContainer.children).forEach((dot, i) => dot.classList.toggle('active', i === index));
+      }
+    }
+    new SlidePresentation();
+  </script>
+</body>
+</html>

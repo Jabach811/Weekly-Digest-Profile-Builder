@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Projects Snapshot — Lab Export</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;700&family=Major+Mono+Display&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:           #ede6d3;
+    --bg-panel:     #e3dac3;
+    --bg-panel-2:   #d9cfb4;
+    --ink:          #1a1f1d;
+    --ink-soft:     #3c4541;
+    --ink-mute:     #6a6f69;
+    --rust:         #c65a2e;
+    --rust-deep:    #a04620;
+    --teal:         #2d8e8a;
+    --teal-deep:    #1f6562;
+    --butter:       #b8882e;
+    --butter-soft:  #d4a854;
+    --rule:         rgba(26,31,29,.18);
+    --rule-strong:  rgba(26,31,29,.32);
+    --rule-faint:   rgba(26,31,29,.08);
+    --field-bg:     #f5efde;
+
+    --scanline-color:   rgba(26,31,29,.35);
+    --scanline-opacity: .035;
+
+    --mono:    "Space Mono", "JetBrains Mono", ui-monospace, monospace;
+    --sans:    "DM Sans", system-ui, -apple-system, sans-serif;
+    --display: "Major Mono Display", "Space Mono", monospace;
+
+    --paper:       var(--bg);
+    --paper-deep:  var(--bg-panel);
+    --accent:      var(--rust);
+    --accent-deep: var(--rust-deep);
+    --muted:       var(--ink-mute);
+    --ok:          var(--teal-deep);
+    --warn:        var(--butter);
+    --danger:      var(--rust);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      var(--scanline-color) 0px,
+      var(--scanline-color) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    opacity: var(--scanline-opacity);
+    pointer-events: none;
+    z-index: 100;
+    mix-blend-mode: multiply;
+  }
+
+  .app { position: relative; z-index: 2; height: 100vh; display: flex; flex-direction: column; }
+
+  header {
+    padding: 12px 28px;
+    border-bottom: 2px solid var(--rust);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono);
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.22em;
+    background: var(--bg-panel);
+  }
+  header .brand { font-weight: 700; color: var(--ink); letter-spacing: 0.28em; }
+  header .brand::before { content: "▪ "; color: var(--rust); }
+  header .meta { color: var(--ink-mute); }
+  header .meta span + span::before { content: " / "; color: var(--rust); margin: 0 4px; font-weight: 700; }
+
+  .stage { flex: 1; position: relative; overflow: hidden; }
+
+  .slide {
+    position: absolute; inset: 0;
+    padding: 40px 64px 80px;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .slide.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .slide::-webkit-scrollbar { width: 6px; }
+  .slide::-webkit-scrollbar-track { background: transparent; }
+  .slide::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+
+  nav.footer {
+    border-top: 1px solid var(--rule);
+    padding: 10px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--paper);
+  }
+  nav.footer .dots { display: flex; gap: 6px; }
+  nav.footer .dot {
+    width: 8px; height: 8px; border: 1px solid var(--ink);
+    cursor: pointer; transition: background 0.15s;
+    background: transparent;
+  }
+  nav.footer .dot.active { background: var(--accent); border-color: var(--accent); }
+  nav.footer .dot:hover { background: var(--ink); }
+  nav.footer button {
+    background: transparent; border: 1px solid var(--ink); color: var(--ink);
+    font: inherit; padding: 6px 14px; cursor: pointer; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background 0.15s, color 0.15s;
+  }
+  nav.footer button:hover { background: var(--ink); color: var(--paper); }
+  nav.footer button:disabled { opacity: 0.3; cursor: not-allowed; }
+  nav.footer .kbd-hint { color: var(--muted); }
+
+  p, li { font-size: 16px; line-height: 1.55; max-width: 72ch; }
+
+  /* ===== COVER / TITLE ===== */
+  .cover { padding: 0 !important; overflow-y: auto; }
+  .cover-inner { display: flex; flex-direction: column; min-height: 100%; }
+
+  .cover-mast {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; padding: 18px 40px;
+    background: var(--bg-panel); position: relative;
+  }
+  .cover-mast::after {
+    content: ""; position: absolute;
+    left: 0; right: 0; bottom: -2px; height: 2px;
+    background: var(--rust);
+  }
+  .cover-mast-left { display: flex; align-items: center; gap: 18px; min-width: 0; }
+  .sigil {
+    width: 38px; height: 38px;
+    border: 1.5px solid var(--ink); border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--display); font-size: 17.5px;
+    color: var(--ink); position: relative; flex-shrink: 0;
+  }
+  .sigil::after {
+    content: ""; position: absolute; inset: 3px;
+    border: 1px solid var(--rule); border-radius: 50%;
+  }
+  .mast-title {
+    font-family: var(--display); font-size: 19px;
+    letter-spacing: 0.04em; color: var(--ink);
+    text-transform: lowercase; white-space: nowrap;
+  }
+  .mast-stencil {
+    font-family: var(--mono); font-size: 12px;
+    letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 4px 10px;
+    border: 1px solid var(--rule-strong); border-radius: 2px;
+    white-space: nowrap;
+  }
+  .mast-stencil .sep { color: var(--rust); margin: 0 6px; font-weight: 700; }
+  .mast-folio {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .mast-folio b { color: var(--ink); font-weight: 700; }
+
+  .cover-band {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    padding: 48px 40px 32px;
+  }
+  .strapline { min-width: 0; }
+  .strapline-eye {
+    font-family: var(--mono); font-size: 12px;
+    letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .strapline-eye .tick {
+    display: inline-block; width: 22px; height: 1px; background: var(--rust);
+  }
+  .cover-h1 {
+    font-family: var(--display);
+    font-size: clamp(42px, 6.4vw, 84px);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    margin: 0 0 18px;
+    line-height: 1.05;
+    text-transform: lowercase;
+    font-weight: 400;
+  }
+  .cover-h1 em { font-style: normal; color: var(--rust); }
+  .cover-sub {
+    font-family: var(--sans);
+    color: var(--ink-soft);
+    font-size: 17px;
+    line-height: 1.55;
+    max-width: 64ch;
+  }
+  .cover-sub b {
+    color: var(--ink); font-weight: 600;
+    border-bottom: 1px dotted var(--rust);
+  }
+
+  /* ===== ROSTER ===== */
+  .roster {
+    border: 1px solid var(--rule-strong);
+    background: var(--bg);
+    border-radius: 2px;
+  }
+  .roster-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 18px;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--rule-strong);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .roster-head .live-dot { color: var(--rust); margin-right: 6px; }
+  .roster-head .right { color: var(--ink-mute); }
+  .roster-head .right b { color: var(--ink); font-weight: 700; }
+
+  .roster-row {
+    display: grid;
+    grid-template-columns: 40px minmax(180px, 1.1fr) auto minmax(130px, auto) minmax(220px, 1.4fr) auto;
+    align-items: center;
+    gap: 18px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--rule-faint);
+    font-family: var(--mono);
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .roster-row:last-child { border-bottom: none; }
+  .roster-row:hover { background: rgba(45,142,138,.08); }
+  .roster-row:hover .r-name { color: var(--rust); }
+  .roster-row:hover .r-arrow { color: var(--rust); transform: translateX(3px); }
+  .roster-row .state {
+    min-width: 92px;
+    text-align: center;
+    padding: 4px 10px;
+    justify-self: start;
+  }
+  .r-num {
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+  }
+  .r-name {
+    font-family: var(--sans);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink);
+    transition: color 0.15s;
+  }
+  .r-name em { font-style: normal; color: var(--rust); font-weight: 700; }
+  .r-date {
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .r-date-label {
+    display: block;
+    font-size: 9px;
+    color: var(--ink-mute);
+    letter-spacing: 0.28em;
+    font-weight: 400;
+    margin-bottom: 2px;
+  }
+  .r-block {
+    color: var(--ink-soft);
+    font-family: var(--sans);
+    font-size: 13.5px;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1.35;
+  }
+  .r-block b { color: var(--ink); font-weight: 600; }
+  .r-arrow {
+    color: var(--ink-mute);
+    font-family: var(--display);
+    font-size: 16px;
+    transition: color 0.15s, transform 0.15s;
+  }
+
+  .cover-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    background: var(--bg);
+  }
+  .cover-strip .cell {
+    padding: 16px 24px;
+    border-right: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .cover-strip .cell:last-child { border-right: none; }
+  .cover-strip .cell b {
+    display: block;
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    margin-top: 4px;
+  }
+
+  /* ===== STATE PILLS ===== */
+  .state {
+    display: inline-block;
+    padding: 3px 9px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 2px;
+    border: 1px solid;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .state.flight   { background: var(--teal); color: #fff; border-color: var(--teal-deep); }
+  .state.scaffold { background: transparent; color: var(--butter); border-color: var(--butter); }
+  .state.idea     { background: transparent; color: var(--ink-mute); border-color: var(--ink-mute); }
+  .state.shipped  { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .state.ready    { background: var(--rust); color: #fff; border-color: var(--rust-deep); }
+  .state.folded   { background: var(--ink-mute); color: var(--bg); border-color: var(--ink-mute); }
+  .state.pattern  { background: var(--butter-soft); color: var(--ink); border-color: var(--butter); }
+  .state.pending  { background: transparent; color: var(--rust); border-color: var(--rust); }
+
+  /* ===== EYE ===== */
+  .eye {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .eye .tick {
+    display: inline-block; width: 22px; height: 1px; background: var(--rust);
+  }
+
+  /* ===== PROJECT DETAIL (same geometry as plan) ===== */
+  .slide.plan { padding: 44px 72px 80px; }
+
+  .plan-head { margin-bottom: 32px; }
+
+  .plan-display-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .plan-h1 {
+    font-family: var(--display);
+    font-size: clamp(40px, 5.4vw, 72px);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    line-height: 1;
+    text-transform: lowercase;
+    font-weight: 400;
+    margin: 0;
+  }
+  .plan-h1 em { font-style: normal; color: var(--rust); }
+
+  .plan-eff {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-align: right;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+  .plan-eff b {
+    display: block;
+    color: var(--ink);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .plan-meta-strip {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    flex-wrap: wrap;
+  }
+  .plan-meta-strip .meta-label { color: var(--ink-mute); }
+  .plan-meta-strip .meta-val { color: var(--ink); font-weight: 700; letter-spacing: 0.1em; margin-left: 4px; }
+  .plan-meta-strip .meta-sep { color: var(--rust); font-weight: 700; opacity: 0.7; }
+
+  .plan-lede {
+    font-family: var(--sans);
+    font-size: 19px;
+    line-height: 1.45;
+    color: var(--ink);
+    font-weight: 400;
+    max-width: 70ch;
+    margin: 0 0 36px;
+  }
+
+  .transmission {
+    position: relative;
+    border: 1px solid var(--rust);
+    background: var(--bg-panel);
+    padding: 22px 26px 22px 30px;
+    border-radius: 2px;
+    margin-bottom: 36px;
+  }
+  .transmission::before {
+    content: ""; position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 4px; background: var(--rust);
+  }
+  .transmission-label {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 12px;
+    font-weight: 700;
+  }
+  .transmission-label::before {
+    content: "⚑";
+    font-family: var(--display);
+    font-size: 20px;
+    line-height: 1;
+  }
+  .transmission-body {
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .transmission-body b { font-weight: 600; }
+  .transmission-body em { color: var(--rust); font-style: italic; }
+  .transmission-body ol,
+  .transmission-body ul {
+    margin: 10px 0 0;
+    padding-left: 22px;
+    font-size: 14.5px;
+    line-height: 1.65;
+  }
+  .transmission-body ol li,
+  .transmission-body ul li { margin: 4px 0; max-width: none; }
+
+  .panel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .panel {
+    position: relative;
+    border: 1px solid var(--rule-strong);
+    background: var(--bg);
+    padding: 22px 24px 24px;
+    border-radius: 2px;
+  }
+  .panel::before, .panel::after {
+    content: ""; position: absolute;
+    width: 10px; height: 10px;
+  }
+  .panel::before {
+    top: -1px; left: -1px;
+    border-top: 1.5px solid var(--rust);
+    border-left: 1.5px solid var(--rust);
+  }
+  .panel::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 1.5px solid var(--rust);
+    border-right: 1.5px solid var(--rust);
+  }
+  .panel-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .thread-list { list-style: none; padding: 0; margin: 0; }
+  .thread-list li {
+    padding: 12px 0;
+    border-bottom: 1px dotted var(--rule);
+  }
+  .thread-list li:first-child { padding-top: 0; }
+  .thread-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .thread-title {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+    display: flex; align-items: baseline; gap: 10px;
+    line-height: 1.35;
+  }
+  .thread-title::before {
+    content: "▸"; color: var(--rust);
+    font-size: 11px; flex-shrink: 0;
+  }
+  .thread-body {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    padding-left: 18px;
+    margin-top: 4px;
+    max-width: none;
+  }
+
+  .trigger-seq {
+    list-style: none; padding: 0; margin: 0;
+    counter-reset: seq;
+  }
+  .trigger-seq li {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 14px;
+    align-items: baseline;
+    padding: 11px 0;
+    border-bottom: 1px dotted var(--rule);
+    counter-increment: seq;
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.4;
+    max-width: none;
+  }
+  .trigger-seq li:first-child { padding-top: 0; }
+  .trigger-seq li:last-child { border-bottom: none; padding-bottom: 0; }
+  .trigger-seq li::before {
+    content: counter(seq, decimal-leading-zero);
+    font-family: var(--mono);
+    color: var(--rust);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    font-variant-numeric: tabular-nums;
+  }
+  .trigger-seq li::after {
+    content: "→";
+    color: var(--ink-mute);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  .off-plate {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+    align-items: center;
+    padding: 18px 22px;
+    background: var(--bg-panel);
+    border-left: 3px solid var(--teal);
+    border-radius: 2px;
+  }
+  .off-plate-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--teal-deep);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .off-plate-text {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .off-plate-text b { font-weight: 600; }
+
+  /* Tag chips under lede, project-flavored */
+  .proj-chips {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin: -18px 0 32px;
+  }
+  .proj-chip {
+    display: inline-block;
+    padding: 4px 10px;
+    border: 1px solid var(--rule-strong);
+    background: var(--bg-panel);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    border-radius: 2px;
+  }
+
+  @media (max-width: 900px) {
+    .slide { padding: 28px 24px 80px; }
+    .panel-grid { grid-template-columns: 1fr; gap: 24px; }
+    .roster-row {
+      grid-template-columns: 30px 1fr auto;
+      grid-auto-rows: auto;
+    }
+    .roster-row .r-date,
+    .roster-row .r-block { grid-column: 2 / 4; }
+  }
+
+  .slide.active > * { animation: rise 0.5s ease backwards; }
+  .slide.active > *:nth-child(1) { animation-delay: 0.05s; }
+  .slide.active > *:nth-child(2) { animation-delay: 0.1s; }
+  .slide.active > *:nth-child(3) { animation-delay: 0.15s; }
+  .slide.active > *:nth-child(4) { animation-delay: 0.2s; }
+  .slide.active > *:nth-child(5) { animation-delay: 0.25s; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header>
+    <div class="brand">Projects / Snapshot</div>
+    <div class="meta">
+      <span id="slide-label">01 — Roster</span>
+      <span>Wed · Apr 22, 2026</span>
+    </div>
+  </header>
+
+  <main class="stage" id="stage">
+
+    <!-- SLIDE 1: TITLE / ROSTER -->
+    <section class="slide cover active" data-label="01 — Roster">
+      <div class="cover-inner">
+
+        <header class="cover-mast">
+          <div class="cover-mast-left">
+            <span class="sigil" aria-hidden="true">N</span>
+            <span class="mast-title">nbi. projects snapshot</span>
+            <span class="mast-stencil">
+              PROJ.001<span class="sep">/</span>LAB EXPORT<span class="sep">/</span>REV. 2026-04-22
+            </span>
+          </div>
+          <div class="mast-folio">
+            FOLIO <b>№ 01 / 08</b>
+          </div>
+        </header>
+
+        <div class="cover-band">
+          <div class="strapline">
+            <div class="strapline-eye">
+              <span class="tick"></span>
+              SNAPSHOT / OPERATOR / JOEL · SR. DATA CONSULTANT
+            </div>
+            <h1 class="cover-h1">current<br/><em>projects.</em></h1>
+            <p class="cover-sub">
+              A snapshot of the <b>seven projects</b> in Joel's lab. Two in flight, one ready to ship, three in the idea column, one folded. Each row jumps to the full brief.
+            </p>
+          </div>
+
+          <div class="roster" role="list" aria-label="Project roster">
+            <div class="roster-head">
+              <span><span class="live-dot">●</span> PROJECT ROSTER</span>
+              <span class="right">PROJECTS <b>07</b> / IN FLIGHT <b>02</b> / READY <b>01</b></span>
+            </div>
+
+            <a class="roster-row" role="listitem" href="#slide-2" data-target="1">
+              <span class="r-num">01</span>
+              <span class="r-name">nbi <em>search</em></span>
+              <span class="state ready">Ready</span>
+              <span class="r-date"><span class="r-date-label">Ship Gate</span>1 blocker</span>
+              <span class="r-block"><b>Blocked by</b> self — replace file picker</span>
+              <span class="r-arrow">→</span>
+            </a>
+
+            <a class="roster-row" role="listitem" href="#slide-3" data-target="2">
+              <span class="r-num">02</span>
+              <span class="r-name">ta <em>brain</em></span>
+              <span class="state flight">In Flight</span>
+              <span class="r-date"><span class="r-date-label">Mode</span>Always On</span>
+              <span class="r-block"><b>Near term</b> Friday demo for Anthony — data-safety</span>
+              <span class="r-arrow">→</span>
+            </a>
+
+            <a class="roster-row" role="listitem" href="#slide-4" data-target="3">
+              <span class="r-num">03</span>
+              <span class="r-name">data <em>parser</em></span>
+              <span class="state flight">In Flight</span>
+              <span class="r-date"><span class="r-date-label">Function</span>~ 100%</span>
+              <span class="r-block"><b>Open</b> test coverage · summary-report decision</span>
+              <span class="r-arrow">→</span>
+            </a>
+
+            <a class="roster-row" role="listitem" href="#slide-5" data-target="4">
+              <span class="r-num">04</span>
+              <span class="r-name">ta brain <em>— tc section</em></span>
+              <span class="state pending">Pending</span>
+              <span class="r-date"><span class="r-date-label">Unlock</span>via demo</span>
+              <span class="r-block"><b>Blocked by</b> Anthony — buy-in after data-safety demo</span>
+              <span class="r-arrow">→</span>
+            </a>
+
+            <a class="roster-row" role="listitem" href="#slide-6" data-target="5">
+              <span class="r-num">05</span>
+              <span class="r-name">app portfolio <em>site</em></span>
+              <span class="state idea">Idea</span>
+              <span class="r-date"><span class="r-date-label">When Ready</span>Future</span>
+              <span class="r-block"><b>Dormant</b> — surfaces when enough apps are shipped</span>
+              <span class="r-arrow">→</span>
+            </a>
+
+            <a class="roster-row" role="listitem" href="#slide-7" data-target="6">
+              <span class="r-num">06</span>
+              <span class="r-name">excel → app <em>pipeline</em></span>
+              <span class="state pattern">Pattern</span>
+              <span class="r-date"><span class="r-date-label">Mode</span>Ongoing</span>
+              <span class="r-block"><b>Catch-all</b> — spin up child projects per candidate</span>
+              <span class="r-arrow">→</span>
+            </a>
+
+            <a class="roster-row" role="listitem" href="#slide-8" data-target="7">
+              <span class="r-num">07</span>
+              <span class="r-name">mapping <em>validator</em></span>
+              <span class="state folded">Folded</span>
+              <span class="r-date"><span class="r-date-label">Decision</span>2026-04-22</span>
+              <span class="r-block"><b>Killed</b> as standalone — lives inside Data Parser</span>
+              <span class="r-arrow">→</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="cover-strip">
+          <div class="cell">Operator <b>Joel</b></div>
+          <div class="cell">Role <b>Sr. Data Consultant</b></div>
+          <div class="cell">Projects <b>07 Logged</b></div>
+          <div class="cell">Nav <b>← → · click row</b></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 2: NBI SEARCH -->
+    <section class="slide plan" data-label="02 — NBI Search">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §01 / READY TO SHIP / SNAPSHOT
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">nbi <em>search</em></h1>
+          <div class="plan-eff">Ship Gate<b>1 blocker</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state ready">Ready</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Blocked by</span><span class="meta-val">Self · File picker</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Design</span><span class="meta-val">Locked · do not iterate</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">Fast search UI over NBI data. Design is locked and loved. One file-picker decision between here and launch.</p>
+
+      <div class="proj-chips">
+        <span class="proj-chip">ui</span>
+        <span class="proj-chip">search</span>
+        <span class="proj-chip">ship-blocker · file-path</span>
+      </div>
+
+      <div class="transmission">
+        <div class="transmission-label">Ship Blocker</div>
+        <div class="transmission-body">
+          Replace the file picker with a <b>hard-coded path</b> (or config-loaded path) plus a refresh button. Path-free launch experience is the whole exit criterion.
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Open Decision</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">Literal vs. config path</div>
+              <div class="thread-body">Cheapest: literal. Slightly more future-proof: config-loaded. Pick one and move.</div>
+            </li>
+            <li>
+              <div class="thread-title">Refresh button behavior</div>
+              <div class="thread-body">Re-read the source on click. No other UI for data source selection.</div>
+            </li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Next Moves</div>
+          <ol class="trigger-seq">
+            <li><span>Remove file-picker from the UI</span></li>
+            <li><span>Wire the refresh button</span></li>
+            <li><span>Decide literal vs. config path</span></li>
+            <li><span>Smoke test → ship</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="off-plate">
+        <div class="off-plate-label">Off Your Plate When</div>
+        <div class="off-plate-text">
+          <b>Path-free launch experience</b> — open the app, it loads, search works. That's shippable.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: TA BRAIN -->
+    <section class="slide plan" data-label="03 — TA Brain">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §02 / IN FLIGHT / SNAPSHOT
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">ta <em>brain</em></h1>
+          <div class="plan-eff">Mode<b>Always On</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state flight">In Flight</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Near term</span><span class="meta-val">Friday demo · Anthony</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Proof</span><span class="meta-val">Data-safety · sanitizer agent</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">Always-on project. Never fully off the list. Four open threads; the Anthony demo is the near-term anchor.</p>
+
+      <div class="proj-chips">
+        <span class="proj-chip">ui</span>
+        <span class="proj-chip">search</span>
+        <span class="proj-chip">animations</span>
+        <span class="proj-chip">always-on</span>
+      </div>
+
+      <div class="transmission">
+        <div class="transmission-label">Friday Demo · Anthony</div>
+        <div class="transmission-body">
+          Aim for a demo this week to open the TC-section conversation. Must prove <b>data-safety</b> via the sanitizer agent — without that, the TC-section unlock stays closed.
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Open Threads</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">Animations — expand coverage</div>
+              <div class="thread-body">Current placement is OK. Priority is <b>more</b> animations on processes that don't have them, not better placement on the table.</div>
+            </li>
+            <li>
+              <div class="thread-title">Concepts page redesign</div>
+              <div class="thread-body">Reads as one blur. Lighter categorization without over-categorizing. Sidebar stays open — don't collapse it.</div>
+            </li>
+            <li>
+              <div class="thread-title">Search — visibility</div>
+              <div class="thread-body">Works, could be more visible. Add a <code>/</code> command palette, same pattern as NBI Tracker.</div>
+            </li>
+            <li>
+              <div class="thread-title">Anthony demo</div>
+              <div class="thread-body">Schedule for Friday. Prep the data-safety walkthrough. Prove it before asking for anything.</div>
+            </li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Next Moves</div>
+          <ol class="trigger-seq">
+            <li><span>Find more places to add animation</span></li>
+            <li><span>Redesign concepts page layout</span></li>
+            <li><span>Add <code>/</code> command palette to search</span></li>
+            <li><span>Schedule Anthony demo · prep data-safety walkthrough</span></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: DATA PARSER -->
+    <section class="slide plan" data-label="04 — Data Parser">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §03 / IN FLIGHT / SNAPSHOT
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">data <em>parser</em></h1>
+          <div class="plan-eff">Function<b>~ 100%</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state flight">In Flight</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Open</span><span class="meta-val">Test coverage · summary report</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Rule</span><span class="meta-val">Correctness only · no design</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">Parse and validate incoming data files for plan conversions. Functionality is ~100%. No more style work — correctness only.</p>
+
+      <div class="proj-chips">
+        <span class="proj-chip">data</span>
+        <span class="proj-chip">parser</span>
+        <span class="proj-chip">test-coverage</span>
+        <span class="proj-chip">function-first</span>
+      </div>
+
+      <div class="transmission">
+        <div class="transmission-label">Scope Rule</div>
+        <div class="transmission-body">
+          Mapping Validator <b>lives inside this project</b> — do not extract. The 2-for-1 is the point. If validator coverage is thin, add it to the parser tests; don't spin up a new repo.
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Open Items</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">Golden test set</div>
+              <div class="thread-body">Build a reference set of input files that prove correctness across the conversion shapes we actually see.</div>
+            </li>
+            <li>
+              <div class="thread-title">Secondary summary report</div>
+              <div class="thread-body">Kill it or keep it? If keep → tighten the logic. Either path still requires the test files.</div>
+            </li>
+            <li>
+              <div class="thread-title">Mapping-validator coverage</div>
+              <div class="thread-body">Verify the validator behavior is covered by existing parser tests — or add the coverage.</div>
+            </li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Next Moves</div>
+          <ol class="trigger-seq">
+            <li><span>Build the golden-set of test input files</span></li>
+            <li><span>Decide summary report: kill or tighten</span></li>
+            <li><span>Verify mapping-validator coverage</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="off-plate">
+        <div class="off-plate-label">Off Your Plate When</div>
+        <div class="off-plate-text">
+          Golden set passes, summary-report decision is logged, validator coverage is green. No more design work — just correctness signal.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: TA BRAIN — TC SECTION -->
+    <section class="slide plan" data-label="05 — TA Brain TC Section">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §04 / PENDING UNLOCK / SNAPSHOT
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">ta brain <em>— tc section</em></h1>
+          <div class="plan-eff">Unlock<b>via ta-brain demo</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state pending">Pending</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Blocked by</span><span class="meta-val">Anthony · Buy-in</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Gate</span><span class="meta-val">Data-safety demo</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">Depends on Anthony buy-in, which depends on a clean data-safety demo. Unlocks a large section currently off-limits — "blow it out" once approved.</p>
+
+      <div class="proj-chips">
+        <span class="proj-chip">depends-on-anthony</span>
+        <span class="proj-chip">data-safety</span>
+        <span class="proj-chip">expansion</span>
+      </div>
+
+      <div class="transmission">
+        <div class="transmission-label">Dependency Chain</div>
+        <div class="transmission-body">
+          Friday demo (tracked in <b>ta-brain</b>) → Anthony approval → TC-section green light. Nothing in this project moves until that chain resolves. Don't start implementation ahead of approval.
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Hold Until</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">Sanitizer agent proven</div>
+              <div class="thread-body">Data-safety must be demonstrable end-to-end, not theoretical.</div>
+            </li>
+            <li>
+              <div class="thread-title">Anthony explicit buy-in</div>
+              <div class="thread-body">No ambiguous green lights. Locked-in "yes" before scoping the expansion.</div>
+            </li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Next Move</div>
+          <ol class="trigger-seq">
+            <li><span>Land the Anthony demo (tracked in ta-brain)</span></li>
+            <li><span>On approval → scope the TC-section expansion</span></li>
+            <li><span>Then blow it out</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="off-plate">
+        <div class="off-plate-label">Unlocks When</div>
+        <div class="off-plate-text">
+          Data-safety demo lands clean → Anthony buy-in → this page becomes the front-burner project.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: APP PORTFOLIO SITE -->
+    <section class="slide plan" data-label="06 — App Portfolio Site">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §05 / IDEA / SNAPSHOT
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">app portfolio <em>site</em></h1>
+          <div class="plan-eff">When Ready<b>Future</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state idea">Idea</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Trigger</span><span class="meta-val">Enough shipped apps</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Lift</span><span class="meta-val">Minimal index shell</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">A future dashboard hosting all side-apps under one roof. Inert until there's enough shipped to warrant it.</p>
+
+      <div class="proj-chips">
+        <span class="proj-chip">infra</span>
+        <span class="proj-chip">dashboard</span>
+        <span class="proj-chip">future</span>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Hold Condition</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">Shipped-app threshold not yet met</div>
+              <div class="thread-body">Don't build the index before there's anything to index. NBI Search is closest; TA Brain is always-on but not "shipped" in the distributable sense.</div>
+            </li>
+            <li>
+              <div class="thread-title">No hosting decision yet</div>
+              <div class="thread-body">Deferred deliberately. Cheapest viable once it's time.</div>
+            </li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Next Moves · When Ready</div>
+          <ol class="trigger-seq">
+            <li><span>Pick hosting (cheapest viable)</span></li>
+            <li><span>Stand up a minimal index shell</span></li>
+            <li><span>Wire the first shipped app in</span></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: EXCEL → APP PIPELINE -->
+    <section class="slide plan" data-label="07 — Excel → App Pipeline">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §06 / ONGOING PATTERN / SNAPSHOT
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">excel → app <em>pipeline</em></h1>
+          <div class="plan-eff">Mode<b>Ongoing</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state pattern">Pattern</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Shape</span><span class="meta-val">Not a single project</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Output</span><span class="meta-val">Child projects per candidate</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">Ongoing conversion pattern, not a single project. This file catches candidates. Each one, when it starts, spins up its own <code>projects/&lt;key&gt;.md</code>.</p>
+
+      <div class="proj-chips">
+        <span class="proj-chip">pattern</span>
+        <span class="proj-chip">ongoing</span>
+        <span class="proj-chip">conversion</span>
+      </div>
+
+      <div class="transmission">
+        <div class="transmission-label">How This Works</div>
+        <div class="transmission-body">
+          Take old Excel one-offs and rebuild as proper small apps. This page is a <b>catch-net</b>, not a backlog — candidates get logged here, then graduate to their own file the moment a specific one starts.
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Candidates</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">(none logged yet)</div>
+              <div class="thread-body">Add here as surfaced. The moment one starts → new <code>projects/&lt;key&gt;.md</code>.</div>
+            </li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Graduation Rule</div>
+          <ol class="trigger-seq">
+            <li><span>Candidate surfaces during real work</span></li>
+            <li><span>Log it here</span></li>
+            <li><span>When it actually starts → split into its own project file</span></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: MAPPING VALIDATOR -->
+    <section class="slide plan" data-label="08 — Mapping Validator">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §07 / FOLDED / SNAPSHOT
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">mapping <em>validator</em></h1>
+          <div class="plan-eff">Decision<b>2026-04-22</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state folded">Folded</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Killed as</span><span class="meta-val">Standalone project</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Lives in</span><span class="meta-val">Data Parser</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">Killed as a standalone project. The functionality already lives inside Data Parser and the 2-for-1 is the point.</p>
+
+      <div class="proj-chips">
+        <span class="proj-chip">decision-logged</span>
+        <span class="proj-chip">folded-into-data-parser</span>
+      </div>
+
+      <div class="transmission">
+        <div class="transmission-label">Decision · 2026-04-22</div>
+        <div class="transmission-body">
+          Do <b>not revisit extraction</b>. Mapping Validator is a capability of Data Parser, not a separate tool. This file exists only to log the decision and prevent the idea from silently re-surfacing later.
+        </div>
+      </div>
+
+      <div class="off-plate">
+        <div class="off-plate-label">Status</div>
+        <div class="off-plate-text">
+          Closed. If the urge comes back to extract → re-read this page first. The answer is still <b>no</b>.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="footer">
+    <button id="prev-btn">← Prev</button>
+    <div class="dots" id="dots"></div>
+    <span class="kbd-hint">← → to navigate</span>
+    <button id="next-btn">Next →</button>
+  </nav>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsContainer = document.getElementById('dots');
+  const slideLabel = document.getElementById('slide-label');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  let current = 0;
+
+  slides.forEach((s, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+    dot.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(dot);
+  });
+
+  function goTo(i) {
+    if (i < 0 || i >= slides.length) return;
+    slides[current].classList.remove('active');
+    dotsContainer.children[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    dotsContainer.children[current].classList.add('active');
+    slideLabel.textContent = slides[current].dataset.label;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === slides.length - 1;
+    slides[current].scrollTop = 0;
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); goTo(current + 1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'PageUp')   { e.preventDefault(); goTo(current - 1); }
+    if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    if (e.key === 'End')  { e.preventDefault(); goTo(slides.length - 1); }
+  });
+
+  document.querySelectorAll('.roster-row').forEach(row => {
+    row.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = parseInt(row.dataset.target, 10);
+      if (!Number.isNaN(target)) goTo(target);
+    });
+  });
+
+  prevBtn.disabled = true;
+</script>
+
+</body>
+</html>

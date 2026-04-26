@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Daily · 2026-04-26 · Caseload + Projects</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* CURSOR — warm minimalism */
+    --bg:           #f2f1ed;
+    --surface-100:  #f7f7f4;
+    --surface-300:  #ebeae5;
+    --surface-400:  #e6e5e0;
+    --surface-500:  #e1e0db;
+
+    --ink:          #26251e;
+    --ink-60:       rgba(38,37,30,0.60);
+    --ink-55:       rgba(38,37,30,0.55);
+    --ink-40:       rgba(38,37,30,0.40);
+    --ink-25:       rgba(38,37,30,0.25);
+    --ink-10:       rgba(38,37,30,0.10);
+    --ink-06:       rgba(38,37,30,0.06);
+
+    --accent:       #f54e00;
+    --error:        #cf2d56;
+    --success:      #1f8a65;
+    --gold:         #c08532;
+
+    /* Why-tag accents (timeline palette from spec) */
+    --t-thinking:   #dfa88f;
+    --t-grep:       #9fc9a2;
+    --t-read:       #9fbbe0;
+    --t-edit:       #c0a8dd;
+
+    --border:       rgba(38,37,30,0.10);
+    --border-2:     rgba(38,37,30,0.20);
+
+    --display:      "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --serif:        "Source Serif 4", "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
+    --mono:         "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+    --radius-sm:    4px;
+    --radius:       8px;
+    --radius-pill:  9999px;
+
+    --shadow-amb:   0 0 16px rgba(0,0,0,0.02), 0 0 8px rgba(0,0,0,0.008);
+    --shadow-card:  0 28px 70px rgba(0,0,0,0.05), 0 14px 32px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-feature-settings: "swsh" 1;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--ink); text-decoration: none; transition: color 150ms ease; }
+  a:hover { color: var(--error); }
+
+  ::selection { background: var(--accent); color: #fff; }
+
+  /* MASTHEAD */
+  .mast {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .mast-row {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 14px 28px 12px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 18px;
+    align-items: center;
+  }
+  .mast-brand {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: -0.11px;
+    color: var(--ink);
+  }
+  .mast-brand .accent { color: var(--accent); }
+  .mast-brand .sub {
+    margin-left: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--ink-55);
+    letter-spacing: 0.04em;
+  }
+  .mast-pill {
+    justify-self: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-60);
+    background: var(--surface-300);
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    letter-spacing: 0.04em;
+  }
+  .mast-pill b { color: var(--ink); font-weight: 600; }
+  .mast-pill .dot { color: var(--accent); }
+
+  .mast-counter {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-60);
+    letter-spacing: 0.02em;
+  }
+  .mast-counter b { color: var(--ink); font-weight: 600; }
+
+  .progress {
+    height: 4px;
+    background: var(--ink-06);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width 200ms ease;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 28px 80px;
+  }
+
+  /* LEDE */
+  .lede {
+    margin-bottom: 28px;
+  }
+  .lede-eye {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-55);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .lede-eye .tick {
+    width: 18px; height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+  .lede-h {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 44px;
+    line-height: 1.10;
+    letter-spacing: -1.32px;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .lede-h em { font-style: normal; color: var(--accent); }
+  .lede-p {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--ink-55);
+    max-width: 70ch;
+  }
+  .lede-p b {
+    color: var(--ink);
+    font-weight: 600;
+    font-feature-settings: "swsh" 1;
+  }
+
+  /* SECTION HEADER */
+  .sec-h {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 18px;
+    margin: 40px 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sec-h-title {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.11px;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sec-h-title .glyph {
+    font-family: var(--mono);
+    color: var(--accent);
+    font-size: 16px;
+  }
+  .sec-h-title .count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-55);
+    margin-left: 4px;
+    letter-spacing: 0.04em;
+  }
+  .sec-h-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  /* PILL BUTTON */
+  .pill-btn {
+    font-family: var(--display);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-60);
+    background: var(--surface-400);
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: color 150ms ease, background 150ms ease;
+    user-select: none;
+  }
+  .pill-btn:hover { color: var(--error); }
+  .pill-btn.is-active {
+    background: var(--surface-500);
+    color: var(--ink);
+    border-color: var(--border-2);
+  }
+
+  /* DON'T FORGET */
+  .nudge {
+    background: var(--surface-400);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-amb);
+  }
+  .nudge-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 18px;
+  }
+  .nudge-item {
+    display: grid;
+    grid-template-columns: 18px 1fr auto;
+    gap: 10px;
+    align-items: start;
+    padding: 8px 0;
+    border-top: 1px dotted var(--border);
+  }
+  .nudge-item:nth-child(-n+2) { border-top: none; padding-top: 0; }
+  .nudge-item.is-dismissed { display: none; }
+  .nudge-marker {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-25);
+    line-height: 1.55;
+    text-align: center;
+  }
+  .nudge-marker.sev-r { color: var(--error); }
+  .nudge-marker.sev-o { color: var(--accent); }
+  .nudge-marker.sev-y { color: var(--gold); }
+  .nudge-marker.sev-g { color: var(--success); }
+  .nudge-body {
+    font-family: var(--serif);
+    font-size: 15.5px;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+  .nudge-body b { font-weight: 600; }
+  .nudge-why {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+  }
+  .why-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 1.4;
+    text-transform: lowercase;
+    letter-spacing: 0.02em;
+    padding: 2px 7px;
+    border-radius: var(--radius-pill);
+    background: var(--surface-500);
+    color: var(--ink-60);
+    border: 1px solid var(--border);
+  }
+  .why-tag.t-date     { background: #f3dcce; color: #7a3a1c; border-color: rgba(122,58,28,0.18); }
+  .why-tag.t-overdue  { background: #f3d5dd; color: #8a1d3a; border-color: rgba(138,29,58,0.20); }
+  .why-tag.t-people   { background: #d6ead8; color: #2e5c34; border-color: rgba(46,92,52,0.18); }
+  .why-tag.t-flag     { background: #ddd1ec; color: #4a3a6a; border-color: rgba(74,58,106,0.18); }
+  .why-tag.t-contra   { background: #f3d5dd; color: #8a1d3a; border-color: rgba(138,29,58,0.20); }
+  .why-tag.t-stale    { background: #e6e5e0; color: var(--ink-60); }
+  .why-tag.t-seq      { background: #d6e3ef; color: #244a6d; border-color: rgba(36,74,109,0.18); }
+  .nudge-x {
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1;
+    color: var(--ink-25);
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: var(--radius-sm);
+    transition: color 150ms ease;
+    user-select: none;
+  }
+  .nudge-x:hover { color: var(--error); }
+
+  /* AT-A-GLANCE */
+  .glance-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .glance {
+    background: var(--surface-400);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px 16px;
+    box-shadow: var(--shadow-amb);
+  }
+  .glance-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .glance-name {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: -0.11px;
+    color: var(--ink);
+  }
+  .glance-blocker {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-55);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .glance-next {
+    font-family: var(--serif);
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+  .glance-meta {
+    margin-top: 10px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-40);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .glance-meta b { color: var(--ink); font-weight: 600; }
+
+  /* STATE PILL */
+  .state {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1;
+    text-transform: lowercase;
+    letter-spacing: 0;
+    padding: 4px 9px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    background: var(--surface-300);
+    color: var(--ink-60);
+    white-space: nowrap;
+  }
+  .state.ramping { background: #d6ead8; color: #2e5c34; border-color: rgba(46,92,52,0.20); }
+  .state.waiting { background: #f4e6c7; color: #6e521e; border-color: rgba(110,82,30,0.20); }
+  .state.debate  { background: #f4dbcb; color: #7a3a1c; border-color: rgba(122,58,28,0.20); }
+  .state.flight  { background: #d6e3ef; color: #244a6d; border-color: rgba(36,74,109,0.20); }
+  .state.ship    { background: #ddd1ec; color: #4a3a6a; border-color: rgba(74,58,106,0.20); }
+  .state.idea    { background: var(--surface-500); color: var(--ink-55); }
+
+  /* CHECKLIST */
+  .grouplist {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .group {
+    background: var(--surface-100);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .group-h {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .group-name {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.11px;
+    color: var(--ink);
+  }
+  .group-name .case {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 10.5px;
+    color: var(--ink-40);
+    margin-left: 6px;
+    letter-spacing: 0.04em;
+  }
+  .group-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .flag-tag {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    color: var(--ink-55);
+    background: var(--surface-500);
+    padding: 2px 7px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    letter-spacing: 0.02em;
+  }
+  .flag-tag.warn { color: #7a3a1c; background: #f4dbcb; border-color: rgba(122,58,28,0.20); }
+  .flag-tag.alert { color: #8a1d3a; background: #f3d5dd; border-color: rgba(138,29,58,0.20); }
+
+  /* CHECK ITEM */
+  .checks { list-style: none; }
+  .check {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 7px 0;
+    border-bottom: 1px dotted var(--border);
+    transition: opacity 150ms ease;
+  }
+  .check:last-child { border-bottom: none; }
+  .check input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    margin-top: 4px;
+    border: 1.5px solid var(--ink-40);
+    border-radius: 3px;
+    background: transparent;
+    cursor: pointer;
+    transition: all 150ms ease;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .check input[type="checkbox"]:hover { border-color: var(--ink); }
+  .check input[type="checkbox"]:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .check input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    left: 3px; top: 0px;
+    width: 4px; height: 8px;
+    border: solid #fff;
+    border-width: 0 1.5px 1.5px 0;
+    transform: rotate(45deg);
+  }
+  .check label {
+    font-family: var(--serif);
+    font-size: 14.5px;
+    line-height: 1.45;
+    color: var(--ink);
+    cursor: pointer;
+    transition: color 150ms ease;
+  }
+  .check:hover label { color: var(--error); }
+  .check.is-done label {
+    text-decoration: line-through;
+    color: var(--ink-40);
+  }
+  .checks.is-hide-done .check.is-done { display: none; }
+  .check .ping {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-60);
+    background: var(--surface-300);
+    padding: 1px 7px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    margin-right: 6px;
+    letter-spacing: 0.02em;
+    vertical-align: 2px;
+  }
+  .check .ping.pin {
+    background: #d6ead8; color: #2e5c34; border-color: rgba(46,92,52,0.20);
+  }
+  .check .warn {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--error);
+    margin-right: 4px;
+    vertical-align: 1px;
+  }
+  .check .due {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    margin-left: 6px;
+    letter-spacing: 0.02em;
+  }
+  .check .due.overdue { color: var(--error); }
+
+  /* BACK BURNER */
+  .burner {
+    background: var(--surface-100);
+    border: 1px dashed var(--border-2);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+  .burner-row {
+    display: grid;
+    grid-template-columns: 200px auto 1fr;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px dotted var(--border);
+    align-items: baseline;
+  }
+  .burner-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .burner-row:first-child { padding-top: 0; }
+  .burner-name {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--ink-60);
+    letter-spacing: -0.11px;
+  }
+  .burner-row .state { justify-self: start; }
+  .burner-next {
+    font-family: var(--serif);
+    font-size: 13.5px;
+    color: var(--ink-55);
+    line-height: 1.45;
+  }
+
+  /* DATE RADAR */
+  .radar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  .day {
+    background: var(--surface-100);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 11px 11px;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+  }
+  .day.today {
+    background: var(--surface-400);
+    border-color: var(--border-2);
+  }
+  .day.next {
+    background: var(--surface-400);
+    border-color: var(--border-2);
+  }
+  .day.next .day-num { color: var(--accent); }
+  .day-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-55);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .day-num {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 19px;
+    letter-spacing: -0.11px;
+    color: var(--ink);
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+  .day.today .day-num { color: var(--accent); }
+  .day-event {
+    font-family: var(--serif);
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--ink);
+    padding: 4px 0;
+    border-top: 1px dotted var(--border);
+  }
+  .day-event:first-of-type { border-top: none; }
+  .day-event.alert { color: var(--error); font-weight: 600; }
+  .day-event.warn { color: var(--accent); font-weight: 600; }
+  .day-event .e-tag {
+    display: block;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    color: var(--ink-55);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 1px;
+    font-weight: 400;
+  }
+
+  /* FOOTER */
+  footer {
+    margin-top: 56px;
+    padding: 18px 0 0;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-55);
+    letter-spacing: 0.02em;
+  }
+  footer .src b { color: var(--ink); font-weight: 600; }
+  footer .reset {
+    color: var(--ink-55);
+    cursor: pointer;
+    border-bottom: 1px dotted var(--border-2);
+    padding-bottom: 1px;
+  }
+  footer .reset:hover { color: var(--error); }
+
+  /* RESPONSIVE */
+  @media (max-width: 1100px) {
+    .glance-grid { grid-template-columns: repeat(2, 1fr); }
+    .nudge-grid { grid-template-columns: 1fr; }
+    .nudge-item:nth-child(2) { border-top: 1px dotted var(--border); padding-top: 8px; }
+    .grouplist { grid-template-columns: 1fr; }
+    .radar { grid-template-columns: repeat(5, 1fr); }
+  }
+  @media (max-width: 820px) {
+    .radar { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 700px) {
+    main { padding: 24px 18px 60px; }
+    .lede-h { font-size: 32px; letter-spacing: -0.96px; }
+    .glance-grid { grid-template-columns: 1fr; }
+    .radar { grid-template-columns: repeat(2, 1fr); }
+    .mast-row { grid-template-columns: 1fr auto; gap: 10px; }
+    .mast-pill { display: none; }
+    .burner-row {
+      grid-template-columns: 1fr auto;
+      gap: 4px 10px;
+    }
+    .burner-row .burner-next { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-row">
+    <div class="mast-brand">daily<span class="accent">.</span><span class="sub">caseload + projects · sun 2026-04-26</span></div>
+    <div class="mast-pill"><b>day before OOO</b> <span class="dot">·</span> 4 active plans <span class="dot">·</span> 4 in-flight projects</div>
+    <div class="mast-counter"><b id="counter-done">0</b> / <b id="counter-total">0</b> done</div>
+  </div>
+  <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
+</header>
+
+<main>
+
+  <!-- LEDE -->
+  <section class="lede">
+    <div class="lede-eye"><span class="tick"></span>day sheet · derived from caseload/*.md + projects/*.md</div>
+    <h1 class="lede-h">pre-wire week. <em>OOO starts tomorrow.</em></h1>
+    <p class="lede-p">
+      <b>Two 5/1 wires</b> land mid-OOO (Haverhill assets, Pella liquidation). Callidi
+      moved Friday — Informatica is back, balances loaded — but XKB/XKC loans still
+      need diagnosis Monday. Hand-off doc to coverage is the single thing this
+      weekend can't end without.
+    </p>
+  </section>
+
+  <!-- DON'T FORGET -->
+  <div class="sec-h">
+    <div class="sec-h-title"><span class="glyph">◆</span> don't forget <span class="count">8 nudges</span></div>
+    <div class="sec-h-actions">
+      <span class="pill-btn" id="restore-nudges" title="bring back dismissed nudges">↺ restore dismissed</span>
+    </div>
+  </div>
+  <div class="nudge">
+    <div class="nudge-grid" id="nudge-grid">
+
+      <div class="nudge-item" data-nudge="handoff">
+        <div class="nudge-marker sev-o">●</div>
+        <div class="nudge-body">
+          <b>Hand-off doc owed before 4/27 OOO.</b> Coverage owns the 5/1 Haverhill asset load + post-wire recon. Write today or first-thing tomorrow morning.
+          <div class="nudge-why">
+            <span class="why-tag t-date">date · 1d</span>
+            <span class="why-tag t-seq">sequencing</span>
+            <span class="why-tag t-people">→ coverage</span>
+          </div>
+        </div>
+        <div class="nudge-x" data-x="handoff" title="dismiss">×</div>
+      </div>
+
+      <div class="nudge-item" data-nudge="callidi">
+        <div class="nudge-marker sev-o">●</div>
+        <div class="nudge-body">
+          <b>Callidi target slipped (was EOW 4/24).</b> Informatica resolved 4/26; balances loaded. XKB/XKC loans + Beth elections are the only remaining trigger — Monday.
+          <div class="nudge-why">
+            <span class="why-tag t-overdue">overdue · 2d</span>
+            <span class="why-tag t-date">date · mon</span>
+            <span class="why-tag t-people">→ Earl, Beth</span>
+          </div>
+        </div>
+        <div class="nudge-x" data-x="callidi" title="dismiss">×</div>
+      </div>
+
+      <div class="nudge-item" data-nudge="contradictions">
+        <div class="nudge-marker sev-o">●</div>
+        <div class="nudge-body">
+          <b>5 open contradictions in <code>contradictions/2026-04-24.md</code></b> — banyan case-number collision, callidi DOB/DOH closure, tmg vesting-fix pivot, callidi loan identity (XKB/XKC vs frozen-loan), NBI ambiguity. Block clean state.
+          <div class="nudge-why">
+            <span class="why-tag t-contra">contradiction · 5</span>
+            <span class="why-tag t-seq">decisions</span>
+          </div>
+        </div>
+        <div class="nudge-x" data-x="contradictions" title="dismiss">×</div>
+      </div>
+
+      <div class="nudge-item" data-nudge="wires">
+        <div class="nudge-marker sev-y">●</div>
+        <div class="nudge-body">
+          <b>Two 5/1 wires this week.</b> Haverhill assets inbound (full scope). Pella liquidation (5/1) still depends on the ADP deferral report.
+          <div class="nudge-why">
+            <span class="why-tag t-date">date · 5d</span>
+            <span class="why-tag t-seq">two plans</span>
+          </div>
+        </div>
+        <div class="nudge-x" data-x="wires" title="dismiss">×</div>
+      </div>
+
+      <div class="nudge-item" data-nudge="sally">
+        <div class="nudge-marker sev-y">●</div>
+        <div class="nudge-body">
+          <b>Pella ADP deferral report still in the air.</b> Group-email approach hasn't gotten a response. Confirm Sally's name + email, push her to bang on ADP directly Monday morning.
+          <div class="nudge-why">
+            <span class="why-tag t-people">→ Sally (tentative)</span>
+            <span class="why-tag t-date">date · 5d</span>
+          </div>
+        </div>
+        <div class="nudge-x" data-x="sally" title="dismiss">×</div>
+      </div>
+
+      <div class="nudge-item" data-nudge="nbi">
+        <div class="nudge-marker sev-y">●</div>
+        <div class="nudge-body">
+          <b>NBI mention is ambiguous.</b> "Trouble pushing my update out" could be the <code>nbi-search</code> deploy or the Haverhill NBI status email. Resolve before Monday.
+          <div class="nudge-why">
+            <span class="why-tag t-contra">contradiction</span>
+            <span class="why-tag t-flag">flag · push-stuck</span>
+          </div>
+        </div>
+        <div class="nudge-x" data-x="nbi" title="dismiss">×</div>
+      </div>
+
+      <div class="nudge-item" data-nudge="tabrain">
+        <div class="nudge-marker sev-y">●</div>
+        <div class="nudge-body">
+          <b>TA Brain demo underdelivered (4/24).</b> Post-demo "quick thumb" feedback email still owed. Light touch on Selina, Smith, Dave Slope channels — they came; keep them warm.
+          <div class="nudge-why">
+            <span class="why-tag t-flag">flag · demo-underdelivered</span>
+            <span class="why-tag t-people">→ Selina · Smith · Dave Slope</span>
+          </div>
+        </div>
+        <div class="nudge-x" data-x="tabrain" title="dismiss">×</div>
+      </div>
+
+      <div class="nudge-item" data-nudge="stale">
+        <div class="nudge-marker sev-g">●</div>
+        <div class="nudge-body">
+          <b>Stale (≥4 days):</b> data-parser hasn't moved since 4/22 — golden-set test files still owed. persistent-brain-rollout idle since 4/22 — needs a candidate teammate.
+          <div class="nudge-why">
+            <span class="why-tag t-stale">stale · 4d</span>
+            <span class="why-tag t-seq">touch or close</span>
+          </div>
+        </div>
+        <div class="nudge-x" data-x="stale" title="dismiss">×</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- AT-A-GLANCE -->
+  <div class="sec-h">
+    <div class="sec-h-title"><span class="glyph">▤</span> at a glance <span class="count">4 active</span></div>
+    <div class="sec-h-actions">
+      <span class="pill-btn filter-chip is-active" data-filter="all">all</span>
+      <span class="pill-btn filter-chip" data-filter="caseload">caseload</span>
+      <span class="pill-btn filter-chip" data-filter="projects">projects</span>
+    </div>
+  </div>
+  <div class="glance-grid">
+
+    <div class="glance">
+      <div class="glance-top">
+        <span class="glance-name">Haverhill</span>
+        <span class="state ramping">ramping</span>
+      </div>
+      <div class="glance-blocker">blocked · self / OOO coverage</div>
+      <div class="glance-next">Pre-wire clean. NBI status email + hand-off doc owed. 5/1 wire mid-OOO.</div>
+      <div class="glance-meta">EFF <b>5/01</b> · WIRE <b>5/01</b></div>
+    </div>
+
+    <div class="glance">
+      <div class="glance-top">
+        <span class="glance-name">Pella SC</span>
+        <span class="state ramping">ramping</span>
+      </div>
+      <div class="glance-blocker">blocked · ADP / deferral report</div>
+      <div class="glance-next">Confirm Sally; push ADP Monday. Liquidation 5/1 — moves only when report lands.</div>
+      <div class="glance-meta">EFF <b>5/01</b> · WIRE <b>5/01</b></div>
+    </div>
+
+    <div class="glance">
+      <div class="glance-top">
+        <span class="glance-name">ISD Denver</span>
+        <span class="state debate">debate</span>
+      </div>
+      <div class="glance-blocker">blocked · policy / deferral workflow</div>
+      <div class="glance-next">Deliver clean analysis package. Raise the "get the file earlier" question with client.</div>
+      <div class="glance-meta">EFF <b>7/01</b> · SCOPE <b>partial</b></div>
+    </div>
+
+    <div class="glance">
+      <div class="glance-top">
+        <span class="glance-name">Callidi Tas</span>
+        <span class="state ramping">ramping</span>
+      </div>
+      <div class="glance-blocker">blocked · XKB/XKC loans</div>
+      <div class="glance-next">Balances loaded 4/26. Diagnose XKB/XKC w/ Earl Monday; Beth processes elections.</div>
+      <div class="glance-meta">EFF <b>4/01</b> · WIRE <b>4/10</b> · TARGET <b>was 4/24</b></div>
+    </div>
+
+  </div>
+
+  <!-- CASELOAD CHECKLIST -->
+  <div class="sec-h" data-section="caseload">
+    <div class="sec-h-title"><span class="glyph">⊟</span> caseload · today <span class="count" id="case-count">0</span></div>
+    <div class="sec-h-actions">
+      <span class="pill-btn" data-toggle="hide-done" data-target="#caseload-checks">hide completed</span>
+    </div>
+  </div>
+  <div class="grouplist" id="caseload-checks">
+
+    <div class="group" data-group="haverhill">
+      <div class="group-h">
+        <div class="group-name">Haverhill <span class="case">TA069932-00051</span></div>
+        <div class="group-tags">
+          <span class="flag-tag warn">contact-change</span>
+          <span class="flag-tag warn">coverage-needed</span>
+          <span class="flag-tag">pre-wire-clean</span>
+        </div>
+      </div>
+      <ul class="checks">
+        <li class="check"><input type="checkbox" data-id="hav-1"><label data-for="hav-1"><span class="ping pin">→ Beth</span>Send NBI status email.</label></li>
+        <li class="check"><input type="checkbox" data-id="hav-2"><label data-for="hav-2"><span class="ping">→ coverage</span>Hand-off doc owed before OOO starts.<span class="due">due 4/27</span></label></li>
+        <li class="check"><input type="checkbox" data-id="hav-3"><label data-for="hav-3">Post-OOO · reconcile asset load, close loop with backup contact.</label></li>
+      </ul>
+    </div>
+
+    <div class="group" data-group="pella">
+      <div class="group-h">
+        <div class="group-name">Pella SC <span class="case">QK63283-00052</span></div>
+        <div class="group-tags">
+          <span class="flag-tag warn">deferral-workaround</span>
+          <span class="flag-tag warn">contact-chasing</span>
+          <span class="flag-tag">adp</span>
+        </div>
+      </div>
+      <ul class="checks">
+        <li class="check"><input type="checkbox" data-id="pel-1"><label data-for="pel-1">Confirm Pella-side contact name (tentative: <span class="ping">→ Sally</span>) and email.<span class="due overdue">slipped 4/24</span></label></li>
+        <li class="check"><input type="checkbox" data-id="pel-2"><label data-for="pel-2"><span class="ping pin">→ Sally</span>Push ADP for the deferral report Monday morning. <em>Do not roll to next cycle.</em></label></li>
+        <li class="check"><input type="checkbox" data-id="pel-3"><label data-for="pel-3">Log ADP rep's name + email once surfaced (still missing from 4/22).</label></li>
+        <li class="check"><input type="checkbox" data-id="pel-4"><label data-for="pel-4">Confirm whether a base file is required.</label></li>
+      </ul>
+    </div>
+
+    <div class="group" data-group="isd">
+      <div class="group-h">
+        <div class="group-name">ISD Denver <span class="case">TA069932-00056</span></div>
+        <div class="group-tags">
+          <span class="flag-tag">startup</span>
+          <span class="flag-tag">partial-scope</span>
+          <span class="flag-tag warn">policy-debate</span>
+        </div>
+      </div>
+      <ul class="checks">
+        <li class="check"><input type="checkbox" data-id="isd-1"><label data-for="isd-1">Deliver clean analysis package on the deferral workflow.</label></li>
+        <li class="check"><input type="checkbox" data-id="isd-2"><label data-for="isd-2">Raise the "get the file earlier" question with the client — no stated reason to wait.</label></li>
+        <li class="check"><input type="checkbox" data-id="isd-3"><label data-for="isd-3">Surface the precedent debate for broader policy discussion (multiple incoming plans hit the same shape).</label></li>
+        <li class="check"><input type="checkbox" data-id="isd-4"><label data-for="isd-4">Confirm partial-scope boundaries with the team (no payroll, no wire).</label></li>
+      </ul>
+    </div>
+
+    <div class="group" data-group="callidi">
+      <div class="group-h">
+        <div class="group-name">Callidi Tas <span class="case">JK62945-00001</span></div>
+        <div class="group-tags">
+          <span class="flag-tag warn">loan-issue</span>
+          <span class="flag-tag">post-balance-load</span>
+          <span class="flag-tag">paychex</span>
+        </div>
+      </div>
+      <ul class="checks">
+        <li class="check"><input type="checkbox" data-id="cal-1"><label data-for="cal-1"><span class="warn">⚠</span><span class="ping pin">→ Earl</span>Diagnose XKB/XKC loans not landing in Transact Detail. Pull Earl in Monday if not solved EOD.<span class="due">due mon</span></label></li>
+        <li class="check"><input type="checkbox" data-id="cal-2"><label data-for="cal-2">Re-run / process loans once XKB/XKC is resolved.</label></li>
+        <li class="check"><input type="checkbox" data-id="cal-3"><label data-for="cal-3"><span class="ping pin">→ Beth</span>Process elections Monday.<span class="due">due mon</span></label></li>
+        <li class="check"><input type="checkbox" data-id="cal-4"><label data-for="cal-4"><span class="warn">⚠</span>Confirm whether 4/22 "frozen/unfrozen / re-amortize" loan issue is the same as XKB/XKC, or still separate. <em>(contradiction)</em></label></li>
+        <li class="check"><input type="checkbox" data-id="cal-5"><label data-for="cal-5"><span class="warn">⚠</span>Confirm DOB/DOH from client is fully resolved (balances staged anyway). <em>(contradiction)</em></label></li>
+        <li class="check"><input type="checkbox" data-id="cal-6"><label data-for="cal-6">Surface balance-file completeness issue up the chain. <em>(transmission-worthy)</em></label></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- PROJECTS CHECKLIST -->
+  <div class="sec-h" data-section="projects">
+    <div class="sec-h-title"><span class="glyph">▦</span> projects · in flight <span class="count" id="proj-count">0</span></div>
+    <div class="sec-h-actions">
+      <span class="pill-btn" data-toggle="hide-done" data-target="#projects-checks">hide completed</span>
+    </div>
+  </div>
+  <div class="grouplist" id="projects-checks">
+
+    <div class="group" data-group="nbi-search">
+      <div class="group-h">
+        <div class="group-name">nbi-search <span class="state ship" style="margin-left:6px">ready-to-ship</span></div>
+        <div class="group-tags">
+          <span class="flag-tag alert">push-stuck</span>
+          <span class="flag-tag alert">ship-blocker · file-picker</span>
+          <span class="flag-tag warn">ambiguous-with-haverhill-nbi</span>
+        </div>
+      </div>
+      <ul class="checks">
+        <li class="check"><input type="checkbox" data-id="nbi-1"><label data-for="nbi-1"><span class="warn">⚠</span>Confirm whether 4/24 "trouble pushing my update out" refers to this app or the Haverhill NBI status email. <em>(contradiction)</em></label></li>
+        <li class="check"><input type="checkbox" data-id="nbi-2"><label data-for="nbi-2">If app: diagnose what's blocking the push Monday; resolve.</label></li>
+        <li class="check"><input type="checkbox" data-id="nbi-3"><label data-for="nbi-3">Replace file-picker with hard-coded / config-loaded path.</label></li>
+        <li class="check"><input type="checkbox" data-id="nbi-4"><label data-for="nbi-4">Wire refresh button.</label></li>
+        <li class="check"><input type="checkbox" data-id="nbi-5"><label data-for="nbi-5">Decide whether path is literal or config-driven.</label></li>
+      </ul>
+    </div>
+
+    <div class="group" data-group="ta-brain">
+      <div class="group-h">
+        <div class="group-name">ta-brain <span class="state flight" style="margin-left:6px">flight</span></div>
+        <div class="group-tags">
+          <span class="flag-tag alert">demo-underdelivered</span>
+          <span class="flag-tag warn">needs-better-prep</span>
+          <span class="flag-tag">always-on</span>
+        </div>
+      </div>
+      <ul class="checks">
+        <li class="check"><input type="checkbox" data-id="tab-1"><label data-for="tab-1"><span class="ping pin">→ attendees</span>Send post-demo "quick thumb" feedback email. <em>Highest priority of the project group.</em></label></li>
+        <li class="check"><input type="checkbox" data-id="tab-2"><label data-for="tab-2"><span class="ping">→ Anthony</span>Schedule follow-up TC-section demo with reserved prep time (first one underdelivered).</label></li>
+        <li class="check"><input type="checkbox" data-id="tab-3"><label data-for="tab-3"><span class="ping">→ Selina · Smith · Dave Slope</span>Light-touch maintenance on open channels.</label></li>
+        <li class="check"><input type="checkbox" data-id="tab-4"><label data-for="tab-4">Find more places to add animation (current placement OK; need <em>more</em>, not better).</label></li>
+        <li class="check"><input type="checkbox" data-id="tab-5"><label data-for="tab-5">Redesign concepts page layout (reads as one blur — lighter categorization).</label></li>
+        <li class="check"><input type="checkbox" data-id="tab-6"><label data-for="tab-6">Add <code>/</code> command palette to search (NBI-Tracker pattern).</label></li>
+      </ul>
+    </div>
+
+    <div class="group" data-group="slide-creator">
+      <div class="group-h">
+        <div class="group-name">slide-creator <span class="state flight" style="margin-left:6px">flight</span></div>
+        <div class="group-tags">
+          <span class="flag-tag">pipeline</span>
+          <span class="flag-tag">side-app</span>
+        </div>
+      </div>
+      <ul class="checks">
+        <li class="check"><input type="checkbox" data-id="slc-1"><label data-for="slc-1">Run the 4/24 Calidus screenshots through the current pipeline to surface gaps. <em>Joel: "really want to do that this cycle."</em></label></li>
+        <li class="check"><input type="checkbox" data-id="slc-2"><label data-for="slc-2">Tune worksheet → slide template (callouts, "important to remember" pull-quotes, numbered procedure steps).</label></li>
+        <li class="check"><input type="checkbox" data-id="slc-3"><label data-for="slc-3">Capture COCC residual-dividend run screenshots next week and feed them through.</label></li>
+        <li class="check"><input type="checkbox" data-id="slc-4"><label data-for="slc-4">Decide whether this becomes its own dashboard tile (app-portfolio-site) or stays a private operator tool.</label></li>
+      </ul>
+    </div>
+
+    <div class="group" data-group="data-parser">
+      <div class="group-h">
+        <div class="group-name">data-parser <span class="state flight" style="margin-left:6px">flight</span></div>
+        <div class="group-tags">
+          <span class="flag-tag warn">needs-test-coverage</span>
+          <span class="flag-tag">stale · 4d</span>
+        </div>
+      </div>
+      <ul class="checks">
+        <li class="check"><input type="checkbox" data-id="dpr-1"><label data-for="dpr-1">Build a golden-set of test input files.</label></li>
+        <li class="check"><input type="checkbox" data-id="dpr-2"><label data-for="dpr-2">Decide on summary report: kill or tighten.</label></li>
+        <li class="check"><input type="checkbox" data-id="dpr-3"><label data-for="dpr-3">Verify mapping-validator behavior is covered by the existing parser tests (or add coverage).</label></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- BACK BURNER -->
+  <div class="sec-h" data-section="projects">
+    <div class="sec-h-title"><span class="glyph">○</span> on the back burner <span class="count">4 ideas</span></div>
+  </div>
+  <div class="burner">
+    <div class="burner-row">
+      <div class="burner-name">excel-to-app-pipeline</div>
+      <span class="state idea">idea</span>
+      <div class="burner-next">Pattern-tracker. Catalog the next conversion candidate when one surfaces.</div>
+    </div>
+    <div class="burner-row">
+      <div class="burner-name">persistent-brain-rollout</div>
+      <span class="state idea">idea</span>
+      <div class="burner-next">Pick a candidate teammate for the mock profile. <em>Stale since 4/22.</em></div>
+    </div>
+    <div class="burner-row">
+      <div class="burner-name">ta-brain-tc-section</div>
+      <span class="state idea">idea</span>
+      <div class="burner-next">Land follow-up Anthony demo (tracked in ta-brain) with materially more prep. Dependency stalled.</div>
+    </div>
+    <div class="burner-row">
+      <div class="burner-name">app-portfolio-site</div>
+      <span class="state idea">idea</span>
+      <div class="burner-next">Dormant. Surfaces when enough side-apps are shipped to warrant a hub.</div>
+    </div>
+  </div>
+
+  <!-- DATE RADAR -->
+  <div class="sec-h">
+    <div class="sec-h-title"><span class="glyph">▷</span> the week ahead <span class="count">mon → fri</span></div>
+  </div>
+  <div class="radar">
+    <div class="day next">
+      <div class="day-label">mon · tomorrow</div>
+      <div class="day-num">27</div>
+      <div class="day-event alert"><span class="e-tag">OOO</span>OOO starts</div>
+      <div class="day-event warn"><span class="e-tag">due</span>Hand-off doc</div>
+      <div class="day-event"><span class="e-tag">callidi</span>Earl · XKB/XKC</div>
+      <div class="day-event"><span class="e-tag">callidi</span>Beth · elections</div>
+      <div class="day-event"><span class="e-tag">pella</span>Sally · push ADP</div>
+    </div>
+    <div class="day">
+      <div class="day-label">tue</div>
+      <div class="day-num">28</div>
+      <div class="day-event"><span class="e-tag">OOO</span>—</div>
+    </div>
+    <div class="day">
+      <div class="day-label">wed</div>
+      <div class="day-num">29</div>
+      <div class="day-event"><span class="e-tag">OOO</span>—</div>
+    </div>
+    <div class="day">
+      <div class="day-label">thu</div>
+      <div class="day-num">30</div>
+      <div class="day-event"><span class="e-tag">OOO</span>—</div>
+    </div>
+    <div class="day">
+      <div class="day-label">fri · wires</div>
+      <div class="day-num">01</div>
+      <div class="day-event alert"><span class="e-tag">haverhill</span>5/1 wire · assets</div>
+      <div class="day-event alert"><span class="e-tag">pella</span>5/1 liquidation</div>
+      <div class="day-event"><span class="e-tag">OOO</span>last day</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="src">source · <b>caseload/*.md</b> + <b>projects/*.md</b> + <b>contradictions/2026-04-24.md</b> · sheet for 2026-04-26</div>
+    <div><span class="reset" id="reset-day">↺ reset day</span></div>
+  </footer>
+
+</main>
+
+<script>
+(function () {
+  var DAY_KEY = 'caseload-daily:2026-04-26';
+  var KEY_CHECKS    = DAY_KEY + ':checks';
+  var KEY_DISMISSED = DAY_KEY + ':dismissed';
+  var KEY_HIDDEN    = DAY_KEY + ':hidden';
+  var KEY_FILTER    = DAY_KEY + ':filter';
+
+  function readJSON(k, fallback) {
+    try { return JSON.parse(localStorage.getItem(k)) || fallback; }
+    catch (e) { return fallback; }
+  }
+  function writeJSON(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
+  }
+
+  // --- Checkboxes
+  var checkState = readJSON(KEY_CHECKS, {});
+  var allChecks = document.querySelectorAll('.check input[type="checkbox"]');
+  var totalCount = allChecks.length;
+
+  function refreshCounter() {
+    var done = 0;
+    allChecks.forEach(function (cb) { if (cb.checked) done++; });
+    document.getElementById('counter-done').textContent = done;
+    document.getElementById('counter-total').textContent = totalCount;
+    var pct = totalCount === 0 ? 0 : (done / totalCount) * 100;
+    document.getElementById('progress-fill').style.width = pct.toFixed(1) + '%';
+
+    // section counts
+    var caseDone = 0, caseTotal = 0, projDone = 0, projTotal = 0;
+    document.querySelectorAll('#caseload-checks .check input[type="checkbox"]').forEach(function (cb) {
+      caseTotal++; if (cb.checked) caseDone++;
+    });
+    document.querySelectorAll('#projects-checks .check input[type="checkbox"]').forEach(function (cb) {
+      projTotal++; if (cb.checked) projDone++;
+    });
+    var cc = document.getElementById('case-count');
+    var pc = document.getElementById('proj-count');
+    if (cc) cc.textContent = caseDone + ' / ' + caseTotal;
+    if (pc) pc.textContent = projDone + ' / ' + projTotal;
+  }
+
+  // wire labels (clicking label area outside the input toggles)
+  document.querySelectorAll('.check label').forEach(function (lab) {
+    var id = lab.getAttribute('data-for');
+    if (!id) return;
+    lab.addEventListener('click', function (e) {
+      // default behavior: nothing — but native checkbox+label association needs id linking.
+      // We'll trigger the input directly.
+      e.preventDefault();
+      var cb = document.querySelector('.check input[type="checkbox"][data-id="' + id + '"]');
+      if (!cb) return;
+      cb.checked = !cb.checked;
+      cb.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+  });
+
+  allChecks.forEach(function (cb) {
+    var id = cb.getAttribute('data-id');
+    if (checkState[id]) {
+      cb.checked = true;
+      cb.closest('.check').classList.add('is-done');
+    }
+    cb.addEventListener('change', function () {
+      var li = cb.closest('.check');
+      if (cb.checked) li.classList.add('is-done'); else li.classList.remove('is-done');
+      checkState[id] = cb.checked;
+      writeJSON(KEY_CHECKS, checkState);
+      refreshCounter();
+    });
+  });
+
+  refreshCounter();
+
+  // --- Don't-Forget dismissals
+  var dismissed = readJSON(KEY_DISMISSED, {});
+  document.querySelectorAll('.nudge-item').forEach(function (n) {
+    var id = n.getAttribute('data-nudge');
+    if (dismissed[id]) n.classList.add('is-dismissed');
+  });
+  document.querySelectorAll('.nudge-x').forEach(function (x) {
+    x.addEventListener('click', function () {
+      var id = x.getAttribute('data-x');
+      var item = document.querySelector('.nudge-item[data-nudge="' + id + '"]');
+      if (!item) return;
+      item.classList.add('is-dismissed');
+      dismissed[id] = true;
+      writeJSON(KEY_DISMISSED, dismissed);
+    });
+  });
+
+  document.getElementById('restore-nudges').addEventListener('click', function () {
+    document.querySelectorAll('.nudge-item').forEach(function (n) {
+      n.classList.remove('is-dismissed');
+    });
+    dismissed = {};
+    writeJSON(KEY_DISMISSED, dismissed);
+  });
+
+  // --- Hide-completed toggles
+  var hiddenState = readJSON(KEY_HIDDEN, {});
+  document.querySelectorAll('[data-toggle="hide-done"]').forEach(function (btn) {
+    var target = btn.getAttribute('data-target');
+    var key = target;
+    var node = document.querySelector(target);
+    if (!node) return;
+
+    function applyState() {
+      if (hiddenState[key]) {
+        node.querySelectorAll('.checks').forEach(function (ul) { ul.classList.add('is-hide-done'); });
+        btn.classList.add('is-active');
+        btn.textContent = 'show completed';
+      } else {
+        node.querySelectorAll('.checks').forEach(function (ul) { ul.classList.remove('is-hide-done'); });
+        btn.classList.remove('is-active');
+        btn.textContent = 'hide completed';
+      }
+    }
+
+    btn.addEventListener('click', function () {
+      hiddenState[key] = !hiddenState[key];
+      writeJSON(KEY_HIDDEN, hiddenState);
+      applyState();
+    });
+
+    applyState();
+  });
+
+  // --- Filter chips
+  var filterState = readJSON(KEY_FILTER, 'all');
+  function applyFilter(f) {
+    document.querySelectorAll('.filter-chip').forEach(function (c) {
+      c.classList.toggle('is-active', c.getAttribute('data-filter') === f);
+    });
+    var caseload = document.getElementById('caseload-checks');
+    var projects = document.getElementById('projects-checks');
+    var caseHead = document.querySelector('[data-section="caseload"]');
+    var projHead = document.querySelectorAll('[data-section="projects"]');
+    if (f === 'all') {
+      if (caseload) caseload.style.display = '';
+      if (projects) projects.style.display = '';
+      if (caseHead) caseHead.style.display = '';
+      projHead.forEach(function (h) { h.style.display = ''; });
+    } else if (f === 'caseload') {
+      if (caseload) caseload.style.display = '';
+      if (projects) projects.style.display = 'none';
+      if (caseHead) caseHead.style.display = '';
+      projHead.forEach(function (h) { h.style.display = 'none'; });
+    } else if (f === 'projects') {
+      if (caseload) caseload.style.display = 'none';
+      if (projects) projects.style.display = '';
+      if (caseHead) caseHead.style.display = 'none';
+      projHead.forEach(function (h) { h.style.display = ''; });
+    }
+  }
+  document.querySelectorAll('.filter-chip').forEach(function (c) {
+    c.addEventListener('click', function () {
+      filterState = c.getAttribute('data-filter');
+      writeJSON(KEY_FILTER, filterState);
+      applyFilter(filterState);
+    });
+  });
+  applyFilter(filterState);
+
+  // --- Reset day
+  document.getElementById('reset-day').addEventListener('click', function () {
+    if (!window.confirm('Reset all checkboxes, dismissals, and toggles for today?')) return;
+    localStorage.removeItem(KEY_CHECKS);
+    localStorage.removeItem(KEY_DISMISSED);
+    localStorage.removeItem(KEY_HIDDEN);
+    localStorage.removeItem(KEY_FILTER);
+    location.reload();
+  });
+
+})();
+</script>
+
+</body>
+</html>

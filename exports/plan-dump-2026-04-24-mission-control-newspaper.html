@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Current Plan Dump · 2026-04-24 · Mission Control Newspaper</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f4efe6;
+      --paper-2: #efe7da;
+      --ink: #17130f;
+      --muted: #6a5e52;
+      --line: rgba(23, 19, 15, 0.16);
+      --line-strong: rgba(23, 19, 15, 0.34);
+      --red: #b01f17;
+      --red-soft: #e7c5bf;
+      --gold: #b78a3b;
+      --white: #fffdf9;
+      --shadow: 0 24px 80px rgba(40, 22, 12, 0.12);
+      --title-size: clamp(2rem, 6vw, 5.4rem);
+      --h2-size: clamp(1.25rem, 3vw, 2.3rem);
+      --h3-size: clamp(0.95rem, 1.8vw, 1.3rem);
+      --body-size: clamp(0.82rem, 1.18vw, 1.05rem);
+      --small-size: clamp(0.68rem, 0.92vw, 0.84rem);
+      --slide-padding: clamp(1rem, 3.5vw, 3rem);
+      --content-gap: clamp(0.75rem, 1.7vw, 1.5rem);
+      --element-gap: clamp(0.35rem, 0.9vw, 0.9rem);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(183, 138, 59, 0.08), transparent 22%),
+        linear-gradient(180deg, #f9f5ee 0%, var(--paper) 100%);
+      color: var(--ink);
+      font-family: "Instrument Sans", sans-serif;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      width: 0;
+      background: linear-gradient(90deg, var(--red), #d84c3d);
+      z-index: 1000;
+      transition: width 220ms ease;
+    }
+
+    .nav-dots {
+      position: fixed;
+      right: clamp(0.5rem, 1.4vw, 1rem);
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      z-index: 1000;
+    }
+
+    .nav-dots button {
+      width: 0.8rem;
+      height: 0.8rem;
+      border-radius: 999px;
+      border: 1px solid rgba(23, 19, 15, 0.28);
+      background: rgba(255, 255, 255, 0.75);
+      cursor: pointer;
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+    }
+
+    .nav-dots button.active {
+      background: var(--red);
+      border-color: var(--red);
+      transform: scale(1.14);
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      scroll-snap-align: start;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(23, 19, 15, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 19, 15, 0.025) 1px, transparent 1px);
+      background-size: 100% 2rem, 2rem 100%;
+      pointer-events: none;
+      opacity: 0.55;
+    }
+
+    .slide-content {
+      flex: 1;
+      max-height: 100%;
+      overflow: hidden;
+      padding: var(--slide-padding);
+      display: flex;
+      flex-direction: column;
+      gap: var(--content-gap);
+      position: relative;
+      z-index: 1;
+    }
+
+    .masthead, .footerline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .masthead {
+      padding-bottom: 0.65rem;
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .brand::before {
+      content: "";
+      width: 0.42rem;
+      height: 1.1rem;
+      background: var(--red);
+      border-radius: 0.1rem;
+    }
+
+    h1, h2, h3, blockquote { margin: 0; }
+
+    h1 {
+      font-family: "Fraunces", serif;
+      font-size: var(--title-size);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      font-weight: 900;
+      max-width: 11ch;
+    }
+
+    h1 .accent { color: var(--red); }
+
+    h2 {
+      font-family: "Fraunces", serif;
+      font-size: var(--h2-size);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+
+    h3 {
+      font-size: var(--h3-size);
+      line-height: 1.15;
+      font-weight: 700;
+    }
+
+    p, li {
+      font-size: var(--body-size);
+      line-height: 1.42;
+      margin: 0;
+    }
+
+    .lede {
+      max-width: 62ch;
+      color: var(--muted);
+      font-size: clamp(0.95rem, 1.4vw, 1.18rem);
+      line-height: 1.55;
+    }
+
+    .hero-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.15fr 0.95fr;
+      gap: clamp(1rem, 3vw, 2rem);
+      align-items: start;
+      min-height: 0;
+    }
+
+    .hero-notes {
+      display: grid;
+      gap: 0.9rem;
+      min-height: 0;
+    }
+
+    .pulse-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--line-strong);
+      border-left: 1px solid var(--line);
+      background: rgba(255,255,255,0.45);
+      box-shadow: var(--shadow);
+    }
+
+    .pulse-card {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: clamp(0.9rem, 1.6vw, 1.3rem);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      min-height: 0;
+    }
+
+    .pulse-card .k {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .pulse-card .n {
+      font-family: "Fraunces", serif;
+      font-weight: 900;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 0.9;
+    }
+
+    .sidebar-sheet {
+      background:
+        linear-gradient(180deg, rgba(176,31,23,0.08), transparent 28%),
+        rgba(255,255,255,0.82);
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--shadow);
+      padding: clamp(1rem, 2vw, 1.4rem);
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      min-height: 0;
+    }
+
+    .sidebar-sheet .stamp {
+      align-self: flex-start;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.32rem 0.5rem;
+      border: 1px solid var(--red);
+      color: var(--red);
+      background: rgba(176,31,23,0.05);
+    }
+
+    .rail-grid,
+    .board-grid,
+    .roster-grid,
+    .timeline-grid,
+    .check-grid {
+      display: grid;
+      gap: clamp(0.7rem, 1.2vw, 1rem);
+      min-height: 0;
+    }
+
+    .board-grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .roster-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .timeline-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .check-grid {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      padding: 0.7rem 0.9rem;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .panel-header .tag {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .panel-body {
+      padding: 0.9rem;
+      display: grid;
+      gap: 0.7rem;
+      min-height: 0;
+    }
+
+    .story {
+      display: grid;
+      gap: 0.35rem;
+      padding-left: 0.85rem;
+      border-left: 0.22rem solid var(--red-soft);
+    }
+
+    .story strong { color: var(--ink); }
+    .story p { color: var(--muted); }
+
+    .list-compact {
+      display: grid;
+      gap: 0.45rem;
+      padding: 0;
+      list-style: none;
+      margin: 0;
+    }
+
+    .list-compact li {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.55rem;
+      align-items: start;
+    }
+
+    .bullet {
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 999px;
+      margin-top: 0.38rem;
+      background: var(--red);
+      flex: 0 0 auto;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border: 1px solid var(--line-strong);
+      padding: 0.28rem 0.46rem;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(255,255,255,0.66);
+    }
+
+    .status-chip::before {
+      content: "";
+      width: 0.46rem;
+      height: 0.46rem;
+      border-radius: 999px;
+      background: currentColor;
+      opacity: 0.88;
+    }
+
+    .status-ramping { color: var(--red); }
+    .status-active { color: #2f5e4e; }
+    .status-watch { color: #88622d; }
+    .status-hold { color: #6c6360; }
+
+    .plan-row {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr 1fr;
+      gap: 0.65rem;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid var(--line);
+      align-items: start;
+    }
+
+    .plan-row:last-child { border-bottom: none; }
+    .plan-row p { color: var(--muted); }
+
+    .mini {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .timeline-card {
+      min-height: 0;
+      background: linear-gradient(180deg, rgba(176,31,23,0.05), rgba(255,255,255,0.85));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 0.85rem;
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .timeline-card .date {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: var(--small-size);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 600;
+    }
+
+    .split-note {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+      min-height: 0;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .checklist li {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.55rem;
+      align-items: start;
+      padding-bottom: 0.55rem;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .check {
+      width: 1rem;
+      height: 1rem;
+      border: 1px solid var(--line-strong);
+      background: var(--white);
+      margin-top: 0.18rem;
+    }
+
+    .quote-box {
+      border-left: 0.28rem solid var(--red);
+      padding-left: 1rem;
+      color: var(--muted);
+      font-size: clamp(0.95rem, 1.35vw, 1.15rem);
+      line-height: 1.6;
+    }
+
+    @media (max-height: 700px) {
+      :root {
+        --slide-padding: clamp(0.75rem, 3vw, 2rem);
+        --content-gap: clamp(0.45rem, 1vw, 0.85rem);
+        --title-size: clamp(1.65rem, 4.4vw, 3.5rem);
+        --body-size: clamp(0.72rem, 1vw, 0.92rem);
+      }
+    }
+
+    @media (max-height: 600px) {
+      .nav-dots { display: none; }
+      .panel-body, .sidebar-sheet, .timeline-card { gap: 0.45rem; }
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .board-grid.two,
+      .roster-grid,
+      .timeline-grid,
+      .check-grid,
+      .split-note {
+        grid-template-columns: 1fr;
+      }
+
+      .pulse-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .plan-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .progress-bar, .nav-dots button { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" aria-hidden="true"></div>
+  <nav class="nav-dots" aria-label="Slide navigation"></nav>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead">
+        <span class="brand">Weekly Digest · current plan dump</span>
+        <span>rev 2026-04-24 · style 01 mission control newspaper</span>
+      </div>
+      <div class="hero-grid">
+        <div class="hero-notes">
+          <div>
+            <div class="mini">field edition</div>
+            <h1>current state <span class="accent">plan dump.</span></h1>
+          </div>
+          <p class="lede">The book is not chaotic, but it is loaded. <strong>Callidi</strong>, <strong>COCC</strong>, <strong>Pella</strong>, <strong>TMG</strong>, and <strong>Banyan</strong> are the live circuits. <strong>Haverhill</strong> is mostly staged. The rest of the roster is either future-dated or parked by design. This pass separates what actually closed, what is merely safer, and what still wants a hand on it.</p>
+          <div class="pulse-strip">
+            <div class="pulse-card">
+              <span class="k">total plans</span>
+              <span class="n">13</span>
+              <span class="mini">full roster in play</span>
+            </div>
+            <div class="pulse-card">
+              <span class="k">working now</span>
+              <span class="n">7</span>
+              <span class="mini">active / ramping / live work</span>
+            </div>
+            <div class="pulse-card">
+              <span class="k">blocked threads</span>
+              <span class="n">4</span>
+              <span class="mini">hard contradictions or open blockers</span>
+            </div>
+            <div class="pulse-card">
+              <span class="k">near windows</span>
+              <span class="n">4</span>
+              <span class="mini">5/1 to 6/1 matters most</span>
+            </div>
+          </div>
+        </div>
+        <aside class="sidebar-sheet">
+          <span class="stamp">operator reading copy</span>
+          <h3>How to read this deck</h3>
+          <div class="story">
+            <strong>Complete</strong>
+            <p>Work that landed or materially de-risked enough to stop eating attention.</p>
+          </div>
+          <div class="story">
+            <strong>Working</strong>
+            <p>Plans with immediate motion, sequence work, or delegated follow-through.</p>
+          </div>
+          <div class="story">
+            <strong>Pending</strong>
+            <p>Real blockers, contradictions, missing IDs, and “confirm this before you trust it.”</p>
+          </div>
+          <div class="story">
+            <strong>Coming up</strong>
+            <p>Windows that will matter whether or not they are loud right now.</p>
+          </div>
+          <div class="quote-box">The right move here is not “everything is urgent.” The right move is keeping the live plans visible while refusing to let the parked book impersonate work.</div>
+        </aside>
+      </div>
+      <div class="footerline">
+        <span>slides 01 / 08</span>
+        <span>keyboard: arrows, page up/down, space</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead">
+        <span class="brand">portfolio map</span>
+        <span>what is moving vs what is parked</span>
+      </div>
+      <h2>Status map by plan</h2>
+      <div class="board-grid two">
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Working now</h3>
+            <span class="status-chip status-ramping">7 live threads</span>
+          </div>
+          <div class="panel-body">
+            <div class="story"><strong>Callidi Tas</strong><p>Balances landed. Loan routing defect still active. Elections next.</p></div>
+            <div class="story"><strong>COCC</strong><p>Live EDS routing fix plus payroll cleanup and residual-dividend prep.</p></div>
+            <div class="story"><strong>Pella SC</strong><p>Deferral report chase is the only thing keeping the path from feeling clean.</p></div>
+            <div class="story"><strong>TMG</strong><p>Breakthrough happened. Monday load still has to happen for the win to count.</p></div>
+            <div class="story"><strong>Banyan</strong><p>New active plan. Census and election-default work is ready to start.</p></div>
+            <div class="story"><strong>Haverhill</strong><p>Mostly staged. Email plus handoff remain before the OOO window.</p></div>
+            <div class="story"><strong>ISD</strong><p>Not noisy, but the deferral-operating model still wants a clean call.</p></div>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Parked / horizon book</h3>
+            <span class="status-chip status-hold">6 quieter plans</span>
+          </div>
+          <div class="panel-body">
+            <div class="story"><strong>Prime Healthcare</strong><p>On hold to August. Off radar by design.</p></div>
+            <div class="story"><strong>Stoutco</strong><p>7/1 Excel-wise plan. Historically simple. No meeting yet.</p></div>
+            <div class="story"><strong>Bonnier</strong><p>7/1. Future-dated. Nothing demanding attention this cycle.</p></div>
+            <div class="story"><strong>Leiby's</strong><p>8/1. Meeting canceled. Still monitor-only.</p></div>
+            <div class="story"><strong>Canam Bridges</strong><p>10/1. Way out, but its case number is colliding with Banyan's claim.</p></div>
+            <div class="story"><strong>Canam Bldgs</strong><p>10/1. Fully future-state.</p></div>
+          </div>
+        </article>
+      </div>
+      <div class="footerline">
+        <span>slides 02 / 08</span>
+        <span>map first, detail second</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead">
+        <span class="brand">recently completed</span>
+        <span>done or materially de-risked</span>
+      </div>
+      <h2>Things that actually landed</h2>
+      <div class="rail-grid">
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Callidi came back to life</h3>
+            <span class="mini">ramping</span>
+          </div>
+          <div class="panel-body">
+            <p><strong>Informatica recovered</strong>, participant balances loaded, and the dummy reversal closed clean. That is real closure, not a mood improvement.</p>
+            <p>The plan is not done, but the scary “we are blocked on the external system” phase is over.</p>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Haverhill is staged, not flailing</h3>
+            <span class="mini">active</span>
+          </div>
+          <div class="panel-body">
+            <p>Base file is loaded, AQT fix explained, flags placed. The only remaining pre-wire move is the NBI status email and clean coverage handoff before OOO.</p>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="panel-header">
+            <h3>TMG found the smarter path</h3>
+            <span class="mini">active</span>
+          </div>
+          <div class="panel-body">
+            <p>The years-of-service approach pivoted from “wait on client ask” to <strong>self-calculate and verify against vendor records</strong>. That materially lowers exposure and changes the message going back to Ruby / WTW.</p>
+          </div>
+        </article>
+      </div>
+      <div class="split-note">
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Read this correctly</h3>
+            <span class="mini">important distinction</span>
+          </div>
+          <div class="panel-body">
+            <p>These are not “closed plans.” They are <strong>work packets that cleared a dangerous phase</strong>.</p>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="panel-header">
+            <h3>What still keeps them alive</h3>
+            <span class="mini">carryover risk</span>
+          </div>
+          <div class="panel-body">
+            <ul class="list-compact">
+              <li><span class="bullet"></span><span>Callidi still needs the loan defect fixed and elections processed.</span></li>
+              <li><span class="bullet"></span><span>Haverhill still needs the email and handoff before the 5/1 wire.</span></li>
+              <li><span class="bullet"></span><span>TMG still needs the actual YOS load before the breakthrough becomes final.</span></li>
+            </ul>
+          </div>
+        </article>
+      </div>
+      <div class="footerline">
+        <span>slides 03 / 08</span>
+        <span>done is not the same as quiet</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead">
+        <span class="brand">working now</span>
+        <span>the live board</span>
+      </div>
+      <h2>Active work by pressure level</h2>
+      <div class="board-grid two">
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Must move this cycle</h3>
+            <span class="status-chip status-ramping">high heat</span>
+          </div>
+          <div class="panel-body">
+            <div class="story"><strong>COCC</strong><p>Fix EDS source-routing, re-verify the payroll file, and stay careful with a touchy client.</p></div>
+            <div class="story"><strong>Callidi</strong><p>Diagnose XKB / XKC not landing in Transact Detail, then run loans and hand off elections Monday.</p></div>
+            <div class="story"><strong>Pella</strong><p>Push ADP through Sally or the right contact. Waiting politely is not the move anymore.</p></div>
+            <div class="story"><strong>TMG</strong><p>Finalize the self-calculated YOS file and get the actual vesting correction in.</p></div>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Live, but not on fire</h3>
+            <span class="status-chip status-active">steady work</span>
+          </div>
+          <div class="panel-body">
+            <div class="story"><strong>Banyan</strong><p>Load census, default elections, run Julius's audit query, and lock the naming / case number down.</p></div>
+            <div class="story"><strong>Haverhill</strong><p>Send NBI status email and package the handoff before the OOO gap turns into confusion.</p></div>
+            <div class="story"><strong>ISD</strong><p>Resolve the deferral operating model so the “startup treated like merger” logic does not keep bouncing.</p></div>
+          </div>
+        </article>
+      </div>
+      <div class="footerline">
+        <span>slides 04 / 08</span>
+        <span>heat split: hard work vs stable work</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead">
+        <span class="brand">pending and contradictory</span>
+        <span>do not treat these as settled</span>
+      </div>
+      <h2>Open blockers, TBDs, and things that still smell off</h2>
+      <div class="board-grid two">
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Hard blockers</h3>
+            <span class="status-chip status-ramping">needs action</span>
+          </div>
+          <div class="panel-body">
+            <ul class="list-compact">
+              <li><span class="bullet"></span><span><strong>Callidi</strong>: XKB / XKC loan refs not landing in Transact Detail.</span></li>
+              <li><span class="bullet"></span><span><strong>COCC</strong>: routing fix is still live and dates / case number are not even captured.</span></li>
+              <li><span class="bullet"></span><span><strong>Pella</strong>: proper deferral report channel still unresolved.</span></li>
+              <li><span class="bullet"></span><span><strong>TMG</strong>: case number missing while the fix path is already moving.</span></li>
+            </ul>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Contradictions and watch items</h3>
+            <span class="status-chip status-watch">verify before trust</span>
+          </div>
+          <div class="panel-body">
+            <ul class="list-compact">
+              <li><span class="bullet"></span><span><strong>Banyan vs Canam Bridges</strong>: case number collision on `QK63283-00099`.</span></li>
+              <li><span class="bullet"></span><span><strong>Callidi</strong>: older frozen / unfrozen loan issue may be separate from today's XKB / XKC defect.</span></li>
+              <li><span class="bullet"></span><span><strong>Callidi</strong>: DOB / DOH gap appears resolved operationally, but the close was never stated cleanly.</span></li>
+              <li><span class="bullet"></span><span><strong>Banyan</strong>: plan name still toggles between Banyan and Cutting Edge Staffing.</span></li>
+            </ul>
+          </div>
+        </article>
+      </div>
+      <article class="panel">
+        <div class="panel-header">
+          <h3>Operator note</h3>
+          <span class="mini">why this slide exists</span>
+        </div>
+        <div class="panel-body">
+          <p>These are exactly the kinds of details that get smoothed over in a pretty recap and then bite later. This deck keeps them loud on purpose.</p>
+        </div>
+      </article>
+      <div class="footerline">
+        <span>slides 05 / 08</span>
+        <span>nothing here gets silently “fixed”</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead">
+        <span class="brand">coming up</span>
+        <span>the windows that matter next</span>
+      </div>
+      <h2>Near-term dates and pressure windows</h2>
+      <div class="timeline-grid">
+        <article class="timeline-card">
+          <span class="date">5 / 1</span>
+          <h3>Pella + Haverhill</h3>
+          <p>Pella liquidation day lands with the ADP deferral-report thread still open. Haverhill wire day lands during OOO, so the handoff quality matters.</p>
+        </article>
+        <article class="timeline-card">
+          <span class="date">5 / 14 → 5 / 27</span>
+          <h3>Banyan limited access</h3>
+          <p>The census / election-default work has to be clean before this window. Post-window monitoring queries are part of the real job, not extra credit.</p>
+        </article>
+        <article class="timeline-card">
+          <span class="date">6 / 1</span>
+          <h3>Banyan wire</h3>
+          <p>Wire and asset transfer expected right after limited access. Reconciliation planning should exist before the date is staring back at you.</p>
+        </article>
+        <article class="timeline-card">
+          <span class="date">7 / 1 → 10 / 1</span>
+          <h3>Later horizon</h3>
+          <p>ISD, Stoutco, Bonnier come into shape earlier; Prime and Leiby's sit in August; Canam plans are October work. Useful context, not current panic.</p>
+        </article>
+      </div>
+      <div class="footerline">
+        <span>slides 06 / 08</span>
+        <span>near-term timing beats vague pressure</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead">
+        <span class="brand">full roster</span>
+        <span>all plans, one glance</span>
+      </div>
+      <h2>Roster sheet</h2>
+      <div class="roster-grid">
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Active / ramping side</h3>
+            <span class="mini">7 plans</span>
+          </div>
+          <div class="panel-body">
+            <div class="plan-row">
+              <div><strong>Callidi Tas</strong><p>Balances loaded. Loan route defect and elections remain.</p></div>
+              <div><span class="status-chip status-ramping">ramping</span></div>
+              <div><span class="mini">4 / 1 effective · 4 / 10 assets</span></div>
+            </div>
+            <div class="plan-row">
+              <div><strong>Pella SC</strong><p>Close to liquidation. Waiting on ADP deferral report.</p></div>
+              <div><span class="status-chip status-active">active</span></div>
+              <div><span class="mini">5 / 1 asset day</span></div>
+            </div>
+            <div class="plan-row">
+              <div><strong>Haverhill</strong><p>Staged and quiet. NBI email + handoff remain.</p></div>
+              <div><span class="status-chip status-active">active</span></div>
+              <div><span class="mini">5 / 1 asset day</span></div>
+            </div>
+            <div class="plan-row">
+              <div><strong>ISD</strong><p>Partial-scope plan. Deferral model still needs a clean call.</p></div>
+              <div><span class="status-chip status-active">active</span></div>
+              <div><span class="mini">7 / 1 live date</span></div>
+            </div>
+            <div class="plan-row">
+              <div><strong>Banyan</strong><p>New active plan. Case number and display naming still unsettled.</p></div>
+              <div><span class="status-chip status-active">active</span></div>
+              <div><span class="mini">5 / 28 effective · 6 / 1 wire</span></div>
+            </div>
+            <div class="plan-row">
+              <div><strong>TMG</strong><p>Vesting-fix mode. YOS load is the next true move.</p></div>
+              <div><span class="status-chip status-active">active</span></div>
+              <div><span class="mini">legacy plan · fix scope</span></div>
+            </div>
+            <div class="plan-row">
+              <div><strong>COCC</strong><p>Routing repair and payroll cleanup under a touchy-client condition.</p></div>
+              <div><span class="status-chip status-active">active</span></div>
+              <div><span class="mini">dates TBD</span></div>
+            </div>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Horizon side</h3>
+            <span class="mini">6 plans</span>
+          </div>
+          <div class="panel-body">
+            <div class="plan-row">
+              <div><strong>Prime Healthcare</strong><p>Pushed to 8 / 1. On hold.</p></div>
+              <div><span class="status-chip status-hold">hold</span></div>
+              <div><span class="mini">8 / 1</span></div>
+            </div>
+            <div class="plan-row">
+              <div><strong>Stoutco</strong><p>Excel-wise, historically simple, no immediate work.</p></div>
+              <div><span class="status-chip status-watch">future</span></div>
+              <div><span class="mini">7 / 1</span></div>
+            </div>
+            <div class="plan-row">
+              <div><strong>Bonnier</strong><p>Future-dated and fully monitor-only.</p></div>
+              <div><span class="status-chip status-watch">future</span></div>
+              <div><span class="mini">7 / 1</span></div>
+            </div>
+            <div class="plan-row">
+              <div><strong>Leiby's</strong><p>Meeting canceled. Still off radar.</p></div>
+              <div><span class="status-chip status-watch">future</span></div>
+              <div><span class="mini">8 / 1</span></div>
+            </div>
+            <div class="plan-row">
+              <div><strong>Canam Bridges</strong><p>Way out, but still part of the Banyan collision story.</p></div>
+              <div><span class="status-chip status-watch">future</span></div>
+              <div><span class="mini">10 / 1</span></div>
+            </div>
+            <div class="plan-row">
+              <div><strong>Canam Bldgs</strong><p>Fully future-state.</p></div>
+              <div><span class="status-chip status-watch">future</span></div>
+              <div><span class="mini">10 / 1</span></div>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div class="footerline">
+        <span>slides 07 / 08</span>
+        <span>one page, whole book</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead">
+        <span class="brand">action checklist</span>
+        <span>the carry-out list</span>
+      </div>
+      <h2>What this deck says to do next</h2>
+      <div class="check-grid">
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Operator checklist</h3>
+            <span class="mini">next concrete moves</span>
+          </div>
+          <div class="panel-body">
+            <ul class="checklist">
+              <li><span class="check"></span><span><strong>COCC</strong> · fix EDS source-routing and re-verify the broken payroll file.</span></li>
+              <li><span class="check"></span><span><strong>Callidi</strong> · diagnose XKB / XKC loan-drop issue, then re-run loans.</span></li>
+              <li><span class="check"></span><span><strong>Pella</strong> · push ADP through Sally / right contact and pull the deferral report loose.</span></li>
+              <li><span class="check"></span><span><strong>Haverhill</strong> · send NBI email and finish OOO handoff before 4 / 27.</span></li>
+              <li><span class="check"></span><span><strong>TMG</strong> · finalize and load self-calculated YOS.</span></li>
+              <li><span class="check"></span><span><strong>Banyan</strong> · confirm case number, lock naming, then start census / election prep cleanly.</span></li>
+            </ul>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Deck takeaway</h3>
+            <span class="mini">one-sentence read</span>
+          </div>
+          <div class="panel-body">
+            <p class="quote-box">The book is in decent shape, but the live wins only stay wins if the operator closes the routing defects, pulls the missing reports loose, and refuses to let TBD data masquerade as settled facts.</p>
+            <p><strong>Best news:</strong> Callidi, Haverhill, and TMG each got meaningfully safer.</p>
+            <p><strong>Main risk:</strong> COCC and the unresolved identity / contradiction threads can still steal time if left fuzzy.</p>
+          </div>
+        </article>
+      </div>
+      <div class="footerline">
+        <span>slides 08 / 08</span>
+        <span>mission control newspaper · current state cut</span>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    class SlidePresentation {
+      constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.progressBar = document.querySelector('.progress-bar');
+        this.navDotsContainer = document.querySelector('.nav-dots');
+        this.currentSlide = 0;
+        this.setupNavDots();
+        this.setupObservers();
+        this.setupEvents();
+        this.updateUI(0);
+      }
+
+      setupNavDots() {
+        this.navDotsContainer.innerHTML = '';
+        this.slides.forEach((_, index) => {
+          const dot = document.createElement('button');
+          dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+          dot.addEventListener('click', () => this.goToSlide(index));
+          this.navDotsContainer.appendChild(dot);
+        });
+      }
+
+      setupObservers() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const index = this.slides.indexOf(entry.target);
+              this.updateUI(index);
+            }
+          });
+        }, { threshold: 0.55 });
+
+        this.slides.forEach((slide) => observer.observe(slide));
+      }
+
+      setupEvents() {
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'ArrowDown' || event.key === 'ArrowRight' || event.key === ' ' || event.key === 'PageDown') {
+            event.preventDefault();
+            this.goToSlide(Math.min(this.currentSlide + 1, this.slides.length - 1));
+          }
+          if (event.key === 'ArrowUp' || event.key === 'ArrowLeft' || event.key === 'PageUp') {
+            event.preventDefault();
+            this.goToSlide(Math.max(this.currentSlide - 1, 0));
+          }
+          if (event.key === 'Home') {
+            event.preventDefault();
+            this.goToSlide(0);
+          }
+          if (event.key === 'End') {
+            event.preventDefault();
+            this.goToSlide(this.slides.length - 1);
+          }
+        });
+      }
+
+      goToSlide(index) {
+        this.slides[index].scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      }
+
+      updateUI(index) {
+        this.currentSlide = index;
+        const pct = ((index + 1) / this.slides.length) * 100;
+        this.progressBar.style.width = `${pct}%`;
+        Array.from(this.navDotsContainer.children).forEach((dot, dotIndex) => {
+          dot.classList.toggle('active', dotIndex === index);
+        });
+      }
+    }
+
+    new SlidePresentation();
+  </script>
+</body>
+</html>

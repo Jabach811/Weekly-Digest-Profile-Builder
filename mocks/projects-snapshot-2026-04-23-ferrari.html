@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Projects Portfolio · Snapshot · 2026-04-23 · Ferrari Mock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!--
+  Font substitutions (FerrariSans is proprietary):
+    - Inter Tight  → FerrariSans stand-in (narrative voice, 400/500/600/700)
+    - Archivo      → "Body-Font" stand-in (uppercase labels, 1px tracking)
+-->
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Ferrari palette — DESIGN.md §2 (verbatim hex) */
+    --f-red:        #DA291C;   /* Rosso Corsa — sole accent */
+    --f-white:      #FFFFFF;
+    --f-black:      #000000;
+    --f-surface-90: #303030;
+    --f-ui-20:      #D2D2D2;
+    --f-ink:        #181818;   /* Near Black body text */
+    --f-ink-60:     #666666;
+    --f-ink-50:     #8F8F8F;
+    --f-border:     #CCCCCC;
+
+    --sans:  'Inter Tight', Arial, Helvetica, sans-serif;
+    --label: 'Archivo', Arial, Helvetica, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--f-white);
+    color: var(--f-ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─────────── masthead · cinematic black ─────────── */
+  .masthead {
+    background: var(--f-black);
+    color: var(--f-white);
+    padding: 56px 88px 72px;
+    position: relative;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.18);
+    font-family: var(--label);
+    font-size: 11px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--f-ink-50);
+    margin-bottom: 88px;
+  }
+
+  .topbar .mark {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--f-white);
+  }
+  /* single razor vertical — not red (red is spent elsewhere on this page) */
+  .topbar .mark::before {
+    content: "";
+    width: 2px; height: 14px;
+    background: var(--f-white);
+    display: inline-block;
+  }
+  .topbar .meta span + span::before {
+    content: "·";
+    margin: 0 10px;
+    color: var(--f-ink-50);
+  }
+
+  .eye {
+    font-family: var(--label);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+    color: var(--f-ink-50);
+    display: inline-block;
+  }
+
+  h1.display {
+    font-family: var(--sans);
+    font-size: clamp(76px, 10.5vw, 176px);
+    font-weight: 500;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin-top: 28px;
+    text-transform: lowercase;
+    color: var(--f-white);
+  }
+  /* The ONE red mark on the masthead — a single period. */
+  h1.display .dot { color: var(--f-red); }
+
+  p.lede {
+    font-family: var(--sans);
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1.55;
+    max-width: 64ch;
+    margin-top: 32px;
+    color: var(--f-ui-20);
+  }
+  p.lede b { color: var(--f-white); font-weight: 700; }
+
+  /* ─────────── state counters strip ─────────── */
+  .counters {
+    margin-top: 72px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255,255,255,0.22);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .counter {
+    padding: 8px 24px 4px 0;
+    border-right: 1px solid rgba(255,255,255,0.18);
+    position: relative;
+  }
+  .counter:last-child { border-right: none; }
+  .counter .k {
+    font-family: var(--label);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--f-ink-50);
+    display: block;
+    margin-bottom: 16px;
+  }
+  .counter .n {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -0.035em;
+    color: var(--f-white);
+    font-variant-numeric: tabular-nums;
+  }
+  /* The ONE red mark on the counters strip — a single red dot on FLIGHT. */
+  .counter.flight .n::after {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--f-red);
+    margin-left: 12px;
+    vertical-align: middle;
+    transform: translateY(-18px);
+  }
+
+  /* ─────────── editorial body · white pages ─────────── */
+  main {
+    background: var(--f-white);
+    padding: 88px 88px 56px;
+  }
+
+  section.group {
+    margin-bottom: 96px;
+  }
+  section.group:last-of-type { margin-bottom: 0; }
+
+  .group-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--f-ink);
+    margin-bottom: 0;
+  }
+  .group-head .title-block .eye { color: var(--f-ink-50); }
+  .group-head h2 {
+    font-family: var(--sans);
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--f-ink);
+    margin-top: 10px;
+    text-transform: lowercase;
+  }
+  .group-head .count {
+    font-family: var(--label);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--f-ink-60);
+    font-weight: 600;
+    padding-bottom: 6px;
+  }
+  .group-head .count b { color: var(--f-ink); font-weight: 700; }
+
+  /* ─────────── project rows · razor-thin rules ─────────── */
+  article.project {
+    display: grid;
+    grid-template-columns: 88px 1.15fr 1.3fr;
+    column-gap: 48px;
+    padding: 40px 0 44px;
+    border-bottom: 1px solid var(--f-ui-20);
+  }
+  article.project:last-child { border-bottom: none; }
+
+  .project .rail .num {
+    font-family: var(--label);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--f-ink-50);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 14px;
+  }
+  .project .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border: 1px solid var(--f-ink);
+    border-radius: 2px;
+    font-family: var(--label);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--f-ink);
+    background: var(--f-white);
+    white-space: nowrap;
+  }
+  .project .pill.folded {
+    border-color: var(--f-ink-50);
+    color: var(--f-ink-50);
+  }
+
+  .project h3.title {
+    font-family: var(--sans);
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--f-ink);
+    margin-bottom: 10px;
+  }
+  /* SHIPPED-FOLDED accent — the one red mark allowed in this section:
+     a single red strikethrough line. */
+  .project h3.title.struck {
+    color: var(--f-ink-50);
+    position: relative;
+    display: inline-block;
+  }
+  .project h3.title.struck::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    top: 54%;
+    height: 2px;
+    background: var(--f-red);
+  }
+
+  .project .pitch {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-style: italic;
+    line-height: 1.55;
+    color: var(--f-ink-60);
+    max-width: 44ch;
+  }
+
+  .project .state {
+    padding-top: 2px;
+  }
+  .project .state .label-head {
+    font-family: var(--label);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--f-ink-50);
+    display: block;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--f-ui-20);
+  }
+  .project .state ul {
+    list-style: none;
+    margin-bottom: 22px;
+  }
+  .project .state ul:last-child { margin-bottom: 0; }
+  .project .state li {
+    padding: 10px 0 10px 18px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--f-ink);
+    border-bottom: 1px solid var(--f-ui-20);
+    position: relative;
+  }
+  .project .state li:last-child { border-bottom: none; }
+  .project .state li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 19px;
+    width: 6px;
+    height: 1px;
+    background: var(--f-ink);
+  }
+  .project .state li b { color: var(--f-ink); font-weight: 700; }
+  .project .state li em {
+    font-family: var(--label);
+    font-style: normal;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 11px;
+    color: var(--f-ink);
+  }
+
+  .project .open-head {
+    margin-top: 4px;
+  }
+  .project .open-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+  }
+  .project .open-list .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 12px;
+    border: 1px solid var(--f-ink);
+    border-radius: 2px;
+    font-family: var(--label);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--f-ink);
+    background: var(--f-white);
+  }
+
+  /* ─────────── footer · dark surface ─────────── */
+  footer {
+    background: var(--f-surface-90);
+    color: var(--f-ui-20);
+    padding: 28px 88px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--label);
+    font-size: 11px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  footer .left, footer .right { display: inline-flex; gap: 24px; align-items: center; }
+  footer b { color: var(--f-white); font-weight: 600; }
+  footer code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    letter-spacing: 0;
+    color: var(--f-ui-20);
+    text-transform: none;
+  }
+  footer span + span::before {
+    content: "·";
+    margin-right: 24px;
+    margin-left: 0;
+    color: var(--f-ink-50);
+  }
+
+  @media (max-width: 900px) {
+    .masthead, main { padding-left: 28px; padding-right: 28px; }
+    footer { padding-left: 28px; padding-right: 28px; flex-direction: column; gap: 12px; align-items: flex-start; }
+    .counters { grid-template-columns: repeat(2, 1fr); }
+    .counter { border-bottom: 1px solid rgba(255,255,255,0.18); padding-bottom: 20px; }
+    article.project { grid-template-columns: 1fr; row-gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ──────────────────────────── MASTHEAD · BLACK ──────────────────────────── -->
+<header class="masthead">
+  <div class="topbar">
+    <div class="mark">Projects · Portfolio</div>
+    <div class="meta">
+      <span>SNAPSHOT</span><span>REV 2026.04.23</span><span>08 RECORDS</span>
+    </div>
+  </div>
+
+  <span class="eye">§00 — Portfolio — Projects — Compiled 2026-04-23</span>
+  <h1 class="display">the<br>portfolio<span class="dot">.</span></h1>
+  <p class="lede">
+    Eight side tracks. Two in <b>flight</b>, one <b>ready to ship</b>, four still <b>ideas</b>, one already <b>folded</b>. No cycle window, no deadlines — just the board as it stands today.
+  </p>
+
+  <div class="counters">
+    <div class="counter flight">
+      <span class="k">Flight</span>
+      <span class="n">02</span>
+    </div>
+    <div class="counter">
+      <span class="k">Ready-to-Ship</span>
+      <span class="n">01</span>
+    </div>
+    <div class="counter">
+      <span class="k">Idea</span>
+      <span class="n">04</span>
+    </div>
+    <div class="counter">
+      <span class="k">Shipped-Folded</span>
+      <span class="n">01</span>
+    </div>
+  </div>
+</header>
+
+<!-- ──────────────────────────── BODY · WHITE EDITORIAL ──────────────────────────── -->
+<main>
+
+  <!-- GROUP · FLIGHT -->
+  <section class="group" id="flight">
+    <div class="group-head">
+      <div class="title-block">
+        <span class="eye">§01 — State — Flight</span>
+        <h2>in flight</h2>
+      </div>
+      <div class="count">Records <b>02</b></div>
+    </div>
+
+    <article class="project">
+      <div class="rail">
+        <span class="num">№ 01</span>
+        <span class="pill">Flight</span>
+      </div>
+      <div class="head">
+        <h3 class="title">Data Parser</h3>
+        <p class="pitch">Parse and validate incoming data files for plan conversions.</p>
+      </div>
+      <div class="state">
+        <span class="label-head">Current State</span>
+        <ul>
+          <li>Functionality <b>~100%</b>. No more style / design iteration — function only.</li>
+          <li><b>Decision pending:</b> keep or kill the secondary summary report. Either path needs better test files.</li>
+          <li><b>Mapping Validator</b> lives inside this project — do not extract.</li>
+        </ul>
+        <span class="label-head open-head">Open</span>
+        <div class="open-list">
+          <span class="chip">Golden-set test files</span>
+          <span class="chip">Decide summary report</span>
+          <span class="chip">Verify mapping coverage</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="rail">
+        <span class="num">№ 02</span>
+        <span class="pill">Flight</span>
+      </div>
+      <div class="head">
+        <h3 class="title">TA Brain</h3>
+        <p class="pitch">Always-on UI. Search, animations, concepts, demos.</p>
+      </div>
+      <div class="state">
+        <span class="label-head">Current State</span>
+        <ul>
+          <li><em>Animations</em> — priority is MORE animations on processes that lack them.</li>
+          <li><em>Concepts</em> page is bloated; needs lighter categorization without over-categorizing.</li>
+          <li><em>Search</em> works but could be more visible — add backslash command palette.</li>
+          <li><b>Anthony:</b> aim for Friday demo this week to open the TC section conversation. Demo must prove data-safety.</li>
+        </ul>
+      </div>
+    </article>
+  </section>
+
+  <!-- GROUP · READY-TO-SHIP -->
+  <section class="group" id="ready">
+    <div class="group-head">
+      <div class="title-block">
+        <span class="eye">§02 — State — Ready-to-Ship</span>
+        <h2>ready to ship</h2>
+      </div>
+      <div class="count">Records <b>01</b></div>
+    </div>
+
+    <article class="project">
+      <div class="rail">
+        <span class="num">№ 03</span>
+        <span class="pill">Ready-to-Ship</span>
+      </div>
+      <div class="head">
+        <h3 class="title">NBI Search</h3>
+        <p class="pitch">Fast search UI over NBI data. Design is locked and loved.</p>
+      </div>
+      <div class="state">
+        <span class="label-head">Current State</span>
+        <ul>
+          <li>One <b>ship-blocker:</b> replace the file picker with a hard-coded path + refresh button.</li>
+          <li><em>Off-ramp</em> — path-free launch experience → shippable.</li>
+        </ul>
+        <span class="label-head open-head">Open</span>
+        <div class="open-list">
+          <span class="chip">Remove file-picker</span>
+          <span class="chip">Wire refresh button</span>
+          <span class="chip">Literal vs config path</span>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- GROUP · IDEA -->
+  <section class="group" id="idea">
+    <div class="group-head">
+      <div class="title-block">
+        <span class="eye">§03 — State — Idea</span>
+        <h2>ideas</h2>
+      </div>
+      <div class="count">Records <b>04</b></div>
+    </div>
+
+    <article class="project">
+      <div class="rail">
+        <span class="num">№ 04</span>
+        <span class="pill">Idea</span>
+      </div>
+      <div class="head">
+        <h3 class="title">Persistent Brain — Rollout</h3>
+        <p class="pitch">The Weekly Digest itself as a product. Voice-dump → MD brain → brief + exports.</p>
+      </div>
+      <div class="state">
+        <span class="label-head">Current State</span>
+        <ul>
+          <li>Live for Joel. Intake, contradictions, pending flags, brief, snapshot, handoff — all defined.</li>
+          <li><b>Hypothesis:</b> the pattern generalizes for any consultant with a caseload + a wandering brain.</li>
+          <li><em>Next move when ready</em> — build profile for one teammate; run a single Friday session; generate their first brief.</li>
+          <li><b>Open question:</b> do they own the folder, or does Joel mirror?</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="rail">
+        <span class="num">№ 05</span>
+        <span class="pill">Idea</span>
+      </div>
+      <div class="head">
+        <h3 class="title">App Portfolio Site</h3>
+        <p class="pitch">Future dashboard hosting all side-apps under one roof.</p>
+      </div>
+      <div class="state">
+        <span class="label-head">Current State</span>
+        <ul>
+          <li>Not active. Surfaces when enough apps are shipped to warrant it.</li>
+          <li><em>Next move (when ready)</em> — pick hosting + a minimal index shell.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="rail">
+        <span class="num">№ 06</span>
+        <span class="pill">Idea</span>
+      </div>
+      <div class="head">
+        <h3 class="title">Excel → App Pipeline</h3>
+        <p class="pitch">Ongoing pattern: take old Excel one-offs and rebuild as proper small apps.</p>
+      </div>
+      <div class="state">
+        <span class="label-head">Current State</span>
+        <ul>
+          <li>Not a single project — a pattern that catches candidate conversions.</li>
+          <li>Each new conversion spins up its own <b>projects/&lt;key&gt;.md</b>.</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="project">
+      <div class="rail">
+        <span class="num">№ 07</span>
+        <span class="pill">Idea</span>
+      </div>
+      <div class="head">
+        <h3 class="title">TA Brain — TC Section</h3>
+        <p class="pitch">Unlock a currently off-limits section once Anthony approves.</p>
+      </div>
+      <div class="state">
+        <span class="label-head">Current State</span>
+        <ul>
+          <li><b>Depends on:</b> Anthony buy-in, which depends on a clean data-safety demo.</li>
+          <li><em>Next move</em> — land the Anthony demo (tracked in <b>ta-brain</b>).</li>
+        </ul>
+      </div>
+    </article>
+  </section>
+
+  <!-- GROUP · SHIPPED-FOLDED -->
+  <section class="group" id="folded">
+    <div class="group-head">
+      <div class="title-block">
+        <span class="eye">§04 — State — Shipped-Folded</span>
+        <h2>shipped &amp; folded</h2>
+      </div>
+      <div class="count">Records <b>01</b></div>
+    </div>
+
+    <article class="project">
+      <div class="rail">
+        <span class="num">№ 08</span>
+        <span class="pill folded">Shipped-Folded</span>
+      </div>
+      <div class="head">
+        <h3 class="title struck">Mapping Validator</h3>
+        <p class="pitch">Killed as standalone. Lives inside Data Parser.</p>
+      </div>
+      <div class="state">
+        <span class="label-head">Current State</span>
+        <ul>
+          <li>Decision logged <b>2026-04-22</b>. Do not revisit extraction — functionality is already there.</li>
+        </ul>
+      </div>
+    </article>
+  </section>
+
+</main>
+
+<!-- ──────────────────────────── FOOTER · DARK ──────────────────────────── -->
+<footer>
+  <div class="left">
+    <span>Compiled <b>2026-04-23</b></span>
+    <span>Projects <b>08</b></span>
+  </div>
+  <div class="right">
+    <span>Source <code>projects/*.md</code></span>
+  </div>
+</footer>
+
+</body>
+</html>

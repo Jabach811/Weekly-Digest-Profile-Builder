@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/mabac/.claude/skills/**)",
+      "Bash(npx getdesign@latest add figma)",
+      "mcp__Claude_Preview__preview_start",
+      "WebFetch(domain:getdesign.md)"
+    ]
+  }
+}

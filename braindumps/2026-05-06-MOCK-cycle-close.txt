@@ -1,0 +1,22 @@
+=== MOCK BRAINDUMP — 2026-05-06 — TEST RUN ONLY ===
+(this file was generated to demonstrate the intake loop. not a real voice memo.)
+
+Alright, end of the cycle, let me rip through it real quick. Uh, big news first, Callidi is done, Bubba. Client finally got me the DOB and date of hire on those missing folks, I popped everybody in, loaded the balances, and that loan thing, turned out it was just a logging issue on their side, not an actual payment gap. So we re-amortized, clean, moved on. Plan is off my plate. That's it, done, don't want to see it again.
+
+Uh, NBI Search, holy cow, I actually shipped it. Got rid of the file picker, went with a config file approach, just drop the path in a little JSON sitting next to the HTML, refresh button works, it's beautiful. I love it. So that one's shipped. Gonna start using it day-to-day and we'll see what breaks, but for now, shipped.
+
+ISD, uh, that debate is still going. They did end up sending me the deferral file early, which was good, I pushed for it and they caved, so that's a win. But now the bigger policy thing about whether startups should have the blackout window or not, that's kicked up to some committee or whatever, so I'm just waiting. Nothing I'm driving there, it's on them. Next move is, I guess, just prepare the analysis for whenever they decide.
+
+TA Brain, uh, Anthony demo happened Friday, it was awesome. I walked him through the sanitizer, showed him a test payload with fake socials and all that, showed how it strips everything down, and he was nodding the whole way through. I think we're good. He said he'd loop back this week with a timeline for opening up the TC section. So that unblocks, fingers crossed.
+
+Uh, what else. Oh, the backslash command palette on TA Brain search, I didn't get to it this cycle. Still on the list. Uh, animations, I added like two more on the dashboard load, those are sweet.
+
+Data parser, didn't really touch it this cycle. Been focused on NBI and Anthony prep. I'll circle back next cycle.
+
+Pella, uh, ADP deferral report came in, it's messy as expected. We're in the workaround flow, nothing new to say.
+
+Haverhill, assets landed during my OOO, Beth covered it, no fires. So good hand-off. Thank you Beth.
+
+Oh and one more thing, I want to start playing with, uh, some kind of inbox triage thing for emails. Like I get hammered with client emails and it's hard to tell which ones actually need a response today versus can wait. Something real simple, probably just a Gmail filter setup plus a little dashboard. Just a seed of an idea. Not doing it now.
+
+Alright that's all. Bubba you're out.

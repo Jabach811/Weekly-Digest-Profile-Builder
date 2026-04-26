@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Projects · Portfolio · Rev. 2026-04-23</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500;700&family=Major+Mono+Display&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:           #ede6d3;
+    --bg-panel:     #e3dac3;
+    --bg-panel-2:   #d9cfb4;
+    --ink:          #1a1f1d;
+    --ink-soft:     #3c4541;
+    --ink-mute:     #6a6f69;
+    --rust:         #c65a2e;
+    --rust-deep:    #a04620;
+    --teal:         #2d8e8a;
+    --teal-deep:    #1f6562;
+    --butter:       #b8882e;
+    --butter-soft:  #d4a854;
+    --rule:         rgba(26,31,29,.18);
+    --rule-strong:  rgba(26,31,29,.32);
+    --rule-faint:   rgba(26,31,29,.08);
+    --field-bg:     #f5efde;
+
+    --scanline-color:   rgba(26,31,29,.35);
+    --scanline-opacity: .035;
+
+    --mono:    "Space Mono", "JetBrains Mono", ui-monospace, monospace;
+    --sans:    "DM Sans", system-ui, -apple-system, sans-serif;
+    --display: "Major Mono Display", "Space Mono", monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      var(--scanline-color) 0px,
+      var(--scanline-color) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    opacity: var(--scanline-opacity);
+    pointer-events: none;
+    z-index: 100;
+    mix-blend-mode: multiply;
+  }
+
+  .doc { position: relative; z-index: 2; }
+
+  /* MASTHEAD */
+  .mast {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 18px 40px;
+    background: var(--bg-panel);
+    position: relative;
+  }
+  .mast::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 2px;
+    background: var(--rust);
+  }
+  .mast-left { display: flex; align-items: center; gap: 18px; min-width: 0; }
+  .sigil {
+    width: 38px; height: 38px;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--display);
+    font-size: 17.5px;
+    color: var(--ink);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .sigil::after {
+    content: "";
+    position: absolute; inset: 3px;
+    border: 1px solid var(--rule);
+    border-radius: 50%;
+  }
+  .mast-title {
+    font-family: var(--display);
+    font-size: 19px;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    text-transform: lowercase;
+    white-space: nowrap;
+  }
+  .mast-stencil {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 4px 10px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .mast-stencil .sep { color: var(--rust); margin: 0 6px; font-weight: 700; }
+  .mast-folio {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .mast-folio b { color: var(--ink); font-weight: 700; }
+
+  main { padding: 56px 64px 80px; max-width: 1240px; margin: 0 auto; }
+
+  /* EYE + DISPLAY + LEDE */
+  .eye {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .eye .tick {
+    display: inline-block;
+    width: 22px; height: 1px;
+    background: var(--rust);
+  }
+  .h-display {
+    font-family: var(--display);
+    font-size: clamp(36px, 5.2vw, 64px);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    margin: 0 0 18px;
+    line-height: 1.05;
+    text-transform: lowercase;
+    font-weight: 400;
+  }
+  .h-display em { font-style: normal; color: var(--rust); }
+  .lede-rf {
+    font-family: var(--sans);
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-size: 17px;
+    line-height: 1.5;
+    max-width: 64ch;
+    margin: 0;
+  }
+  .lede-rf b {
+    color: var(--ink);
+    font-weight: 600;
+    border-bottom: 1px dotted var(--rust);
+  }
+
+  /* STATE COUNTER STRIP */
+  .counters {
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    border: 1px solid var(--rule-strong);
+    background: var(--bg-panel);
+    border-radius: 2px;
+  }
+  .counter {
+    padding: 16px 20px;
+    border-right: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .counter:last-child { border-right: none; }
+  .counter-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 700;
+  }
+  .counter-row {
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .counter-value {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .counter-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--rule-strong);
+  }
+  .counter.flight   .counter-dot { background: var(--teal); }
+  .counter.ready    .counter-dot { background: var(--rust); }
+  .counter.scaffold .counter-dot { background: var(--butter); }
+  .counter.idea     .counter-dot { background: var(--ink-mute); }
+  .counter.folded   .counter-dot { background: var(--ink); }
+
+  /* GROUP HEADER */
+  .group {
+    margin-top: 56px;
+  }
+  .group-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 14px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--rust);
+  }
+  .group-label {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink);
+    font-weight: 700;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .group-label .tick {
+    display: inline-block;
+    width: 22px; height: 1px;
+    background: var(--rust);
+  }
+  .group-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+  }
+  .group-count b { color: var(--ink); font-weight: 700; }
+
+  /* CARD GRID */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .card {
+    position: relative;
+    border: 1px solid var(--rule-strong);
+    background: var(--bg);
+    padding: 22px 24px 24px;
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+  }
+  .card::before, .card::after {
+    content: "";
+    position: absolute;
+    width: 10px; height: 10px;
+  }
+  .card::before {
+    top: -1px; left: -1px;
+    border-top: 1.5px solid var(--rust);
+    border-left: 1.5px solid var(--rust);
+  }
+  .card::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 1.5px solid var(--rust);
+    border-right: 1.5px solid var(--rust);
+  }
+
+  .card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .card-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* STATE PILLS — same taxonomy as the brief */
+  .state {
+    display: inline-block;
+    padding: 3px 9px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 2px;
+    border: 1px solid;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .state.flight   { background: var(--teal); color: #fff; border-color: var(--teal-deep); }
+  .state.ready    { background: var(--rust); color: #fff; border-color: var(--rust-deep); }
+  .state.scaffold { background: transparent; color: var(--butter); border-color: var(--butter); }
+  .state.idea     { background: transparent; color: var(--ink-mute); border-color: var(--ink-mute); }
+  .state.folded   { background: transparent; color: var(--ink-mute); border-color: var(--ink-mute); opacity: 0.7; text-decoration: line-through; }
+
+  .card-title {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 19px;
+    color: var(--ink);
+    line-height: 1.2;
+    margin: 0 0 8px;
+    letter-spacing: -0.005em;
+  }
+  .card.folded .card-title {
+    color: var(--ink-mute);
+    text-decoration: line-through;
+  }
+  .card-pitch {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin: 0 0 14px;
+  }
+
+  .derived {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    line-height: 1.4;
+  }
+  .derived::before {
+    content: "↳";
+    color: var(--rust);
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .derived b {
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+  }
+
+  /* CURRENT STATE BULLETS */
+  .state-block {
+    margin-bottom: 14px;
+  }
+  .state-block-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px dotted var(--rule);
+  }
+  .state-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .state-list li {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.55;
+    padding: 4px 0 4px 16px;
+    position: relative;
+  }
+  .state-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--rust);
+    font-weight: 700;
+  }
+  .state-list li b { color: var(--ink); font-weight: 600; }
+
+  /* OPEN QUESTIONS — only when present */
+  .open-q {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--bg-panel);
+    border-left: 3px solid var(--butter);
+    border-radius: 2px;
+  }
+  .open-q-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--butter);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .open-q ul {
+    list-style: none; padding: 0; margin: 0;
+  }
+  .open-q li {
+    font-family: var(--sans);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    padding: 3px 0 3px 14px;
+    position: relative;
+  }
+  .open-q li::before {
+    content: "•";
+    color: var(--butter);
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+  }
+
+  /* DELIVERABLES CHIPS */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px dotted var(--rule);
+  }
+  .chip {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 3px 8px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: var(--bg-panel);
+  }
+
+  /* FOOTER STRIP */
+  footer.foot {
+    margin-top: 64px;
+    padding: 18px 24px;
+    background: var(--bg-panel);
+    border-top: 2px solid var(--rust);
+    border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  footer.foot b { color: var(--ink); font-weight: 700; }
+  footer.foot .src { color: var(--ink-mute); }
+
+  @media (max-width: 920px) {
+    main { padding: 36px 28px 60px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .counters { grid-template-columns: repeat(5, 1fr); font-size: 12px; }
+    .counter { padding: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc">
+
+  <header class="mast">
+    <div class="mast-left">
+      <div class="sigil">jb</div>
+      <div class="mast-title">nbi · projects portfolio</div>
+    </div>
+    <div class="mast-stencil">PROJECTS<span class="sep">/</span>PORTFOLIO<span class="sep">/</span>REV. 2026-04-23</div>
+    <div class="mast-folio">DOC <b>00 / 01</b></div>
+  </header>
+
+  <main>
+
+    <div class="eye"><span class="tick"></span>§ 00 / PORTFOLIO / PROJECTS</div>
+    <h1 class="h-display">eight side <em>tracks.</em></h1>
+    <p class="lede-rf">
+      Personal lab board, no deadlines. <b>Two in flight</b>, one ready to ship,
+      four ideas, one folded. Compiled from <b>projects/*.md</b> at today's date —
+      timeless snapshot, no cycle.
+    </p>
+
+    <div class="counters">
+      <div class="counter flight">
+        <div class="counter-label">Flight</div>
+        <div class="counter-row"><span class="counter-dot"></span><span class="counter-value">02</span></div>
+      </div>
+      <div class="counter ready">
+        <div class="counter-label">Ready-to-ship</div>
+        <div class="counter-row"><span class="counter-dot"></span><span class="counter-value">01</span></div>
+      </div>
+      <div class="counter scaffold">
+        <div class="counter-label">Scaffold</div>
+        <div class="counter-row"><span class="counter-dot"></span><span class="counter-value">00</span></div>
+      </div>
+      <div class="counter idea">
+        <div class="counter-label">Idea</div>
+        <div class="counter-row"><span class="counter-dot"></span><span class="counter-value">04</span></div>
+      </div>
+      <div class="counter folded">
+        <div class="counter-label">Shipped-folded</div>
+        <div class="counter-row"><span class="counter-dot"></span><span class="counter-value">01</span></div>
+      </div>
+    </div>
+
+    <!-- ========== FLIGHT ========== -->
+    <section class="group">
+      <div class="group-head">
+        <div class="group-label"><span class="tick"></span>Flight · Actively Building</div>
+        <div class="group-count"><b>02</b> · projects</div>
+      </div>
+
+      <div class="card-grid">
+
+        <article class="card">
+          <div class="card-head">
+            <span class="state flight">Flight</span>
+            <span class="card-num">№ 01</span>
+          </div>
+          <h3 class="card-title">Data Parser</h3>
+          <p class="card-pitch">Parse and validate incoming data files for plan conversions. Functionality ~100%.</p>
+          <div class="derived"><b>Derived from</b> &nbsp;Standalone</div>
+
+          <div class="state-block">
+            <div class="state-block-label">Current State</div>
+            <ul class="state-list">
+              <li>Functionality ~100%. Rule for this project: <b>no design work, only correctness.</b></li>
+              <li>Mapping Validator lives <b>inside</b> this project — do not extract.</li>
+              <li>Open thread on the secondary summary report: kill or tighten.</li>
+              <li>Either path requires better test files to prove correctness.</li>
+            </ul>
+          </div>
+
+          <div class="open-q">
+            <div class="open-q-label">Open Questions</div>
+            <ul>
+              <li>Keep the secondary summary report (sub-analysis) or kill it?</li>
+              <li>If kept, tighten the logic.</li>
+              <li>Either way: build a golden-set of test input files.</li>
+            </ul>
+          </div>
+
+          <div class="chips">
+            <span class="chip">parser</span>
+            <span class="chip">test-coverage</span>
+            <span class="chip">function-first</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <span class="state flight">Flight</span>
+            <span class="card-num">№ 02</span>
+          </div>
+          <h3 class="card-title">TA Brain</h3>
+          <p class="card-pitch">Always-on UI / search / animation work. Never fully off the list.</p>
+          <div class="derived"><b>Derived from</b> &nbsp;Standalone (always-on)</div>
+
+          <div class="state-block">
+            <div class="state-block-label">Current State</div>
+            <ul class="state-list">
+              <li>Animations: current placement OK. Priority is <b>more</b> animations on processes that don't have them.</li>
+              <li>Concepts page reads as one blur — explore lighter categorization, sidebar stays open.</li>
+              <li>Search works but could be more visible. Add a <b>backslash command palette</b> (NBI Tracker pattern).</li>
+              <li>Anthony: aim for a Friday demo to open the TC section conversation. Demo must prove data-safety (sanitizer agent).</li>
+            </ul>
+          </div>
+
+          <div class="chips">
+            <span class="chip">ui</span>
+            <span class="chip">search</span>
+            <span class="chip">animations</span>
+            <span class="chip">always-on</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========== READY-TO-SHIP ========== -->
+    <section class="group">
+      <div class="group-head">
+        <div class="group-label"><span class="tick"></span>Ready-to-Ship · One Blocker Left</div>
+        <div class="group-count"><b>01</b> · project</div>
+      </div>
+
+      <div class="card-grid">
+
+        <article class="card">
+          <div class="card-head">
+            <span class="state ready">Ready</span>
+            <span class="card-num">№ 03</span>
+          </div>
+          <h3 class="card-title">NBI Search</h3>
+          <p class="card-pitch">Fast search UI over NBI data. Design is locked and loved.</p>
+          <div class="derived"><b>Derived from</b> &nbsp;Standalone</div>
+
+          <div class="state-block">
+            <div class="state-block-label">Current State</div>
+            <ul class="state-list">
+              <li>Design complete — do not iterate.</li>
+              <li><b>Ship-blocker:</b> the file picker. Replace with hard-coded path (or config-loaded path) and a refresh button.</li>
+              <li>Off-ramp: path-free launch experience → shippable.</li>
+            </ul>
+          </div>
+
+          <div class="open-q">
+            <div class="open-q-label">Open Questions</div>
+            <ul>
+              <li>Path: literal hard-code or config-loaded?</li>
+            </ul>
+          </div>
+
+          <div class="chips">
+            <span class="chip">ui</span>
+            <span class="chip">search</span>
+            <span class="chip">ship-blocker · file path</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========== IDEA ========== -->
+    <section class="group">
+      <div class="group-head">
+        <div class="group-label"><span class="tick"></span>Idea · Named, Not Started</div>
+        <div class="group-count"><b>04</b> · projects</div>
+      </div>
+
+      <div class="card-grid">
+
+        <article class="card">
+          <div class="card-head">
+            <span class="state idea">Idea</span>
+            <span class="card-num">№ 04</span>
+          </div>
+          <h3 class="card-title">Persistent Brain — Rollout</h3>
+          <p class="card-pitch">The Weekly Digest system itself as a product. Currently single-operator. Grassroots rollout idea.</p>
+          <div class="derived"><b>Derived from</b> &nbsp;Standalone (system-as-product)</div>
+
+          <div class="state-block">
+            <div class="state-block-label">Current State</div>
+            <ul class="state-list">
+              <li>System is live for Joel. Intake, contradiction check, pending flags, weekly brief, snapshot, handoff pack — all defined.</li>
+              <li>Hypothesis: the pattern generalizes — any consultant with a caseload + a wandering brain should get value.</li>
+              <li>Goal: <b>not a tool launch.</b> A grassroots pattern. If it sticks with one person, it sticks with ten.</li>
+            </ul>
+          </div>
+
+          <div class="open-q">
+            <div class="open-q-label">Open Questions</div>
+            <ul>
+              <li>Pick a candidate teammate for the mock profile.</li>
+              <li>Folder ownership — personal copy or shared template? (Probably personal.)</li>
+              <li>Bootstrap their identity.md from one intro conversation.</li>
+              <li>Document what had to be tweaked so the skill generalizes.</li>
+            </ul>
+          </div>
+
+          <div class="chips">
+            <span class="chip">process</span>
+            <span class="chip">team</span>
+            <span class="chip">grassroots</span>
+            <span class="chip">self-referential</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <span class="state idea">Idea</span>
+            <span class="card-num">№ 05</span>
+          </div>
+          <h3 class="card-title">TA Brain — TC Section</h3>
+          <p class="card-pitch">Unlocks a large currently-off-limits section. Depends on Anthony buy-in.</p>
+          <div class="derived"><b>Derived from</b> &nbsp;TA Brain · TC expansion</div>
+
+          <div class="state-block">
+            <div class="state-block-label">Current State</div>
+            <ul class="state-list">
+              <li>Depends on: Anthony buy-in, which depends on a clean data-safety demo.</li>
+              <li>Value: unlocks a large section. "Blow it out" once approved.</li>
+              <li><b>Next move:</b> land the Anthony demo (tracked in ta-brain.md).</li>
+            </ul>
+          </div>
+
+          <div class="chips">
+            <span class="chip">depends-on-anthony</span>
+            <span class="chip">data-safety</span>
+            <span class="chip">expansion</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <span class="state idea">Idea</span>
+            <span class="card-num">№ 06</span>
+          </div>
+          <h3 class="card-title">Excel → App Pipeline</h3>
+          <p class="card-pitch">Ongoing pattern, not a single project. Take old Excel one-offs and rebuild as proper small apps.</p>
+          <div class="derived"><b>Derived from</b> &nbsp;Standalone (pattern catcher)</div>
+
+          <div class="state-block">
+            <div class="state-block-label">Current State</div>
+            <ul class="state-list">
+              <li>Catches candidate conversions as they come up.</li>
+              <li>Each time a specific one starts, spin up its own <b>projects/&lt;key&gt;.md</b>.</li>
+              <li>No candidates logged yet.</li>
+            </ul>
+          </div>
+
+          <div class="chips">
+            <span class="chip">pattern</span>
+            <span class="chip">ongoing</span>
+            <span class="chip">conversion</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <span class="state idea">Idea</span>
+            <span class="card-num">№ 07</span>
+          </div>
+          <h3 class="card-title">App Portfolio Site</h3>
+          <p class="card-pitch">Future dashboard hosting all side-apps under one roof. Surfaces when there are enough apps.</p>
+          <div class="derived"><b>Derived from</b> &nbsp;Standalone (future infra)</div>
+
+          <div class="state-block">
+            <div class="state-block-label">Current State</div>
+            <ul class="state-list">
+              <li>Not active. Surfaces when enough apps are shipped to warrant it.</li>
+              <li><b>Next move (when ready):</b> pick hosting + a minimal index shell.</li>
+            </ul>
+          </div>
+
+          <div class="chips">
+            <span class="chip">infra</span>
+            <span class="chip">dashboard</span>
+            <span class="chip">future</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========== SHIPPED-FOLDED ========== -->
+    <section class="group">
+      <div class="group-head">
+        <div class="group-label"><span class="tick"></span>Shipped-Folded · Decision Logged</div>
+        <div class="group-count"><b>01</b> · project</div>
+      </div>
+
+      <div class="card-grid">
+
+        <article class="card folded">
+          <div class="card-head">
+            <span class="state folded">Folded</span>
+            <span class="card-num">№ 08</span>
+          </div>
+          <h3 class="card-title">Mapping Validator</h3>
+          <p class="card-pitch">Killed as a standalone — lives inside Data Parser. Functionality is already there; 2-for-1 is the point.</p>
+          <div class="derived"><b>Derived from</b> &nbsp;Folded into Data Parser</div>
+
+          <div class="state-block">
+            <div class="state-block-label">Current State</div>
+            <ul class="state-list">
+              <li>status: idea → <b>shipped-folded</b>.</li>
+              <li>This file exists only to log the decision and prevent the idea from silently re-surfacing later.</li>
+              <li>Do not revisit extraction.</li>
+            </ul>
+          </div>
+
+          <div class="chips">
+            <span class="chip">decision-logged</span>
+            <span class="chip">folded-into-data-parser</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <div>Compile date <b>2026-04-23</b> · projects <b>08</b></div>
+    <div class="src">source · projects/*.md · persistent brain</div>
+  </footer>
+
+</div>
+
+</body>
+</html>

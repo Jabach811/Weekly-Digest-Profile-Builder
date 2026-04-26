@@ -1,0 +1,14 @@
+key,case_number,canonical_name,display_name,day1,effective_date,asset_transfer_date,status,scope,notes
+callidi,JK62945-00001,Callidatas,Callidi Tas,2026-01-01,2026-04-01,2026-04-10,ramping,full,Balances loaded 4/24 post-Informatica recovery. Loans blocked on XKB/XKC missing from Transact Detail; need Earl. Elections Monday.
+prime,QK62489-00001,Prime Healthcare,Prime Healthcare,2026-01-01,2026-08-01,2026-08-01,on_hold,full,On hold.
+pella,QK63283-00052,Pella Carolina,Pella SC,2026-03-01,2026-05-01,2026-05-01,active,full,
+canam-br,QK63283-00099,Canam Bridges,Canam Bridges,2026-04-22,2026-10-01,2026-10-01,future,full,Way out — day1 not meaningful yet.
+stoutco,QK63283-00120,Stoutco,Stoutco,2026-04-22,2026-07-01,2026-07-01,future,full,Way out — day1 not meaningful yet.
+bonnier,QK63283-00105,Bonnier Corporation,Bonnier,2026-04-01,2026-07-01,2026-07-01,future,full,Way out — day1 not meaningful yet.
+leibys,QK63283-00112,Leiby's Dairy,Leiby's,2026-04-22,2026-08-01,2026-08-01,future,full,Way out — day1 not meaningful yet.
+canam-bd,QK63283-00113,Canam Buildings,Canam Bldgs,2026-04-01,2026-10-01,2026-10-01,future,full,Way out — day1 not meaningful yet.
+haverhill,TA069932-00051,Havern School,Haverhill,2026-03-01,2026-05-01,2026-05-01,active,full,
+isd,TA069932-00056,International School of Denver,ISD,2026-04-01,2026-07-01,2026-07-01,active,partial,Limited scope: census + elections + deferrals only.
+banyan,TBD,Banyan Treatment Centers,Banyan (Cutting Edge Staffing),2026-04-24,2026-05-28,2026-06-01,active,full,Limited access 5/14-5/27. Case# claimed QK63283-00099 but collides with canam-br — hold until confirmed.
+tmg,TBD,TMG,TMG,2026-01-01,2026-01-01,,active,vesting-fix,Re-opened old plan. WTW advisor group. Pivoting to self-calculated YOS verified against vendor; client-ask likely dropped. Hold pending confirmation.
+cocc,TBD,COCC,COCC,,,,active,full,Live EDS source-routing fix + residual dividends incoming next week. Touchy client. Dates TBD.

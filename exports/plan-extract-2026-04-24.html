@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Plan Extract · 2026-04-24</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --f-red:        #DA291C;
+    --f-red-dark:   #B01E0A;
+    --f-white:      #FFFFFF;
+    --f-paper:      #FAFAFA;
+    --f-black:      #000000;
+    --f-ink:        #181818;
+    --f-ink-60:     #666666;
+    --f-ink-50:     #8F8F8F;
+    --f-ink-30:     #BCBCBC;
+    --f-ui-20:      #D2D2D2;
+    --f-ui-10:      #ECECEC;
+
+    --sans:  'Inter Tight', Arial, Helvetica, sans-serif;
+    --label: 'Archivo', Arial, Helvetica, sans-serif;
+    --mono:  'JetBrains Mono', ui-monospace, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--f-white);
+    color: var(--f-ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+    font-feature-settings: "tnum";
+  }
+
+  .doc {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 56px 120px;
+  }
+
+  /* ─────────── topbar ─────────── */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: var(--f-black);
+    color: var(--f-white);
+    margin: 0 -56px;
+    padding: 14px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--label);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--f-red);
+  }
+  .topbar .mark {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .topbar .mark::before {
+    content: "";
+    width: 2px; height: 14px;
+    background: var(--f-red);
+    display: inline-block;
+  }
+  .topbar .meta span + span::before {
+    content: "·";
+    margin: 0 10px;
+    color: var(--f-ink-50);
+  }
+  .topbar .meta b { color: var(--f-white); font-weight: 600; }
+
+  /* ─────────── hero ─────────── */
+  .hero {
+    padding: 88px 0 56px;
+    border-bottom: 1px solid var(--f-ui-20);
+  }
+  .eye {
+    font-family: var(--label);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+    color: var(--f-ink-50);
+  }
+  h1.display {
+    font-family: var(--sans);
+    font-size: clamp(64px, 9vw, 112px);
+    font-weight: 500;
+    line-height: 0.94;
+    letter-spacing: -0.04em;
+    margin-top: 22px;
+    text-transform: lowercase;
+  }
+  h1.display .dot { color: var(--f-red); }
+  p.lede {
+    font-family: var(--sans);
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1.55;
+    max-width: 62ch;
+    margin-top: 32px;
+    color: var(--f-ink-60);
+  }
+  p.lede b { color: var(--f-ink); font-weight: 600; }
+
+  /* ─────────── brief panel ─────────── */
+  .brief {
+    margin: 56px 0 24px;
+    position: relative;
+    border: 1px solid var(--f-red);
+    background: var(--f-paper);
+    padding: 28px 32px 30px 36px;
+  }
+  .brief::before {
+    content: ""; position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 4px; background: var(--f-red);
+  }
+  .brief-label {
+    font-family: var(--label);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--f-red);
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brief-label::before {
+    content: "⚑";
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1;
+  }
+  .brief-body { font-size: 15.5px; line-height: 1.6; color: var(--f-ink); }
+  .brief-body p { margin-bottom: 12px; max-width: 64ch; }
+  .brief-body p:last-child { margin-bottom: 0; }
+  .brief-body b { color: var(--f-ink); font-weight: 700; }
+  .brief-body em { color: var(--f-red-dark); font-style: normal; font-weight: 600; }
+
+  /* ─────────── TOC ─────────── */
+  .toc {
+    margin: 48px 0 0;
+    border-top: 2px solid var(--f-ink);
+  }
+  .toc-head {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0 12px;
+    font-family: var(--label);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--f-ink-60);
+    border-bottom: 1px solid var(--f-ui-20);
+  }
+  .toc-head b { color: var(--f-ink); font-weight: 600; }
+  .toc-row {
+    display: grid;
+    grid-template-columns: 32px 1fr 96px 86px;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--f-ui-20);
+    font-size: 14px;
+    align-items: center;
+    text-decoration: none;
+    color: var(--f-ink);
+  }
+  .toc-row:last-child { border-bottom: none; }
+  .toc-row:hover { background: var(--f-paper); }
+  .toc-row .num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--f-ink-50);
+    letter-spacing: 0.05em;
+  }
+  .toc-row .name {
+    font-weight: 600;
+    color: var(--f-ink);
+  }
+  .toc-row .name .em { color: var(--f-red); font-style: normal; font-weight: 600; }
+  .toc-row .stage {
+    font-family: var(--label);
+    font-size: 10.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--f-ink-60);
+    text-align: right;
+  }
+  .toc-row .due {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--f-ink);
+    text-align: right;
+    letter-spacing: 0.04em;
+  }
+  .toc-row .due.fire { color: var(--f-red); font-weight: 600; }
+  .toc-row .due.cold { color: var(--f-ink-30); }
+
+  /* ─────────── plan section ─────────── */
+  .plan {
+    margin-top: 80px;
+    scroll-margin-top: 60px;
+  }
+  .plan-head {
+    border-top: 2px solid var(--f-ink);
+    padding-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 24px;
+    row-gap: 14px;
+    align-items: end;
+    margin-bottom: 26px;
+  }
+  .plan-eye {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--f-ink-50);
+    text-transform: uppercase;
+    grid-column: 1 / -1;
+    margin-bottom: 6px;
+  }
+  .plan-eye b { color: var(--f-ink); font-weight: 600; }
+  h2.plan-name {
+    font-family: var(--sans);
+    font-size: 44px;
+    font-weight: 500;
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    color: var(--f-ink);
+    text-transform: lowercase;
+  }
+  h2.plan-name em { color: var(--f-red); font-style: normal; font-weight: 500; }
+
+  .pill {
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border: 1px solid var(--f-ink);
+    border-radius: 2px;
+    font-family: var(--label);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--f-ink);
+    background: var(--f-white);
+    white-space: nowrap;
+  }
+  .pill.fire   { background: var(--f-red); border-color: var(--f-red); color: var(--f-white); }
+  .pill.ramping { border-color: var(--f-ink); background: var(--f-ink); color: var(--f-white); }
+  .pill.future { color: var(--f-ink-60); border-color: var(--f-ui-20); }
+  .pill.hold   { color: var(--f-ink-50); border-color: var(--f-ui-20); background: var(--f-ui-10); }
+
+  /* facts strip */
+  .facts {
+    border-top: 1px solid var(--f-ui-20);
+    border-bottom: 1px solid var(--f-ui-20);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-bottom: 24px;
+  }
+  .fact {
+    padding: 14px 16px 14px 0;
+    border-right: 1px solid var(--f-ui-20);
+  }
+  .fact:last-child { border-right: none; }
+  .fact .k {
+    font-family: var(--label);
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--f-ink-50);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .fact .v {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--f-ink);
+    letter-spacing: 0.02em;
+  }
+  .fact .v.soft { color: var(--f-ink-50); font-weight: 400; }
+  .fact .v.warn { color: var(--f-red); }
+
+  /* state digest */
+  .state-label {
+    font-family: var(--label);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--f-ink-50);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .state {
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--f-ink);
+    margin-bottom: 28px;
+    max-width: 64ch;
+  }
+  .state b { font-weight: 700; }
+  .state em { color: var(--f-red-dark); font-style: normal; font-weight: 600; }
+  .state p + p { margin-top: 12px; }
+
+  /* open items list */
+  .items {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--f-ink);
+  }
+  .items h4 {
+    font-family: var(--label);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--f-ink-50);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .items ul { list-style: none; }
+  .items li {
+    padding: 12px 0;
+    font-size: 14px;
+    color: var(--f-ink);
+    border-bottom: 1px solid var(--f-ui-20);
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 10px;
+    line-height: 1.5;
+    align-items: start;
+  }
+  .items li:last-child { border-bottom: none; }
+  .items li .box {
+    width: 12px; height: 12px;
+    border: 1.25px solid var(--f-ink);
+    border-radius: 2px;
+    margin-top: 4px;
+    background: var(--f-white);
+    position: relative;
+  }
+  .items li.done .box {
+    background: var(--f-ink);
+  }
+  .items li.done .box::after {
+    content: "✓";
+    color: var(--f-white);
+    font-size: 10px;
+    line-height: 1;
+    position: absolute;
+    top: 1px; left: 2px;
+    font-weight: 700;
+  }
+  .items li.done .text {
+    color: var(--f-ink-50);
+    text-decoration: line-through;
+    text-decoration-color: var(--f-ink-30);
+  }
+  .items li.blocked .box {
+    background: repeating-linear-gradient(45deg, var(--f-ink) 0 2px, var(--f-white) 2px 4px);
+  }
+  .items li.warn .box {
+    border-color: var(--f-red);
+  }
+  .items li.warn .text::before {
+    content: "⚠ ";
+    color: var(--f-red);
+    font-weight: 700;
+  }
+  .items li .text { color: var(--f-ink); }
+  .items li .text b { font-weight: 700; }
+
+  /* footer */
+  .doc-foot {
+    margin-top: 96px;
+    padding-top: 24px;
+    border-top: 2px solid var(--f-ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--label);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--f-ink-60);
+  }
+  .doc-foot b { color: var(--f-ink); font-weight: 600; }
+  .doc-foot .sep { color: var(--f-red); margin: 0 8px; font-weight: 700; }
+
+  /* divider for plan group breaks */
+  .group-break {
+    margin: 80px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid var(--f-ui-20);
+    font-family: var(--label);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--f-ink-50);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .group-break b { color: var(--f-ink); font-weight: 700; font-size: 12px; }
+  .group-break .count {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--f-ink-50);
+  }
+
+  @media print {
+    .topbar { position: static; }
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc">
+
+<header class="topbar">
+  <div class="mark">Plan Extract · NBI</div>
+  <div class="meta">
+    <span>EXT.001</span><span>REV <b>2026.04.24</b></span><span>13 PLANS</span>
+  </div>
+</header>
+
+<!-- ─────────── HERO ─────────── -->
+<section class="hero">
+  <div class="eye">§ Plan Extract · End of Week · 2026 · 04 · 24</div>
+  <h1 class="display">where things <br>stand<span class="dot">.</span></h1>
+  <p class="lede">
+    A single-pass read of the caseload. <b>Brief at the top</b> from today's
+    voice dump — the most recent truth, overrides anything below it on
+    conflict. <b>Plan blocks</b> in attention order: hot fires first, then
+    imminent wires, then parked.
+  </p>
+</section>
+
+<!-- ─────────── BRIEF ─────────── -->
+<aside class="brief">
+  <div class="brief-label">Brief · read me first</div>
+  <div class="brief-body">
+
+    <p>End of week. The big shift today: <b>Informatica came back up</b>
+    around <em>10:57 AM</em>, which unblocked everything that was waiting
+    on it. Walked Beth through <b>Callidi</b> on a screen-share — balances
+    are loaded, dummy account reversed, $11M back in the right places.
+    Loans hit a new wall: <em>ref numbers XKB and XKC are landing in Bill
+    Remit Detail but not in Transact Detail</em>. Suspect a fund-letter-
+    prefix collision after the alphabet rolls past Z. Pulling Earl in
+    Monday if it doesn't fall over by EOD.</p>
+
+    <p>Real win on <b>TMG</b>. Worked it through with Ruby and pivoted
+    the whole approach: <em>calculate years-of-service ourselves and
+    verify against vendor data, instead of asking the client</em>. Vendor
+    confirms every expected 100%-er is actually 100%. Client exposure
+    drops from ~200 cases to <em>just the one self-flagged participant</em>.
+    Monday: load the self-calculated YOS and flip the vesting. Open
+    question parked: why were some people flagged at 0% and not others.</p>
+
+    <p>New fire: <b>COCC</b>. EDS source-routing was set up wrong on me —
+    one payroll source pointed at the wrong target, and another source is
+    now receiving funds it shouldn't. <em>Fix ASAP today or first thing
+    Monday</em>. Touchy client. Residual dividends incoming next week —
+    line that up with Beth and capture it for the slide-creator pipeline.</p>
+
+    <p><b>Banyan</b> is teed up: limited-access census ready, early access
+    <em>5/14 → 5/27</em>, wire <em>6/1</em>. Beth is on execution. Case
+    number is still flagged because the QK number Joel gave collides with
+    Canam-Bridges in the registry. <b>Pella</b> + <b>Haverhill</b> both
+    ramping toward 5/1 wires — Pella waiting on the ADP deferral report
+    (Sally is the lever), Haverhill clean and quiet. Everything else
+    (Canam, ISD, Leiby's, Stoutco, Bonnier) is correctly parked. Prime is
+    on hold.</p>
+
+    <p>NBI app push is stuck — separate thing, tracked under projects.
+    Demo with Anthony underdelivered; long-game framing intact, follow-
+    up planned. — <b>Joel</b></p>
+
+  </div>
+</aside>
+
+<!-- ─────────── TOC ─────────── -->
+<section class="toc">
+  <div class="toc-head"><span><b>13</b> Plans</span><span>State <span style="margin: 0 6px;">/</span> Next Date</span></div>
+
+  <a class="toc-row" href="#callidi"><span class="num">01</span><span class="name">callidi <span class="em">tas</span></span><span class="stage">Ramping</span><span class="due fire">Mon · loans</span></a>
+  <a class="toc-row" href="#tmg"><span class="num">02</span><span class="name">tmg</span><span class="stage">Fix in flight</span><span class="due fire">Mon · YOS</span></a>
+  <a class="toc-row" href="#cocc"><span class="num">03</span><span class="name">cocc</span><span class="stage">Live fire</span><span class="due fire">ASAP</span></a>
+  <a class="toc-row" href="#pella"><span class="num">04</span><span class="name">pella <span class="em">sc</span></span><span class="stage">Ramping</span><span class="due">5 / 01</span></a>
+  <a class="toc-row" href="#haverhill"><span class="num">05</span><span class="name">haverhill</span><span class="stage">Pre-wire clean</span><span class="due">5 / 01</span></a>
+  <a class="toc-row" href="#banyan"><span class="num">06</span><span class="name">banyan</span><span class="stage">Active · staged</span><span class="due">5 / 14</span></a>
+  <a class="toc-row" href="#isd"><span class="num">07</span><span class="name">isd</span><span class="stage">Active · partial</span><span class="due cold">7 / 01</span></a>
+  <a class="toc-row" href="#bonnier"><span class="num">08</span><span class="name">bonnier</span><span class="stage">Future</span><span class="due cold">7 / 01</span></a>
+  <a class="toc-row" href="#stoutco"><span class="num">09</span><span class="name">stoutco</span><span class="stage">Future</span><span class="due cold">7 / 01</span></a>
+  <a class="toc-row" href="#leibys"><span class="num">10</span><span class="name">leiby's</span><span class="stage">Future</span><span class="due cold">8 / 01</span></a>
+  <a class="toc-row" href="#prime"><span class="num">11</span><span class="name">prime</span><span class="stage">On hold</span><span class="due cold">8 / 01</span></a>
+  <a class="toc-row" href="#canam-br"><span class="num">12</span><span class="name">canam <span class="em">br</span></span><span class="stage">Future</span><span class="due cold">10 / 01</span></a>
+  <a class="toc-row" href="#canam-bd"><span class="num">13</span><span class="name">canam <span class="em">bd</span></span><span class="stage">Future</span><span class="due cold">10 / 01</span></a>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     GROUP A — HOT (today's fires)
+     ════════════════════════════════════════════════════════════ -->
+<div class="group-break"><b>A · Hot this week</b><span class="count">03 PLANS</span></div>
+
+
+<!-- ─────────── CALLIDI ─────────── -->
+<section class="plan" id="callidi">
+  <div class="plan-head">
+    <span class="plan-eye">01 · <b>JK62945-00001</b> · re-opened 4/24 pm</span>
+    <h2 class="plan-name">callidi <em>tas.</em></h2>
+    <span class="pill ramping">Ramping</span>
+  </div>
+
+  <div class="facts">
+    <div class="fact"><span class="k">Day 1</span><span class="v">2026 · 01 · 01</span></div>
+    <div class="fact"><span class="k">Effective</span><span class="v">2026 · 04 · 01</span></div>
+    <div class="fact"><span class="k">Asset xfer</span><span class="v">2026 · 04 · 10</span></div>
+    <div class="fact"><span class="k">Owner</span><span class="v soft">Self · Beth</span></div>
+  </div>
+
+  <div class="state-label">State · 2026-04-24 PM</div>
+  <div class="state">
+    <p>Informatica recovered <em>10:57 AM</em>, walked Beth through the
+    full balance load on a screen-share. <b>Participant balances loaded
+    and reconciled</b>; 999-00-0000 dummy account reversed cleanly via
+    P3 → ROC; $11M back where it belongs.</p>
+    <p>New blocker on the loans side: <b>ref numbers XKB and XKC are not
+    landing in Transact Detail</b> (they're sitting in Bill Remit Detail
+    fine). Working theory: alphabet-prefix collision past Z (AA / BA / CA
+    series). Earl is the escalation if Monday morning doesn't crack it.
+    Loan setup itself is done — Paychex record-keeper added, conversion
+    record created, manual loan-number → loan-source matching completed
+    by hand.</p>
+  </div>
+
+  <div class="items">
+    <h4>Open Items · 6 active · 4 closed today</h4>
+    <ul>
+      <li><span class="box"></span><span class="text"><b>Diagnose XKB / XKC</b> not landing in Transact Detail. Pull Earl in Monday if not solved EOD.</span></li>
+      <li><span class="box"></span><span class="text">Re-run / process loans once XKB / XKC is resolved.</span></li>
+      <li><span class="box"></span><span class="text">Beth · process elections Monday.</span></li>
+      <li class="warn"><span class="box"></span><span class="text">Confirm whether the older 4/22 frozen-unfrozen re-amortize loan issue is the same as XKB / XKC or still separate.</span></li>
+      <li class="warn"><span class="box"></span><span class="text">Confirm whether DOB / DOH from client is fully resolved (balances staged anyway, never explicitly stated).</span></li>
+      <li><span class="box"></span><span class="text">Surface balance-file completeness issue up the chain.</span></li>
+      <li class="done"><span class="box"></span><span class="text">Informatica down — resolved company-wide ~10:57.</span></li>
+      <li class="done"><span class="box"></span><span class="text">Finish prep so nothing blocks the post-Informatica sequence.</span></li>
+      <li class="done"><span class="box"></span><span class="text">Post participant balances.</span></li>
+      <li class="done"><span class="box"></span><span class="text">Reverse the 999-00-0000 dummy account.</span></li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ─────────── TMG ─────────── -->
+<section class="plan" id="tmg">
+  <div class="plan-head">
+    <span class="plan-eye">02 · <b>case # TBD</b> · WTW advisor group · re-opened</span>
+    <h2 class="plan-name">tmg.</h2>
+    <span class="pill fire">Fix in flight</span>
+  </div>
+
+  <div class="facts">
+    <div class="fact"><span class="k">Day 1</span><span class="v">2026 · 01 · 01</span></div>
+    <div class="fact"><span class="k">Effective</span><span class="v">2026 · 01 · 01</span></div>
+    <div class="fact"><span class="k">Scope</span><span class="v">Vesting fix · ~300</span></div>
+    <div class="fact"><span class="k">AM</span><span class="v soft">Ruby (close)</span></div>
+  </div>
+
+  <div class="state-label">State · 2026-04-24 PM · breakthrough</div>
+  <div class="state">
+    <p>Worked through with Ruby and pivoted the whole fix path. Original
+    plan was <em>ask Meredith for years-of-service</em>. New plan:
+    <b>self-calculate YOS, verify against vendor data</b> — and the
+    verification came back clean. Every participant we expected to be
+    100% is 100% on the vendor records.</p>
+    <p>Big win: <b>client exposure drops from ~200 affected cases to one
+    self-flagged participant</b> (the 20-year employee who logged in,
+    saw 0%, and reported it). The conversation with the client is now
+    "we found one weird case, we fixed it" instead of "we have a vesting
+    problem across the population."</p>
+    <p>Open question parked for after the fix lands: <em>why were some
+    participants flagged at 0% and others not</em>. Root cause unknown.</p>
+  </div>
+
+  <div class="items">
+    <h4>Open Items · 6 active</h4>
+    <ul>
+      <li class="warn"><span class="box"></span><span class="text">Confirm / fill in TMG case number (still not given).</span></li>
+      <li class="blocked"><span class="box"></span><span class="text"><b>Approach pivot in flight</b> — moving from "ask Meredith" to "self-calculate + verify." Pending Joel's confirm to drop the Meredith ask.</span></li>
+      <li><span class="box"></span><span class="text">Finalize self-calculated YOS file (Monday).</span></li>
+      <li><span class="box"></span><span class="text">Load YOS and flip vesting for the impacted ~300.</span></li>
+      <li><span class="box"></span><span class="text">Investigate why some participants weren't flagged at 0% — root cause hunt after the fix.</span></li>
+      <li><span class="box"></span><span class="text">Prep "single-case, no harm, fixed" talk-track for Ruby / WTW.</span></li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ─────────── COCC ─────────── -->
+<section class="plan" id="cocc">
+  <div class="plan-head">
+    <span class="plan-eye">03 · <b>case # TBD</b> · resurfaced 4/24 · touchy client</span>
+    <h2 class="plan-name">cocc.</h2>
+    <span class="pill fire">Live fire</span>
+  </div>
+
+  <div class="facts">
+    <div class="fact"><span class="k">Day 1</span><span class="v warn">TBD</span></div>
+    <div class="fact"><span class="k">Effective</span><span class="v warn">TBD</span></div>
+    <div class="fact"><span class="k">Asset xfer</span><span class="v warn">TBD</span></div>
+    <div class="fact"><span class="k">Owner</span><span class="v soft">Self · Beth</span></div>
+  </div>
+
+  <div class="state-label">State · 2026-04-24</div>
+  <div class="state">
+    <p>EDS was set up wrong — one payroll-file source got routed to the
+    wrong target, and a downstream source is now receiving funds it
+    shouldn't. <em>Joel owns the mistake</em>. Not a financial fix; it's
+    an internal source-to-source transfer, but the payroll file needs
+    cleanup before it propagates further.</p>
+    <p><b>Residual dividends incoming next week.</b> Mechanically low-
+    impact, but the client sensitivity is the highest on the caseload —
+    "very, very touchy." Plan is to walk Beth through the residual-
+    dividend application and capture screenshots for the slide-creator
+    pipeline at the same time.</p>
+  </div>
+
+  <div class="items">
+    <h4>Open Items · 6 active</h4>
+    <ul>
+      <li class="warn"><span class="box"></span><span class="text">Capture COCC case number, day1, effective, asset transfer date — none on file.</span></li>
+      <li><span class="box"></span><span class="text">Fix EDS source-routing (Joel · ASAP).</span></li>
+      <li><span class="box"></span><span class="text">Re-verify payroll file post-fix — confirm no other sources receiving misallocated funds.</span></li>
+      <li><span class="box"></span><span class="text">Prep procedure for residual-dividend application with Beth.</span></li>
+      <li><span class="box"></span><span class="text">Apply residual dividends as soon as they land (expected next week).</span></li>
+      <li><span class="box"></span><span class="text">Capture screenshots through the residual-dividend run for the slide-creator pipeline.</span></li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     GROUP B — IMMINENT (within 2 weeks)
+     ════════════════════════════════════════════════════════════ -->
+<div class="group-break"><b>B · Imminent · within 2 weeks</b><span class="count">03 PLANS</span></div>
+
+
+<!-- ─────────── PELLA ─────────── -->
+<section class="plan" id="pella">
+  <div class="plan-head">
+    <span class="plan-eye">04 · <b>QK63283-00052</b> · ADP source · contact-chasing</span>
+    <h2 class="plan-name">pella <em>sc.</em></h2>
+    <span class="pill ramping">Ramping</span>
+  </div>
+
+  <div class="facts">
+    <div class="fact"><span class="k">Day 1</span><span class="v">2026 · 03 · 01</span></div>
+    <div class="fact"><span class="k">Effective</span><span class="v">2026 · 05 · 01</span></div>
+    <div class="fact"><span class="k">Asset xfer</span><span class="v">2026 · 05 · 01</span></div>
+    <div class="fact"><span class="k">Source</span><span class="v soft">ADP</span></div>
+  </div>
+
+  <div class="state-label">State · 2026-04-24</div>
+  <div class="state">
+    <p>Liquidation day in <em>~7 days</em>. Population is mostly already
+    on file, so the records side is easy. Open thread is still the
+    <b>ADP deferral report</b> — sending into a group inbox hasn't
+    surfaced a response. Lever: <em>Sally</em> on the Pella side
+    (name tentative) — ask her to push ADP directly. Standing
+    workaround in place if the report doesn't arrive in time:
+    load everyone out of default at their current %, hand the client
+    the in-window ambiguous group to notify directly.</p>
+  </div>
+
+  <div class="items">
+    <h4>Open Items · 4 active</h4>
+    <ul>
+      <li><span class="box"></span><span class="text">Confirm Pella-side contact name (tentative: Sally) and email by EOD 4/24.</span></li>
+      <li><span class="box"></span><span class="text">Ping Sally to push ADP for the deferral report — ASAP, not by next cycle.</span></li>
+      <li><span class="box"></span><span class="text">Log ADP rep's name + email once surfaced (still missing from 4/22).</span></li>
+      <li><span class="box"></span><span class="text">Confirm whether a base file is required.</span></li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ─────────── HAVERHILL ─────────── -->
+<section class="plan" id="haverhill">
+  <div class="plan-head">
+    <span class="plan-eye">05 · <b>TA069932-00051</b> · Havern School · coverage required</span>
+    <h2 class="plan-name">haverhill.</h2>
+    <span class="pill">Pre-wire clean</span>
+  </div>
+
+  <div class="facts">
+    <div class="fact"><span class="k">Day 1</span><span class="v">2026 · 03 · 01</span></div>
+    <div class="fact"><span class="k">Effective</span><span class="v">2026 · 05 · 01</span></div>
+    <div class="fact"><span class="k">Asset xfer</span><span class="v">2026 · 05 · 01</span></div>
+    <div class="fact"><span class="k">Owner</span><span class="v soft">Beth · Damien</span></div>
+  </div>
+
+  <div class="state-label">State · 2026-04-24</div>
+  <div class="state">
+    <p>Quietest of the imminent set. Base file fully loaded; AQT fix
+    explained; flags placed; everybody is in the system. Wire arrives
+    <em>5/1</em>, which lands during OOO — coverage owns the post-wire
+    recon. Only open pre-wire step is the <b>NBI status email</b>,
+    which Beth has.</p>
+  </div>
+
+  <div class="items">
+    <h4>Open Items · 3 active · 1 closed today</h4>
+    <ul>
+      <li><span class="box"></span><span class="text">Beth · send NBI status email.</span></li>
+      <li><span class="box"></span><span class="text">Hand-off doc owed to coverage before OOO starts (4/27).</span></li>
+      <li><span class="box"></span><span class="text">Post-OOO · reconcile asset load, close loop with backup contact.</span></li>
+      <li class="done"><span class="box"></span><span class="text">Base file loaded / AQT fix explained / flags placed.</span></li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ─────────── BANYAN ─────────── -->
+<section class="plan" id="banyan">
+  <div class="plan-head">
+    <span class="plan-eye">06 · <b>case # TBD ⚠ collides w/ canam-br</b> · cash conversion</span>
+    <h2 class="plan-name">banyan <em>· cutting edge.</em></h2>
+    <span class="pill">Active · staged</span>
+  </div>
+
+  <div class="facts">
+    <div class="fact"><span class="k">Early access</span><span class="v">5/14 → 5/27</span></div>
+    <div class="fact"><span class="k">Effective</span><span class="v">2026 · 05 · 28</span></div>
+    <div class="fact"><span class="k">Asset xfer</span><span class="v">2026 · 06 · 01</span></div>
+    <div class="fact"><span class="k">Owner</span><span class="v soft">Beth</span></div>
+  </div>
+
+  <div class="state-label">State · 2026-04-24</div>
+  <div class="state">
+    <p>Staged and ready. Limited-access census file ready to load. Beth
+    runs the playbook: <em>enter census → default elections → run
+    Julius's consolidated query</em>. Cash conversion — balances default
+    into a managed-subscription investment election unless participants
+    pick during early access. Standing transmission-worthy item:
+    <em>post-limited-access activity monitoring</em> in the week of 5/27
+    to verify participants only changed what they were allowed to.</p>
+  </div>
+
+  <div class="items">
+    <h4>Open Items · 7 active</h4>
+    <ul>
+      <li class="warn"><span class="box"></span><span class="text">Confirm true case number (Joel claimed QK63283-00099; collides with canam-br).</span></li>
+      <li><span class="box"></span><span class="text">Confirm display name: Banyan Treatment Centers vs. Cutting Edge Staffing (or both — DBA).</span></li>
+      <li><span class="box"></span><span class="text">Beth · load limited access census file.</span></li>
+      <li><span class="box"></span><span class="text">Beth · default investment elections.</span></li>
+      <li><span class="box"></span><span class="text">Beth · run Julius's consolidated-row query to audit the load.</span></li>
+      <li><span class="box"></span><span class="text">Schedule post-early-access activity-monitoring queries for week of 5/27.</span></li>
+      <li><span class="box"></span><span class="text">Post-wire (6/1) reconciliation plan.</span></li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     GROUP C — PARKED · CORRECTLY QUIET
+     ════════════════════════════════════════════════════════════ -->
+<div class="group-break"><b>C · Parked · correctly quiet</b><span class="count">07 PLANS</span></div>
+
+
+<!-- ─────────── ISD ─────────── -->
+<section class="plan" id="isd">
+  <div class="plan-head">
+    <span class="plan-eye">07 · <b>TA069932-00056</b> · International School of Denver · partial scope</span>
+    <h2 class="plan-name">isd.</h2>
+    <span class="pill future">Active · partial</span>
+  </div>
+
+  <div class="facts">
+    <div class="fact"><span class="k">Day 1</span><span class="v">2026 · 04 · 01</span></div>
+    <div class="fact"><span class="k">Effective</span><span class="v">2026 · 07 · 01</span></div>
+    <div class="fact"><span class="k">Asset xfer</span><span class="v">2026 · 07 · 01</span></div>
+    <div class="fact"><span class="k">Scope</span><span class="v soft">Census · elections · deferrals</span></div>
+  </div>
+
+  <div class="state-label">State · 2026-04-24</div>
+  <div class="state">
+    <p>Limited-scope conversion (census + elections + deferrals only —
+    not a full asset transfer). Mentioned in the dump only as "down the
+    road." No new activity this cycle.</p>
+  </div>
+  <div class="items">
+    <h4>Open Items</h4>
+    <ul>
+      <li><span class="box"></span><span class="text">No active items this cycle. Resurface when scope work begins.</span></li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ─────────── BONNIER ─────────── -->
+<section class="plan" id="bonnier">
+  <div class="plan-head">
+    <span class="plan-eye">08 · <b>QK63283-00105</b> · day 1 not meaningful yet</span>
+    <h2 class="plan-name">bonnier.</h2>
+    <span class="pill future">Future</span>
+  </div>
+  <div class="facts">
+    <div class="fact"><span class="k">Day 1</span><span class="v soft">2026 · 04 · 01</span></div>
+    <div class="fact"><span class="k">Effective</span><span class="v">2026 · 07 · 01</span></div>
+    <div class="fact"><span class="k">Asset xfer</span><span class="v">2026 · 07 · 01</span></div>
+    <div class="fact"><span class="k">Owner</span><span class="v soft">—</span></div>
+  </div>
+  <div class="state-label">State</div>
+  <div class="state"><p>Way out. Not mentioned this cycle. Correctly silent.</p></div>
+</section>
+
+
+<!-- ─────────── STOUTCO ─────────── -->
+<section class="plan" id="stoutco">
+  <div class="plan-head">
+    <span class="plan-eye">09 · <b>QK63283-00120</b> · day 1 not meaningful yet</span>
+    <h2 class="plan-name">stoutco.</h2>
+    <span class="pill future">Future</span>
+  </div>
+  <div class="facts">
+    <div class="fact"><span class="k">Day 1</span><span class="v soft">2026 · 04 · 22</span></div>
+    <div class="fact"><span class="k">Effective</span><span class="v">2026 · 07 · 01</span></div>
+    <div class="fact"><span class="k">Asset xfer</span><span class="v">2026 · 07 · 01</span></div>
+    <div class="fact"><span class="k">Owner</span><span class="v soft">—</span></div>
+  </div>
+  <div class="state-label">State</div>
+  <div class="state"><p>Way out. Not mentioned this cycle. Correctly silent.</p></div>
+</section>
+
+
+<!-- ─────────── LEIBYS ─────────── -->
+<section class="plan" id="leibys">
+  <div class="plan-head">
+    <span class="plan-eye">10 · <b>QK63283-00112</b> · explicitly parked</span>
+    <h2 class="plan-name">leiby's.</h2>
+    <span class="pill future">Future</span>
+  </div>
+  <div class="facts">
+    <div class="fact"><span class="k">Day 1</span><span class="v soft">2026 · 04 · 22</span></div>
+    <div class="fact"><span class="k">Effective</span><span class="v">2026 · 08 · 01</span></div>
+    <div class="fact"><span class="k">Asset xfer</span><span class="v">2026 · 08 · 01</span></div>
+    <div class="fact"><span class="k">Owner</span><span class="v soft">—</span></div>
+  </div>
+  <div class="state-label">State · 2026-04-24</div>
+  <div class="state"><p>Joel's read: <em>"Levy's still nothing — no changes."</em> Parked by design.</p></div>
+</section>
+
+
+<!-- ─────────── PRIME ─────────── -->
+<section class="plan" id="prime">
+  <div class="plan-head">
+    <span class="plan-eye">11 · <b>QK62489-00001</b> · paused</span>
+    <h2 class="plan-name">prime <em>healthcare.</em></h2>
+    <span class="pill hold">On hold</span>
+  </div>
+  <div class="facts">
+    <div class="fact"><span class="k">Day 1</span><span class="v soft">2026 · 01 · 01</span></div>
+    <div class="fact"><span class="k">Effective</span><span class="v">2026 · 08 · 01</span></div>
+    <div class="fact"><span class="k">Asset xfer</span><span class="v">2026 · 08 · 01</span></div>
+    <div class="fact"><span class="k">Status</span><span class="v soft">on_hold</span></div>
+  </div>
+  <div class="state-label">State</div>
+  <div class="state"><p>On hold. No movement expected until status flips.</p></div>
+</section>
+
+
+<!-- ─────────── CANAM-BR ─────────── -->
+<section class="plan" id="canam-br">
+  <div class="plan-head">
+    <span class="plan-eye">12 · <b>QK63283-00099</b> · ⚠ case # collides w/ banyan claim</span>
+    <h2 class="plan-name">canam <em>br.</em></h2>
+    <span class="pill future">Future</span>
+  </div>
+  <div class="facts">
+    <div class="fact"><span class="k">Day 1</span><span class="v soft">2026 · 04 · 22</span></div>
+    <div class="fact"><span class="k">Effective</span><span class="v">2026 · 10 · 01</span></div>
+    <div class="fact"><span class="k">Asset xfer</span><span class="v">2026 · 10 · 01</span></div>
+    <div class="fact"><span class="k">Status</span><span class="v warn">case # contested</span></div>
+  </div>
+  <div class="state-label">State · 2026-04-24</div>
+  <div class="state"><p>Joel's read: <em>"Bridge and Can-Am are still way down the road."</em> Parked. <em>Case # disputed</em> with Banyan claim — see contradictions/2026-04-24.md.</p></div>
+</section>
+
+
+<!-- ─────────── CANAM-BD ─────────── -->
+<section class="plan" id="canam-bd">
+  <div class="plan-head">
+    <span class="plan-eye">13 · <b>QK63283-00113</b> · day 1 not meaningful yet</span>
+    <h2 class="plan-name">canam <em>bd.</em></h2>
+    <span class="pill future">Future</span>
+  </div>
+  <div class="facts">
+    <div class="fact"><span class="k">Day 1</span><span class="v soft">2026 · 04 · 01</span></div>
+    <div class="fact"><span class="k">Effective</span><span class="v">2026 · 10 · 01</span></div>
+    <div class="fact"><span class="k">Asset xfer</span><span class="v">2026 · 10 · 01</span></div>
+    <div class="fact"><span class="k">Owner</span><span class="v soft">—</span></div>
+  </div>
+  <div class="state-label">State</div>
+  <div class="state"><p>Parked. Same posture as Canam BR.</p></div>
+</section>
+
+
+<!-- ─────────── footer ─────────── -->
+<footer class="doc-foot">
+  <div>SOURCE · BRAINDUMPS / 2026-04-24-EOW <span class="sep">/</span> CASELOAD MD STATE <span class="sep">/</span> REGISTRY</div>
+  <div>EXTRACT · <b>2026 · 04 · 24</b></div>
+</footer>
+
+</div><!-- /.doc -->
+
+</body>
+</html>

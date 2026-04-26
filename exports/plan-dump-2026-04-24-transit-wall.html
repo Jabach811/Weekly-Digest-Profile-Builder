@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Current Plan Dump · 2026-04-24 · Transit Wall</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&family=Saira+Condensed:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c1017;
+      --bg-2: #111722;
+      --panel: rgba(18, 23, 31, 0.94);
+      --panel-2: rgba(23, 29, 39, 0.9);
+      --text: #f2f7fb;
+      --muted: #aeb7c3;
+      --line: rgba(242, 247, 251, 0.11);
+      --line-strong: rgba(242, 247, 251, 0.2);
+      --red: #ff6a5c;
+      --orange: #f7a646;
+      --green: #49c37d;
+      --blue: #58a7ff;
+      --violet: #9b89ff;
+      --teal: #34c7c7;
+      --yellow: #f0d44d;
+      --title-size: clamp(2rem, 6vw, 5rem);
+      --h2-size: clamp(1.2rem, 2.8vw, 2.1rem);
+      --h3-size: clamp(0.95rem, 1.7vw, 1.2rem);
+      --body-size: clamp(0.78rem, 1.02vw, 0.98rem);
+      --small-size: clamp(0.64rem, 0.86vw, 0.8rem);
+      --slide-padding: clamp(1rem, 3vw, 2.5rem);
+      --content-gap: clamp(0.65rem, 1.3vw, 1rem);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(88,167,255,0.14), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(255,106,92,0.12), transparent 24%),
+        linear-gradient(180deg, #081019 0%, var(--bg) 100%);
+      color: var(--text);
+      font-family: "Manrope", sans-serif;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      width: 0;
+      background: linear-gradient(90deg, var(--blue), var(--teal), var(--green));
+      z-index: 1000;
+      transition: width 220ms ease;
+    }
+
+    .nav-dots {
+      position: fixed;
+      right: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.48rem;
+    }
+
+    .nav-dots button {
+      width: 0.76rem;
+      height: 0.76rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.26);
+      background: rgba(255,255,255,0.07);
+      cursor: pointer;
+    }
+
+    .nav-dots button.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      transform: scale(1.15);
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 100% 2rem, 2rem 100%;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .slide-content {
+      flex: 1;
+      max-height: 100%;
+      overflow: hidden;
+      padding: var(--slide-padding);
+      display: flex;
+      flex-direction: column;
+      gap: var(--content-gap);
+      position: relative;
+      z-index: 1;
+    }
+
+    .masthead, .footerline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .masthead {
+      padding-bottom: 0.7rem;
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .brand::before {
+      content: "";
+      width: 1.4rem;
+      height: 0.32rem;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--red), var(--orange), var(--green), var(--blue));
+    }
+
+    h1, h2, h3 { margin: 0; }
+    h1, h2 {
+      font-family: "Saira Condensed", sans-serif;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+    }
+
+    h1 {
+      font-size: var(--title-size);
+      line-height: 0.88;
+      font-weight: 800;
+      max-width: 10ch;
+    }
+
+    h1 .accent { color: var(--yellow); }
+
+    h2 {
+      font-size: var(--h2-size);
+      line-height: 0.95;
+      font-weight: 700;
+    }
+
+    h3 {
+      font-size: var(--h3-size);
+      font-weight: 800;
+      line-height: 1.1;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+    }
+
+    p, li {
+      margin: 0;
+      font-size: var(--body-size);
+      line-height: 1.4;
+    }
+
+    .lede {
+      max-width: 64ch;
+      color: #d2dbe5;
+      font-size: clamp(0.95rem, 1.25vw, 1.08rem);
+      line-height: 1.52;
+    }
+
+    .hero-grid, .two-grid, .route-grid, .schedule-grid, .check-grid {
+      display: grid;
+      gap: 0.85rem;
+      min-height: 0;
+    }
+
+    .hero-grid {
+      grid-template-columns: 1.05fr 0.95fr;
+      flex: 1;
+    }
+
+    .two-grid, .check-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .route-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .schedule-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent 30%), var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.28);
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      padding: 0.75rem 0.9rem;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .panel-body {
+      padding: 0.9rem;
+      display: grid;
+      gap: 0.7rem;
+      min-height: 0;
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.7rem;
+    }
+
+    .metric {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      padding: 0.75rem;
+      display: grid;
+      gap: 0.28rem;
+    }
+
+    .metric .k, .mini {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .metric .n {
+      font-family: "Saira Condensed", sans-serif;
+      font-size: clamp(2rem, 3.8vw, 3.1rem);
+      line-height: 0.9;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .route-card {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 0.42rem 1fr;
+      min-height: 0;
+    }
+
+    .route-rail { min-height: 100%; }
+    .rail-red { background: var(--red); }
+    .rail-orange { background: var(--orange); }
+    .rail-green { background: var(--green); }
+    .rail-blue { background: var(--blue); }
+    .rail-violet { background: var(--violet); }
+    .rail-teal { background: var(--teal); }
+
+    .route-body {
+      padding: 0.8rem;
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .route-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.7rem;
+    }
+
+    .chip {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.45rem;
+      border: 1px solid currentColor;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.32rem;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .chip::before {
+      content: "";
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .is-red { color: var(--red); }
+    .is-orange { color: var(--orange); }
+    .is-green { color: var(--green); }
+    .is-blue { color: var(--blue); }
+    .is-violet { color: var(--violet); }
+    .is-teal { color: var(--teal); }
+
+    .stop-list, .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .stop-list li, .checklist li {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.55rem;
+      align-items: start;
+    }
+
+    .stop {
+      width: 0.58rem;
+      height: 0.58rem;
+      border-radius: 999px;
+      margin-top: 0.34rem;
+      background: currentColor;
+    }
+
+    .schedule-card {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      padding: 0.8rem;
+      display: grid;
+      gap: 0.4rem;
+    }
+
+    .schedule-card .date {
+      font-family: "JetBrains Mono", monospace;
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      color: var(--yellow);
+      letter-spacing: 0.08em;
+    }
+
+    .box {
+      width: 1rem;
+      height: 1rem;
+      border: 1px solid var(--line-strong);
+      margin-top: 0.18rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid, .two-grid, .route-grid, .schedule-grid, .check-grid {
+        grid-template-columns: 1fr;
+      }
+      .metric-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-height: 700px) {
+      :root {
+        --slide-padding: clamp(0.75rem, 3vw, 1.8rem);
+        --content-gap: clamp(0.45rem, 0.9vw, 0.82rem);
+        --title-size: clamp(1.75rem, 4.2vw, 3.5rem);
+        --body-size: clamp(0.7rem, 0.95vw, 0.9rem);
+      }
+    }
+
+    @media (max-height: 600px) {
+      .nav-dots { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .progress-bar { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" aria-hidden="true"></div>
+  <nav class="nav-dots" aria-label="Slide navigation"></nav>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead">
+        <span class="brand">Weekly Digest · transit wall</span>
+        <span>rev 2026-04-24 · style 03 scan-speed cut</span>
+      </div>
+      <div class="hero-grid">
+        <article class="panel">
+          <div class="panel-body">
+            <div class="mini">system headline</div>
+            <h1>current <span class="accent">routes</span> through the book</h1>
+            <p class="lede">This final cut is built for fast scanning. Each plan reads like a route card: state, stop, next move. The goal is to read the whole portfolio in seconds, then drop into the route that actually needs hands.</p>
+            <div class="metric-row">
+              <div class="metric"><span class="k">total</span><span class="n">13</span></div>
+              <div class="metric"><span class="k">working</span><span class="n">7</span></div>
+              <div class="metric"><span class="k">blocked</span><span class="n">4</span></div>
+              <div class="metric"><span class="k">near stops</span><span class="n">4</span></div>
+            </div>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="panel-header">
+            <h3>Legend</h3>
+            <span class="mini">status color</span>
+          </div>
+          <div class="panel-body">
+            <div class="route-card"><div class="route-rail rail-red"></div><div class="route-body"><strong>Red</strong><p>Mechanical blocker or immediate fault.</p></div></div>
+            <div class="route-card"><div class="route-rail rail-orange"></div><div class="route-body"><strong>Orange</strong><p>Verify / contradiction / identifier issue.</p></div></div>
+            <div class="route-card"><div class="route-rail rail-green"></div><div class="route-body"><strong>Green</strong><p>Recent win or de-risked work packet.</p></div></div>
+            <div class="route-card"><div class="route-rail rail-blue"></div><div class="route-body"><strong>Blue</strong><p>Active steady work.</p></div></div>
+            <div class="route-card"><div class="route-rail rail-violet"></div><div class="route-body"><strong>Violet</strong><p>Scheduled future stop.</p></div></div>
+          </div>
+        </article>
+      </div>
+      <div class="footerline"><span>slides 01 / 08</span><span>scan speed over narrative density</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead"><span class="brand">good routes</span><span>things that improved materially</span></div>
+      <h2>Green lines</h2>
+      <div class="route-grid">
+        <article class="route-card">
+          <div class="route-rail rail-green"></div>
+          <div class="route-body">
+            <div class="route-line"><h3>Callidi</h3><span class="chip is-green">recovered</span></div>
+            <p>Informatica came back, balances landed, and the dummy reversal closed cleanly.</p>
+          </div>
+        </article>
+        <article class="route-card">
+          <div class="route-rail rail-green"></div>
+          <div class="route-body">
+            <div class="route-line"><h3>Haverhill</h3><span class="chip is-green">staged</span></div>
+            <p>Base file loaded, AQT fix explained, flags placed. The pre-wire work is largely done.</p>
+          </div>
+        </article>
+        <article class="route-card">
+          <div class="route-rail rail-green"></div>
+          <div class="route-body">
+            <div class="route-line"><h3>TMG</h3><span class="chip is-green">breakthrough</span></div>
+            <p>Self-calculated YOS verified against vendor data changed the path and lowered exposure.</p>
+          </div>
+        </article>
+        <article class="route-card">
+          <div class="route-rail rail-orange"></div>
+          <div class="route-body">
+            <div class="route-line"><h3>Read this right</h3><span class="chip is-orange">not final</span></div>
+            <p>These are improved lines, not fully closed routes. The map stays honest on purpose.</p>
+          </div>
+        </article>
+      </div>
+      <div class="footerline"><span>slides 02 / 08</span><span>completed vs de-risked still stays explicit</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead"><span class="brand">active routes</span><span>what is moving now</span></div>
+      <h2>Blue and red lines in motion</h2>
+      <div class="route-grid">
+        <article class="route-card">
+          <div class="route-rail rail-red"></div>
+          <div class="route-body">
+            <div class="route-line"><h3>COCC</h3><span class="chip is-red">fault</span></div>
+            <p>EDS source-routing fix, payroll cleanup, and touchy-client handling all live at once.</p>
+          </div>
+        </article>
+        <article class="route-card">
+          <div class="route-rail rail-red"></div>
+          <div class="route-body">
+            <div class="route-line"><h3>Callidi</h3><span class="chip is-red">fault</span></div>
+            <p>XKB / XKC still not landing in Transact Detail. Loans and elections are downstream of that.</p>
+          </div>
+        </article>
+        <article class="route-card">
+          <div class="route-rail rail-red"></div>
+          <div class="route-body">
+            <div class="route-line"><h3>Pella</h3><span class="chip is-red">stuck</span></div>
+            <p>ADP deferral report is still the jam point before 5 / 1 gets here.</p>
+          </div>
+        </article>
+        <article class="route-card">
+          <div class="route-rail rail-blue"></div>
+          <div class="route-body">
+            <div class="route-line"><h3>Banyan</h3><span class="chip is-blue">active</span></div>
+            <p>Census and election-default prep are ready to move as soon as naming / ID locks clean up.</p>
+          </div>
+        </article>
+        <article class="route-card">
+          <div class="route-rail rail-blue"></div>
+          <div class="route-body">
+            <div class="route-line"><h3>Haverhill</h3><span class="chip is-blue">active</span></div>
+            <p>Only communication and handoff work remain before the OOO / 5 / 1 sequence.</p>
+          </div>
+        </article>
+        <article class="route-card">
+          <div class="route-rail rail-blue"></div>
+          <div class="route-body">
+            <div class="route-line"><h3>ISD</h3><span class="chip is-blue">active</span></div>
+            <p>The deferral operating call still needs a clear answer even if the plan is not loud.</p>
+          </div>
+        </article>
+      </div>
+      <div class="footerline"><span>slides 03 / 08</span><span>control-wall route framing</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead"><span class="brand">watch routes</span><span>contradictions and identity issues</span></div>
+      <h2>Orange lines</h2>
+      <div class="two-grid">
+        <article class="panel">
+          <div class="panel-header"><h3>Identity mismatches</h3><span class="chip is-orange">verify</span></div>
+          <div class="panel-body">
+            <ul class="stop-list">
+              <li><span class="stop" style="color: var(--orange)"></span><span><strong>Banyan / Canam Bridges</strong> collide on `QK63283-00099`.</span></li>
+              <li><span class="stop" style="color: var(--orange)"></span><span><strong>Banyan</strong> still swings between Banyan Treatment Centers and Cutting Edge Staffing.</span></li>
+              <li><span class="stop" style="color: var(--orange)"></span><span><strong>COCC</strong> and <strong>TMG</strong> still need case numbers captured cleanly.</span></li>
+            </ul>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="panel-header"><h3>Carryover ambiguity</h3><span class="chip is-orange">hold in view</span></div>
+          <div class="panel-body">
+            <ul class="stop-list">
+              <li><span class="stop" style="color: var(--orange)"></span><span><strong>Callidi</strong> older loan-order issue may or may not be the same fault as XKB / XKC.</span></li>
+              <li><span class="stop" style="color: var(--orange)"></span><span><strong>Callidi</strong> DOB / DOH gap appears closed in practice, but not by explicit statement.</span></li>
+              <li><span class="stop" style="color: var(--orange)"></span><span><strong>TMG</strong> approach pivot is the right read, but the load has to happen before the route fully clears.</span></li>
+            </ul>
+          </div>
+        </article>
+      </div>
+      <div class="footerline"><span>slides 04 / 08</span><span>orange lines are the “do not hand-wave this” layer</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead"><span class="brand">schedule board</span><span>upcoming stops</span></div>
+      <h2>Next stops</h2>
+      <div class="schedule-grid">
+        <article class="schedule-card">
+          <span class="date">5 / 1</span>
+          <h3>Pella</h3>
+          <p>Liquidation timing hits whether the ADP report feels emotionally ready or not.</p>
+        </article>
+        <article class="schedule-card">
+          <span class="date">5 / 1</span>
+          <h3>Haverhill</h3>
+          <p>Asset day during OOO means the handoff quality is part of the route itself.</p>
+        </article>
+        <article class="schedule-card">
+          <span class="date">5 / 14 → 5 / 27</span>
+          <h3>Banyan</h3>
+          <p>Limited-access window wants setup and monitoring discipline.</p>
+        </article>
+        <article class="schedule-card">
+          <span class="date">6 / 1</span>
+          <h3>Banyan wire</h3>
+          <p>Wire and reconciliation become the new active stop immediately after early access.</p>
+        </article>
+      </div>
+      <article class="panel">
+        <div class="panel-header"><h3>Later stops</h3><span class="chip is-violet">future</span></div>
+        <div class="panel-body">
+          <p>ISD, Stoutco, and Bonnier come into shape around July. Prime and Leiby's sit in August. Canam Bridges and Canam Bldgs remain October lines.</p>
+        </div>
+      </article>
+      <div class="footerline"><span>slides 05 / 08</span><span>dates behave like stops, not paragraphs</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead"><span class="brand">full wall</span><span>all routes, one board</span></div>
+      <h2>Portfolio control wall</h2>
+      <div class="route-grid">
+        <article class="route-card"><div class="route-rail rail-red"></div><div class="route-body"><div class="route-line"><h3>Callidi</h3><span class="chip is-red">ramping</span></div><p>Balances in. Loans blocked. Elections next.</p><span class="mini">4 / 1 effective · 4 / 10 assets</span></div></article>
+        <article class="route-card"><div class="route-rail rail-red"></div><div class="route-body"><div class="route-line"><h3>COCC</h3><span class="chip is-red">active</span></div><p>Routing repair and payroll cleanup live now.</p><span class="mini">dates TBD</span></div></article>
+        <article class="route-card"><div class="route-rail rail-red"></div><div class="route-body"><div class="route-line"><h3>Pella</h3><span class="chip is-red">active</span></div><p>ADP report chase before 5 / 1.</p><span class="mini">5 / 1</span></div></article>
+        <article class="route-card"><div class="route-rail rail-green"></div><div class="route-body"><div class="route-line"><h3>Haverhill</h3><span class="chip is-green">staged</span></div><p>Email and handoff remain.</p><span class="mini">5 / 1</span></div></article>
+        <article class="route-card"><div class="route-rail rail-green"></div><div class="route-body"><div class="route-line"><h3>TMG</h3><span class="chip is-green">breakthrough</span></div><p>YOS fix path validated, load still pending.</p><span class="mini">legacy fix scope</span></div></article>
+        <article class="route-card"><div class="route-rail rail-blue"></div><div class="route-body"><div class="route-line"><h3>ISD</h3><span class="chip is-blue">active</span></div><p>Deferral operating model still open.</p><span class="mini">7 / 1</span></div></article>
+        <article class="route-card"><div class="route-rail rail-blue"></div><div class="route-body"><div class="route-line"><h3>Banyan</h3><span class="chip is-blue">active</span></div><p>Prep route ready, identity route still fuzzy.</p><span class="mini">5 / 28 · 6 / 1</span></div></article>
+        <article class="route-card"><div class="route-rail rail-violet"></div><div class="route-body"><div class="route-line"><h3>Prime / Stoutco / Bonnier / Leiby's / Canam</h3><span class="chip is-violet">future</span></div><p>Important context, not current heat.</p><span class="mini">7 / 1 → 10 / 1</span></div></article>
+      </div>
+      <div class="footerline"><span>slides 06 / 08</span><span>whole-book scan in one slide</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead"><span class="brand">carry list</span><span>the next moves that count</span></div>
+      <h2>Operator route checklist</h2>
+      <div class="check-grid">
+        <article class="panel">
+          <div class="panel-header"><h3>Do next</h3><span class="chip is-blue">carry</span></div>
+          <div class="panel-body">
+            <ul class="checklist">
+              <li><span class="box"></span><span>Fix <strong>COCC</strong> routing and verify the payroll file once the fix lands.</span></li>
+              <li><span class="box"></span><span>Clear <strong>Callidi</strong> XKB / XKC and run loans.</span></li>
+              <li><span class="box"></span><span>Pull the <strong>Pella</strong> ADP report through the right person now.</span></li>
+              <li><span class="box"></span><span>Send <strong>Haverhill</strong> NBI status email and finish handoff before OOO.</span></li>
+              <li><span class="box"></span><span>Finalize and load <strong>TMG</strong> YOS file.</span></li>
+              <li><span class="box"></span><span>Confirm <strong>Banyan</strong> case number and lock the display name.</span></li>
+            </ul>
+          </div>
+        </article>
+        <article class="panel">
+          <div class="panel-header"><h3>Fast read</h3><span class="chip is-green">summary</span></div>
+          <div class="panel-body">
+            <p><strong>Green:</strong> the book got safer.</p>
+            <p><strong>Red:</strong> routing defects still own too much leverage.</p>
+            <p><strong>Orange:</strong> identifiers and contradictions still need daylight.</p>
+            <p><strong>Blue:</strong> the rest is just disciplined follow-through.</p>
+          </div>
+        </article>
+      </div>
+      <div class="footerline"><span>slides 07 / 08</span><span>what to carry out of the room</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead"><span class="brand">why this version</span><span>instrument note</span></div>
+      <h2>Use this one when you need the fastest read</h2>
+      <article class="panel">
+        <div class="panel-body">
+          <p class="lede">This transit wall version is the most scanable of the three. It is the least literary, the most coded, and the fastest to read at a distance. If you want a deck that behaves like a control board, this is the strongest pass.</p>
+          <div class="two-grid">
+            <div class="route-card"><div class="route-rail rail-blue"></div><div class="route-body"><strong>Best at</strong><p>status scanning, route separation, and portfolio-wide quick reads.</p></div></div>
+            <div class="route-card"><div class="route-rail rail-orange"></div><div class="route-body"><strong>Tradeoff</strong><p>less narrative warmth than the newspaper cut and less machine poetry than the atelier cut.</p></div></div>
+          </div>
+        </div>
+      </article>
+      <div class="footerline"><span>slides 08 / 08</span><span>transit wall complete</span></div>
+    </div>
+  </section>
+
+  <script>
+    class SlidePresentation {
+      constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.progressBar = document.querySelector('.progress-bar');
+        this.navDotsContainer = document.querySelector('.nav-dots');
+        this.currentSlide = 0;
+        this.setupNavDots();
+        this.setupObservers();
+        this.setupEvents();
+        this.updateUI(0);
+      }
+      setupNavDots() {
+        this.navDotsContainer.innerHTML = '';
+        this.slides.forEach((_, index) => {
+          const dot = document.createElement('button');
+          dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+          dot.addEventListener('click', () => this.goToSlide(index));
+          this.navDotsContainer.appendChild(dot);
+        });
+      }
+      setupObservers() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              this.updateUI(this.slides.indexOf(entry.target));
+            }
+          });
+        }, { threshold: 0.55 });
+        this.slides.forEach((slide) => observer.observe(slide));
+      }
+      setupEvents() {
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'ArrowDown' || event.key === 'ArrowRight' || event.key === ' ' || event.key === 'PageDown') {
+            event.preventDefault();
+            this.goToSlide(Math.min(this.currentSlide + 1, this.slides.length - 1));
+          }
+          if (event.key === 'ArrowUp' || event.key === 'ArrowLeft' || event.key === 'PageUp') {
+            event.preventDefault();
+            this.goToSlide(Math.max(this.currentSlide - 1, 0));
+          }
+        });
+      }
+      goToSlide(index) {
+        this.slides[index].scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      }
+      updateUI(index) {
+        this.currentSlide = index;
+        this.progressBar.style.width = `${((index + 1) / this.slides.length) * 100}%`;
+        Array.from(this.navDotsContainer.children).forEach((dot, i) => dot.classList.toggle('active', i === index));
+      }
+    }
+    new SlidePresentation();
+  </script>
+</body>
+</html>

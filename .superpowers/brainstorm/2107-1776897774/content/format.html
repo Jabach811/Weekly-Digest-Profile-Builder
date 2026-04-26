@@ -1,0 +1,35 @@
+<h2>Deck or Single-Page?</h2>
+<p class="subtitle">Same retro-console theme either way. The question is the shape of the artifact.</p>
+
+<div class="options">
+  <div class="option" data-choice="deck" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Multi-slide deck (like the weekly brief)</h3>
+      <p><b>What it is:</b> Paginated. Arrow keys, slide 1 of N. Each section gets its own canvas.</p>
+      <p><b>Feels like:</b> a formal presentation. Can be presented.</p>
+      <p><b>Pros:</b> reuses 100% of weekly brief CSS &amp; components. Good for big surface (all-plans, OOO pack).</p>
+      <p><b>Cons:</b> overkill for a single-plan or single-project dump. One slide deck feels weird. Chrome (nav, slide counter) wastes space on small dumps.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="page" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Single long-scroll page</h3>
+      <p><b>What it is:</b> one HTML doc, no pagination. Sections stack vertically. Scroll to read it all.</p>
+      <p><b>Feels like:</b> a briefing doc. Read-through, share-as-link, print-to-PDF friendly.</p>
+      <p><b>Pros:</b> one artifact. Works at any length. Much better for single-entity dumps (one plan, one project). Better for phone/email share.</p>
+      <p><b>Cons:</b> reading-mode, not presenting-mode. No keyboard nav. Less theatrical for a big all-plans dump.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="mixed" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Mixed — pick the right shape per output</h3>
+      <p><b>What it is:</b> each output in the family uses whichever form fits.</p>
+      <p><b>My read:</b> all-plans snapshot = <b>deck</b> (many plans, each deserves a slide). OOO hand-off = <b>deck</b> (3-5 slides: frame · plans in window · contacts · lab · close). Single-project dump = <b>single page</b> (one entity, read-through).</p>
+      <p><b>Pros:</b> each artifact is the right shape for its job. Nobody scrolls past a 14-plan deck, nobody paginates a single-project doc.</p>
+      <p><b>Cons:</b> two build paths instead of one. Slightly more design work.</p>
+    </div>
+  </div>
+</div>

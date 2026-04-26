@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Weekly Digest · 029 · W1 · Stripe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Source+Code+Pro:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple:        #533afd;
+    --purple-hover:  #4434d4;
+    --purple-deep:   #2e2b8c;
+    --purple-mid:    #665efd;
+    --purple-light:  #b9b9f9;
+    --purple-soft:   #d6d9fc;
+
+    --heading:       #061b31;
+    --label:         #273951;
+    --body:          #64748d;
+
+    --brand-dark:    #1c1e54;
+
+    --ruby:          #ea2261;
+    --magenta:       #f96bee;
+    --magenta-light: #ffd7ef;
+
+    --success-bg:    rgba(21,190,83,0.2);
+    --success-brd:   rgba(21,190,83,0.4);
+    --success-txt:   #108c3d;
+    --lemon:         #9b6829;
+
+    --border:        #e5edf5;
+    --white:         #ffffff;
+
+    --shadow-elev:   rgba(50,50,93,0.25) 0px 30px 45px -30px, rgba(0,0,0,0.1) 0px 18px 36px -18px;
+    --shadow-ambi:   rgba(23,23,23,0.08) 0px 15px 35px 0px;
+    --shadow-soft:   rgba(23,23,23,0.06) 0px 3px 6px;
+
+    --sans: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+    --mono: 'Source Code Pro', 'SFMono-Regular', Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--white);
+    color: var(--heading);
+    font-family: var(--sans);
+    font-feature-settings: "ss01";
+    font-size: 16px;
+    line-height: 1.40;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 40px 64px 64px;
+  }
+
+  /* ───── topbar ───── */
+  .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--body);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .topbar .brand { color: var(--heading); display: inline-flex; align-items: center; gap: 8px; }
+  .topbar .brand .logo {
+    display: inline-block; width: 10px; height: 10px; border-radius: 2px;
+    background: linear-gradient(135deg, var(--purple) 0%, var(--magenta) 100%);
+  }
+  .topbar .meta span + span::before { content: " · "; margin: 0 8px; color: var(--border); }
+
+  /* ───── hero ───── */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 80px 0 64px;
+    margin-top: 12px;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -30%; left: -10%;
+    width: 120%; height: 120%;
+    background:
+      radial-gradient(55% 55% at 15% 35%, rgba(83,58,253,0.22) 0%, rgba(83,58,253,0) 60%),
+      radial-gradient(45% 45% at 85% 25%, rgba(249,107,238,0.20) 0%, rgba(249,107,238,0) 55%),
+      radial-gradient(50% 50% at 60% 75%, rgba(234,34,97,0.12) 0%, rgba(234,34,97,0) 60%),
+      linear-gradient(135deg, #eef0ff 0%, #f7f4ff 40%, #fff3fb 75%, #fff 100%);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .hero > * { position: relative; z-index: 1; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--purple);
+  }
+
+  h1.display {
+    font-size: 56px;
+    font-weight: 300;
+    line-height: 1.03;
+    letter-spacing: -1.4px;
+    color: var(--heading);
+    margin-top: 18px;
+    font-feature-settings: "ss01";
+    background: linear-gradient(90deg, var(--heading) 0%, var(--purple-deep) 55%, var(--purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  p.lede {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.50;
+    color: var(--body);
+    max-width: 62ch;
+    margin-top: 24px;
+    font-feature-settings: "ss01";
+  }
+  p.lede b { color: var(--heading); font-weight: 400; }
+
+  /* ───── counters ───── */
+  .counters {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 40px;
+  }
+  .counter {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 22px 24px;
+    box-shadow: var(--shadow-elev);
+    position: relative;
+    overflow: hidden;
+  }
+  .counter .num {
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.96px;
+    color: var(--heading);
+    font-feature-settings: "ss01", "tnum";
+  }
+  .counter .k {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--body);
+    margin-bottom: 12px;
+  }
+  .counter .sub {
+    font-size: 13px;
+    color: var(--body);
+    margin-top: 10px;
+    font-weight: 300;
+  }
+  .counter.primary .num {
+    background: linear-gradient(90deg, var(--purple) 0%, var(--magenta) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .counter.primary { border-color: var(--purple-soft); }
+
+  /* ───── sections ───── */
+  section.block { margin-top: 88px; }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-head h2 {
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1.10;
+    letter-spacing: -0.64px;
+    color: var(--heading);
+    font-feature-settings: "ss01";
+  }
+  .section-head .count {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--body);
+  }
+  .section-head .count b { color: var(--heading); font-weight: 500; }
+
+  /* ───── heat cards ───── */
+  .heat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .heat {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 30px 32px;
+    box-shadow: var(--shadow-elev);
+    position: relative;
+    overflow: hidden;
+  }
+  .heat::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--purple) 0%, var(--magenta) 100%);
+  }
+  .heat .meta-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .heat .plan-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--purple);
+  }
+  .heat h3 {
+    font-size: 26px;
+    font-weight: 300;
+    line-height: 1.12;
+    letter-spacing: -0.26px;
+    color: var(--heading);
+    font-feature-settings: "ss01";
+  }
+  .heat .due {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin: 8px 0 18px;
+    font-feature-settings: "tnum";
+  }
+  .heat p {
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.55;
+    color: var(--body);
+    font-feature-settings: "ss01";
+  }
+  .heat p b { color: var(--heading); font-weight: 400; }
+
+  /* ───── badges ───── */
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 400;
+    font-family: var(--sans);
+    font-feature-settings: "ss01";
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--label);
+  }
+  .badge.purple {
+    background: rgba(83,58,253,0.08);
+    color: var(--purple);
+    border-color: var(--purple-soft);
+  }
+  .badge.success {
+    background: var(--success-bg);
+    color: var(--success-txt);
+    border-color: var(--success-brd);
+  }
+  .badge.magenta {
+    background: var(--magenta-light);
+    color: var(--ruby);
+    border-color: var(--magenta-light);
+  }
+  .badge.dot::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor;
+    display: inline-block;
+  }
+
+  /* ───── holding ───── */
+  .holding {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: var(--shadow-ambi);
+    overflow: hidden;
+  }
+  .holding .row {
+    display: grid;
+    grid-template-columns: 180px 1fr auto;
+    gap: 24px;
+    align-items: center;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .holding .row:last-child { border-bottom: none; }
+  .holding .plan {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--heading);
+    font-feature-settings: "ss01";
+  }
+  .holding .note {
+    font-size: 14px;
+    color: var(--body);
+    font-weight: 300;
+    font-feature-settings: "ss01";
+  }
+  .holding .note b { color: var(--label); font-weight: 400; }
+
+  /* ───── monitor chips ───── */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--white);
+    font-size: 14px;
+    color: var(--heading);
+    font-weight: 400;
+    font-feature-settings: "ss01";
+    box-shadow: var(--shadow-soft);
+  }
+  .chip .date {
+    color: var(--purple);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    font-feature-settings: "tnum";
+  }
+  .chip .note { color: var(--body); font-size: 12px; font-weight: 300; }
+
+  /* ───── footer ───── */
+  .footer {
+    margin-top: 96px;
+    padding: 22px 24px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: var(--shadow-ambi);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) auto;
+    gap: 24px;
+    align-items: center;
+  }
+  .footer .cell .k {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--body);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .footer .cell .v {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--heading);
+    font-feature-settings: "ss01", "tnum";
+  }
+  .footer a.top {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--purple);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--purple-light);
+    border-radius: 4px;
+    transition: background 150ms;
+  }
+  .footer a.top:hover { background: rgba(83,58,253,0.05); }
+
+  /* ───── responsive ───── */
+  @media (max-width: 820px) {
+    .page { padding: 28px 28px 48px; }
+    h1.display { font-size: 40px; letter-spacing: -1px; }
+    .counters { grid-template-columns: 1fr; }
+    .heat-grid { grid-template-columns: 1fr; }
+    .holding .row { grid-template-columns: 1fr; gap: 8px; }
+    .footer { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page" id="top">
+
+  <!-- ── topbar ── -->
+  <div class="topbar">
+    <div class="brand"><span class="logo"></span> nbi · weekly digest</div>
+    <div class="meta">
+      <span>WD.029 · W1</span><span>Apr 22 → Apr 29</span><span>pre-ooo</span>
+    </div>
+  </div>
+
+  <!-- ── hero ── -->
+  <section class="hero">
+    <div class="eyebrow">Week 1 of 2 · Cycle 029 · Pre-OOO push</div>
+    <h1 class="display">the push.</h1>
+    <p class="lede">
+      Five working days before OOO. <b>Two open threads to close</b> — Pella's deferral report from the new ADP rep, and Haverhill's missing-participants list with Damien. Both wires land <b>5/1 mid-OOO</b>. Get the coverage pack airtight by Friday.
+    </p>
+
+    <div class="counters">
+      <div class="counter primary">
+        <span class="k">Must close</span>
+        <div class="num">02</div>
+        <div class="sub">Before OOO · Fri Apr 24</div>
+      </div>
+      <div class="counter">
+        <span class="k">Active</span>
+        <div class="num">04</div>
+        <div class="sub">Plans with hands on them</div>
+      </div>
+      <div class="counter">
+        <span class="k">Monitor</span>
+        <div class="num">06</div>
+        <div class="sub">Off the burner</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── this week's heat ── -->
+  <section class="block">
+    <div class="section-head">
+      <h2>This week's heat</h2>
+      <span class="count">must close · <b>02</b></span>
+    </div>
+
+    <div class="heat-grid">
+      <article class="heat">
+        <div class="meta-row">
+          <span class="plan-label">▲ Pre-wire · ball with ADP rep</span>
+          <span class="badge purple dot">Preparation</span>
+        </div>
+        <h3>Pella SC</h3>
+        <div class="due">Due Fri Apr 24 · Wire 5 / 01</div>
+        <p>Deferral report from the <b>new ADP rep</b>. Population already in our system, so records side is straightforward. This is the one thread coverage shouldn't have to chase.</p>
+      </article>
+
+      <article class="heat">
+        <div class="meta-row">
+          <span class="plan-label">▲ Pre-wire · ball with Damien</span>
+          <span class="badge purple dot">Preparation</span>
+        </div>
+        <h3>Haverhill (Havern)</h3>
+        <div class="due">Due Fri Apr 24 · Wire 5 / 01</div>
+        <p>Final sweep on <b>Damien's missing-participant list</b>. AQT flags placed; base file loaded. Hand-off doc is the lever — coverage needs to know who to escalate if a name resurfaces.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ── holding pattern ── -->
+  <section class="block">
+    <div class="section-head">
+      <h2>Holding pattern</h2>
+      <span class="count">active · <b>02</b></span>
+    </div>
+
+    <div class="holding">
+      <div class="row">
+        <div class="plan">Callidi Tas</div>
+        <div class="note">Cleanup continues, <b>blocked on client DOB + DOH</b>; close target 5/06.</div>
+        <span class="badge success dot">Wrapping up</span>
+      </div>
+      <div class="row">
+        <div class="plan">ISD Denver</div>
+        <div class="note">Intake. <b>Nudge for deferral file</b> this week; policy framing draft when there's a window.</div>
+        <span class="badge magenta dot">Intake</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── monitor ── -->
+  <section class="block">
+    <div class="section-head">
+      <h2>Monitor</h2>
+      <span class="count">off the burner · <b>06</b></span>
+    </div>
+
+    <div class="chip-row">
+      <span class="chip">Stoutco <span class="date">7/01</span><span class="note">client mtg next wk</span></span>
+      <span class="chip">Bonnier <span class="date">7/01</span><span class="note">quiet</span></span>
+      <span class="chip">Leiby's Dairy <span class="date">8/01</span></span>
+      <span class="chip">Prime Healthcare <span class="date">8/01</span><span class="note">on hold</span></span>
+      <span class="chip">Canam Bridges <span class="date">10/01</span></span>
+      <span class="chip">Canam Buildings <span class="date">10/01</span></span>
+    </div>
+  </section>
+
+  <!-- ── footer ── -->
+  <div class="footer">
+    <div class="cell"><span class="k">Compiled</span><span class="v">2026-04-22</span></div>
+    <div class="cell"><span class="k">Operator</span><span class="v">Joel</span></div>
+    <div class="cell"><span class="k">Next compile · W2</span><span class="v">Apr 29</span></div>
+    <a class="top" href="#top">Back to top ↑</a>
+  </div>
+
+</div>
+
+</body>
+</html>

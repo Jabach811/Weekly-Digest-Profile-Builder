@@ -1,0 +1,238 @@
+<!--
+  BRIEF SLIDE TEMPLATE — slide 2 of every handoff / OOO pack.
+
+  Canonical reference implementation:
+    exports/MOCK-handoff-front-and-brief-2026-04-22.html
+
+  How to use:
+    1. Copy the <style> fragment below into the deck's stylesheet block
+       (it only adds classes the main brief spec doesn't already define:
+       .brief-frame, .briefing, .directives, .directive). If the classes
+       are already present, skip.
+    2. Copy the <section class="slide brief"> fragment into the deck as
+       slide 2, right after the cover.
+    3. Fill in the placeholders marked {{…}}.
+    4. Tone: casual but proper. See SKILL.md "Brief tone rules."
+
+  Placeholders:
+    {{WINDOW_START}}     e.g. "Wed 4 / 23"
+    {{WINDOW_END}}       e.g. "Wed 5 / 06"
+    {{COVERAGE_NAME}}    e.g. "Mike"
+    {{RETURN_DATE}}      e.g. "Mon 5 / 06"
+    {{OPERATOR_NAME}}    e.g. "Joel"
+    {{COMPILE_DATE}}     e.g. "2026-04-22"
+    {{BRIEFING_PARAS}}   the natural-language body (see template below)
+    {{DIRECTIVES}}       the do / hold / don't rows (see template below)
+
+  Directive taxonomy (three marks, three colors):
+    ✓ DO   — teal  — affirmative action coverage should take
+    ◌ HOLD — butter — receive but do not act; queue for operator
+    ✕ DON'T — rust  — explicit prohibition
+
+  Every directive line starts with a .k chip naming the plan key or
+  category (e.g. "Haverhill", "Pella", "Escalate", "Future Plans").
+-->
+
+
+<!-- ========== CSS FRAGMENT ========== -->
+<style data-fragment="brief-slide">
+  .slide.brief { padding: 40px 72px 64px; }
+
+  .brief-frame {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 1fr);
+    gap: 36px;
+    align-items: start;
+  }
+  @media (max-width: 960px) {
+    .brief-frame { grid-template-columns: 1fr; }
+  }
+
+  .briefing {
+    position: relative;
+    border: 1px solid var(--rust);
+    background: var(--bg-panel);
+    padding: 28px 30px 28px 34px;
+    border-radius: 2px;
+  }
+  .briefing::before {
+    content: ""; position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 4px; background: var(--rust);
+  }
+  .briefing-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700;
+  }
+  .briefing-label::before {
+    content: "⚑";
+    font-family: var(--display);
+    font-size: 18px;
+    line-height: 1;
+  }
+  .briefing-body {
+    font-family: var(--sans);
+    font-size: 16.5px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .briefing-body p { margin-bottom: 12px; max-width: 62ch; font-size: 16.5px; }
+  .briefing-body p:last-child { margin-bottom: 0; }
+  .briefing-body b { color: var(--ink); font-weight: 700; border-bottom: 1px dotted var(--rust); }
+  .briefing-body em { color: var(--rust-deep); font-style: normal; font-weight: 600; }
+
+  .directives {
+    position: relative;
+    border: 1px solid var(--rule-strong);
+    background: var(--bg);
+    padding: 22px 24px 26px;
+    border-radius: 2px;
+  }
+  .directives::before, .directives::after {
+    content: ""; position: absolute;
+    width: 10px; height: 10px;
+  }
+  .directives::before {
+    top: -1px; left: -1px;
+    border-top: 1.5px solid var(--rust);
+    border-left: 1.5px solid var(--rust);
+  }
+  .directives::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 1.5px solid var(--rust);
+    border-right: 1.5px solid var(--rust);
+  }
+  .directives-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px dotted var(--rule);
+  }
+  .directives-label b { color: var(--ink); font-weight: 700; }
+
+  .directive {
+    display: grid;
+    grid-template-columns: 14px 1fr;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px dotted var(--rule);
+    align-items: start;
+  }
+  .directive:last-child { border-bottom: none; padding-bottom: 0; }
+  .directive-mark {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-top: 2px;
+  }
+  .directive.do    .directive-mark { color: var(--teal-deep); }
+  .directive.dont  .directive-mark { color: var(--rust); }
+  .directive.hold  .directive-mark { color: var(--butter); }
+  .directive-body {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    line-height: 1.45;
+    color: var(--ink);
+  }
+  .directive-body .k {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--rust);
+    font-weight: 700;
+    margin-right: 8px;
+  }
+
+  .brief-foot {
+    margin-top: 32px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .brief-foot b { color: var(--ink); font-weight: 700; }
+  .brief-foot .sep { color: var(--rust); margin: 0 8px; font-weight: 700; }
+</style>
+
+
+<!-- ========== HTML FRAGMENT (paste as slide 2) ========== -->
+<section class="slide brief" id="slide-brief">
+  <div class="eye"><span class="tick"></span>§ 02 · HANDOFF · FROM THE OPERATOR</div>
+  <h1 class="h-display">the <em>brief.</em></h1>
+
+  <div class="brief-frame">
+
+    <article class="briefing">
+      <div class="briefing-label">Briefing · read me first</div>
+      <div class="briefing-body">
+        <!--
+          Writing pattern — one paragraph per major plan that needs coverage
+          action, then one short paragraph for anything out of scope, then a
+          sign-off. Mention the window and coverage person in paragraph 1.
+          Use <b>…</b> for plan names and dates, <em>…</em> for the actual
+          directive (the thing to do / not do). Tone: casual but proper.
+        -->
+
+        <p>Out from <b>{{WINDOW_START}} through {{WINDOW_END}}</b> —
+        {{N_WEEKS}}. {{COVERAGE_NAME}} is covering. A quick read before I go.
+        <em>If anything here conflicts with the plan sections that follow,
+        this brief is the current read</em> — I'm speaking more recently than
+        the files.</p>
+
+        {{BRIEFING_PARAS}}
+
+        <p>Everything else on the caseload is future-dated and nothing lands
+        during this window — <em>those can stay untouched</em>. If the weeks
+        go quiet, enjoy the quiet. I'd much rather come back to one clean
+        hand-back email than to several well-intended changes. My phone is
+        on for anything that actually needs me.</p>
+
+        <p style="margin-top: 18px; color: var(--ink-soft); font-size: 15.5px;">
+          Thanks for covering — appreciate it. — <b>{{OPERATOR_NAME}}</b>
+        </p>
+      </div>
+    </article>
+
+    <aside class="directives">
+      <div class="directives-label"><b>Directives</b> · do · hold · don't</div>
+
+      <!--
+        Directive rows. Pattern:
+          <div class="directive do|hold|dont">
+            <div class="directive-mark">✓ | ◌ | ✕</div>
+            <div class="directive-body">
+              <span class="k">PLAN KEY OR CATEGORY</span>One-line action.
+            </div>
+          </div>
+
+        Aim for 6-10 rows. Group by plan. End with one DO for
+        "Escalate / Phone is on."
+      -->
+
+      {{DIRECTIVES}}
+
+    </aside>
+
+  </div>
+
+  <div class="brief-foot">
+    <div>SOURCE · OPERATOR PROMPT <span class="sep">/</span> REV. <b>{{COMPILE_DATE}}</b></div>
+    <div>OVERRIDES THE PLAN SECTIONS ON CONFLICT <span class="sep">/</span> WINDOW <b>{{WINDOW_START_SHORT}} → {{WINDOW_END_SHORT}}</b></div>
+  </div>
+</section>

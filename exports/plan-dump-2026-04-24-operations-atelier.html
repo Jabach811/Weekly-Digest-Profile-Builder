@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Current Plan Dump · 2026-04-24 · Operations Atelier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #111315;
+      --bg-2: #16191d;
+      --panel: rgba(26, 29, 33, 0.92);
+      --panel-soft: rgba(31, 35, 39, 0.84);
+      --text: #eef0ed;
+      --muted: #9ba39d;
+      --line: rgba(238, 240, 237, 0.11);
+      --line-strong: rgba(238, 240, 237, 0.22);
+      --copper: #c48a4a;
+      --copper-soft: rgba(196, 138, 74, 0.16);
+      --green: #76b78a;
+      --red: #e06a5f;
+      --amber: #e0bc6f;
+      --blue: #7da7d9;
+      --title-size: clamp(2rem, 6vw, 5rem);
+      --h2-size: clamp(1.2rem, 2.8vw, 2.2rem);
+      --h3-size: clamp(0.95rem, 1.7vw, 1.25rem);
+      --body-size: clamp(0.8rem, 1.08vw, 1rem);
+      --small-size: clamp(0.66rem, 0.88vw, 0.82rem);
+      --slide-padding: clamp(1rem, 3.2vw, 2.7rem);
+      --content-gap: clamp(0.7rem, 1.5vw, 1.2rem);
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top right, rgba(196,138,74,0.13), transparent 20%),
+        radial-gradient(circle at bottom left, rgba(125,167,217,0.08), transparent 26%),
+        linear-gradient(180deg, #0c0e10 0%, var(--bg) 100%);
+      color: var(--text);
+      font-family: "IBM Plex Sans", sans-serif;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--copper), #f0b16c);
+      transition: width 220ms ease;
+      z-index: 1000;
+    }
+
+    .nav-dots {
+      position: fixed;
+      right: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .nav-dots button {
+      width: 0.78rem;
+      height: 0.78rem;
+      border-radius: 999px;
+      border: 1px solid rgba(238, 240, 237, 0.28);
+      background: rgba(255,255,255,0.08);
+      cursor: pointer;
+    }
+
+    .nav-dots button.active {
+      background: var(--copper);
+      border-color: var(--copper);
+      transform: scale(1.1);
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 100% 2rem, 2rem 100%;
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    .slide-content {
+      flex: 1;
+      max-height: 100%;
+      overflow: hidden;
+      padding: var(--slide-padding);
+      display: flex;
+      flex-direction: column;
+      gap: var(--content-gap);
+      position: relative;
+      z-index: 1;
+    }
+
+    .masthead, .footerline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: "Azeret Mono", monospace;
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .masthead {
+      padding-bottom: 0.7rem;
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .brand::before {
+      content: "";
+      width: 1.4rem;
+      height: 0.22rem;
+      background: var(--copper);
+      border-radius: 999px;
+      box-shadow: 0 0 1.4rem rgba(196,138,74,0.4);
+    }
+
+    h1, h2, h3 { margin: 0; }
+    h1 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: var(--title-size);
+      line-height: 0.94;
+      letter-spacing: -0.05em;
+      font-weight: 800;
+      max-width: 11ch;
+    }
+
+    h1 .accent { color: var(--copper); }
+
+    h2 {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: var(--h2-size);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+    }
+
+    h3 {
+      font-size: var(--h3-size);
+      line-height: 1.15;
+      font-weight: 700;
+    }
+
+    p, li {
+      font-size: var(--body-size);
+      line-height: 1.42;
+      margin: 0;
+    }
+
+    .lede {
+      max-width: 62ch;
+      color: #d4d9d4;
+      font-size: clamp(0.95rem, 1.3vw, 1.14rem);
+      line-height: 1.54;
+    }
+
+    .hero-grid, .duo-grid, .roster-grid, .run-grid, .check-grid {
+      display: grid;
+      gap: 0.95rem;
+      min-height: 0;
+    }
+
+    .hero-grid {
+      grid-template-columns: 1.15fr 0.85fr;
+      flex: 1;
+    }
+
+    .duo-grid, .roster-grid, .check-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .run-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card, .rack {
+      background:
+        linear-gradient(180deg, rgba(196,138,74,0.08), transparent 36%),
+        var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.24);
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-header {
+      padding: 0.75rem 0.9rem;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-body {
+      padding: 0.9rem;
+      display: grid;
+      gap: 0.7rem;
+      min-height: 0;
+    }
+
+    .metric-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.8rem;
+    }
+
+    .metric {
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      padding: 0.8rem;
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .metric .k, .mini, .chip {
+      font-family: "Azeret Mono", monospace;
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .metric .n {
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-size: clamp(1.9rem, 3.6vw, 3rem);
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      font-weight: 800;
+    }
+
+    .trace-box {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .trace-box::after {
+      content: "";
+      position: absolute;
+      inset: auto -8% 18% auto;
+      width: 70%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--copper), transparent);
+      box-shadow: 0 0 1rem rgba(196,138,74,0.45);
+    }
+
+    .story {
+      display: grid;
+      gap: 0.3rem;
+      padding-left: 0.9rem;
+      border-left: 0.2rem solid var(--copper-soft);
+    }
+
+    .story p { color: #c8cdc8; }
+
+    .list {
+      display: grid;
+      gap: 0.5rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .list li {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.55rem;
+      align-items: start;
+    }
+
+    .dot {
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 999px;
+      margin-top: 0.38rem;
+      background: var(--copper);
+      box-shadow: 0 0 0.8rem rgba(196,138,74,0.35);
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.38rem;
+      padding: 0.3rem 0.46rem;
+      border: 1px solid currentColor;
+      font-family: "Azeret Mono", monospace;
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .status-chip::before {
+      content: "";
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .ok { color: var(--green); }
+    .warn { color: var(--amber); }
+    .hot { color: var(--red); }
+    .flow { color: var(--blue); }
+
+    .run-card {
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      padding: 0.85rem;
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .run-card .date {
+      font-family: "Azeret Mono", monospace;
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--copper);
+    }
+
+    .plan-row {
+      display: grid;
+      grid-template-columns: 1.2fr 0.65fr 0.9fr;
+      gap: 0.7rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .plan-row:last-child { border-bottom: none; }
+    .plan-row p { color: #c8cdc8; }
+
+    .checklist {
+      display: grid;
+      gap: 0.55rem;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .checklist li {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.55rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .box {
+      width: 1rem;
+      height: 1rem;
+      border: 1px solid var(--line-strong);
+      background: rgba(255,255,255,0.03);
+      margin-top: 0.2rem;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid, .duo-grid, .roster-grid, .run-grid, .check-grid {
+        grid-template-columns: 1fr;
+      }
+      .metric-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .plan-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-height: 700px) {
+      :root {
+        --slide-padding: clamp(0.75rem, 3vw, 2rem);
+        --content-gap: clamp(0.45rem, 0.95vw, 0.85rem);
+        --title-size: clamp(1.7rem, 4.4vw, 3.4rem);
+        --body-size: clamp(0.72rem, 0.95vw, 0.9rem);
+      }
+    }
+
+    @media (max-height: 600px) {
+      .nav-dots { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .progress-bar { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" aria-hidden="true"></div>
+  <nav class="nav-dots" aria-label="Slide navigation"></nav>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead">
+        <span class="brand">Weekly Digest · operations atelier</span>
+        <span>rev 2026-04-24 · style 02 dark machine cut</span>
+      </div>
+      <div class="hero-grid">
+        <div class="card trace-box">
+          <div class="card-body">
+            <div class="mini">machine state</div>
+            <h1>the book is a live <span class="accent">machine.</span></h1>
+            <p class="lede">This cut treats the caseload like a system under load: good runs, fault lines, queued work, and later scheduled runs. The point is not to make the work sound dramatic. The point is to make the actual machine state impossible to misread.</p>
+            <div class="metric-strip">
+              <div class="metric"><span class="k">total plans</span><span class="n">13</span><span class="chip">full rack</span></div>
+              <div class="metric"><span class="k">active load</span><span class="n">7</span><span class="chip">working now</span></div>
+              <div class="metric"><span class="k">fault lines</span><span class="n">4</span><span class="chip">blocked / TBD</span></div>
+              <div class="metric"><span class="k">near runs</span><span class="n">4</span><span class="chip">5/1 → 6/1</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Readout</h3>
+            <span class="status-chip flow">portfolio logic</span>
+          </div>
+          <div class="card-body">
+            <div class="story"><strong>Healthy runs</strong><p>Callidi, Haverhill, and TMG each cleared something real.</p></div>
+            <div class="story"><strong>Live faults</strong><p>COCC routing, Callidi loan routing, missing IDs, and contradictory plan identifiers still need hands.</p></div>
+            <div class="story"><strong>Scheduled runs</strong><p>5/1, 5/14-5/27, and 6/1 are the next windows that meaningfully change state.</p></div>
+            <div class="story"><strong>Parked inventory</strong><p>Prime, Stoutco, Bonnier, Leiby's, and the Canam plans should stay context, not noise.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="footerline"><span>slides 01 / 08</span><span>machine framing instead of editorial framing</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead"><span class="brand">machine map</span><span>what is running, what is waiting</span></div>
+      <h2>Load map</h2>
+      <div class="duo-grid">
+        <article class="card">
+          <div class="card-header"><h3>Hot lanes</h3><span class="status-chip hot">must move</span></div>
+          <div class="card-body">
+            <div class="story"><strong>COCC</strong><p>Routing defect is live, client is sensitive, and the payroll file still needs a clean verification pass.</p></div>
+            <div class="story"><strong>Callidi</strong><p>Balances are in; the machine is now blocked on XKB / XKC loan refs not landing where they should.</p></div>
+            <div class="story"><strong>Pella</strong><p>Deferral report retrieval is the job. Everything else is downstream of that.</p></div>
+            <div class="story"><strong>TMG</strong><p>Breakthrough exists. Monday load is what converts breakthrough into done.</p></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-header"><h3>Flow lanes</h3><span class="status-chip flow">steady work</span></div>
+          <div class="card-body">
+            <div class="story"><strong>Banyan</strong><p>Ready for census / election setup, but identifier and naming locks still matter.</p></div>
+            <div class="story"><strong>Haverhill</strong><p>Mostly staged. Remaining moves are communication and coverage quality.</p></div>
+            <div class="story"><strong>ISD</strong><p>Not noisy, but the deferral logic still wants a clean operating decision.</p></div>
+            <div class="story"><strong>Future inventory</strong><p>Prime, Stoutco, Bonnier, Leiby's, Canam Bridges, and Canam Bldgs stay out of the hot lane.</p></div>
+          </div>
+        </article>
+      </div>
+      <div class="footerline"><span>slides 02 / 08</span><span>two-tier pressure framing</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead"><span class="brand">clean runs</span><span>things that improved for real</span></div>
+      <h2>Good runs</h2>
+      <div class="duo-grid">
+        <article class="card">
+          <div class="card-header"><h3>Callidi recovery sequence</h3><span class="status-chip ok">good run</span></div>
+          <div class="card-body">
+            <p>Informatica recovered. Balances landed. Dummy reversal ran. The sequence executed like it should once the outside system came back.</p>
+            <p>That still leaves loan routing and elections, but the machine is no longer frozen at the gate.</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-header"><h3>Haverhill pre-wire state</h3><span class="status-chip ok">good run</span></div>
+          <div class="card-body">
+            <p>Base file loaded, AQT fix explained, flags placed. This is a stable state, not a scramble state.</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-header"><h3>TMG fix-path pivot</h3><span class="status-chip ok">good run</span></div>
+          <div class="card-body">
+            <p>Self-calculated YOS verified against vendor data changed both the risk and the message. That is the most valuable conceptual improvement in the book right now.</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-header"><h3>Read this carefully</h3><span class="status-chip warn">not closed</span></div>
+          <div class="card-body">
+            <p>These are not fully closed plans. They are <strong>runs that landed cleanly enough to release pressure</strong>.</p>
+          </div>
+        </article>
+      </div>
+      <div class="footerline"><span>slides 03 / 08</span><span>good runs deserve their own frame</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead"><span class="brand">fault lines</span><span>where the machine still catches</span></div>
+      <h2>Fault lines and contradictions</h2>
+      <div class="duo-grid">
+        <article class="card">
+          <div class="card-header"><h3>Mechanical faults</h3><span class="status-chip hot">break / fix</span></div>
+          <div class="card-body">
+            <ul class="list">
+              <li><span class="dot"></span><span><strong>COCC</strong> · EDS source-routing is wrong and needs a clean payroll verification afterward.</span></li>
+              <li><span class="dot"></span><span><strong>Callidi</strong> · XKB / XKC not landing in Transact Detail blocks the next loan move.</span></li>
+              <li><span class="dot"></span><span><strong>Pella</strong> · ADP report still trapped behind weak channeling.</span></li>
+              <li><span class="dot"></span><span><strong>TMG</strong> · actual load still pending despite the conceptual win.</span></li>
+            </ul>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-header"><h3>Identity faults</h3><span class="status-chip warn">verify first</span></div>
+          <div class="card-body">
+            <ul class="list">
+              <li><span class="dot"></span><span><strong>Banyan / Canam Bridges</strong> case number collision on `QK63283-00099`.</span></li>
+              <li><span class="dot"></span><span><strong>Banyan</strong> still toggles between Banyan Treatment Centers and Cutting Edge Staffing.</span></li>
+              <li><span class="dot"></span><span><strong>Callidi</strong> still carries unresolved identity between the old frozen / unfrozen loan issue and the newer XKB / XKC issue.</span></li>
+              <li><span class="dot"></span><span><strong>COCC / TMG</strong> still missing case numbers in the registry-state picture.</span></li>
+            </ul>
+          </div>
+        </article>
+      </div>
+      <div class="footerline"><span>slides 04 / 08</span><span>separate machine faults from data-identity faults</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead"><span class="brand">scheduled runs</span><span>the next windows on the board</span></div>
+      <h2>Run schedule</h2>
+      <div class="run-grid">
+        <article class="run-card">
+          <span class="date">5 / 1</span>
+          <h3>Pella</h3>
+          <p>Liquidation timing is here before the deferral-report thread feels settled.</p>
+        </article>
+        <article class="run-card">
+          <span class="date">5 / 1</span>
+          <h3>Haverhill</h3>
+          <p>Asset day lands during OOO, so email and handoff quality are part of the run.</p>
+        </article>
+        <article class="run-card">
+          <span class="date">5 / 14 → 5 / 27</span>
+          <h3>Banyan</h3>
+          <p>Limited-access window wants setup, audit discipline, and post-window monitoring.</p>
+        </article>
+        <article class="run-card">
+          <span class="date">6 / 1</span>
+          <h3>Banyan wire</h3>
+          <p>Wire and reconciliation become real immediately after early access closes.</p>
+        </article>
+      </div>
+      <article class="card">
+        <div class="card-header"><h3>Later scheduled inventory</h3><span class="status-chip flow">context only</span></div>
+        <div class="card-body">
+          <p>ISD, Stoutco, and Bonnier become more real around July. Prime and Leiby's sit in August. Canam Bridges and Canam Bldgs are October work. Important context, not active machine heat.</p>
+        </div>
+      </article>
+      <div class="footerline"><span>slides 05 / 08</span><span>calendar pressure beats vague pressure</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead"><span class="brand">live rack</span><span>all active circuits at once</span></div>
+      <h2>Active rack</h2>
+      <div class="roster-grid">
+        <article class="rack card">
+          <div class="card-header"><h3>Current live circuits</h3><span class="mini">ramping / active</span></div>
+          <div class="card-body">
+            <div class="plan-row"><div><strong>Callidi Tas</strong><p>Recovered from system outage. Loan route issue still active.</p></div><div><span class="status-chip hot">ramping</span></div><div><span class="mini">elections Monday</span></div></div>
+            <div class="plan-row"><div><strong>COCC</strong><p>Routing repair under touchy-client pressure.</p></div><div><span class="status-chip hot">active</span></div><div><span class="mini">dates TBD</span></div></div>
+            <div class="plan-row"><div><strong>Pella SC</strong><p>ADP report retrieval is the whole move.</p></div><div><span class="status-chip hot">active</span></div><div><span class="mini">5 / 1</span></div></div>
+            <div class="plan-row"><div><strong>TMG</strong><p>Vesting-fix load still has to land.</p></div><div><span class="status-chip hot">active</span></div><div><span class="mini">legacy fix path</span></div></div>
+            <div class="plan-row"><div><strong>Banyan</strong><p>New plan with prep work and identity cleanup both live.</p></div><div><span class="status-chip flow">active</span></div><div><span class="mini">5 / 28 · 6 / 1</span></div></div>
+            <div class="plan-row"><div><strong>Haverhill</strong><p>Communication and handoff are the remaining live moves.</p></div><div><span class="status-chip flow">active</span></div><div><span class="mini">5 / 1</span></div></div>
+            <div class="plan-row"><div><strong>ISD</strong><p>Strategic deferral call still open.</p></div><div><span class="status-chip flow">active</span></div><div><span class="mini">7 / 1</span></div></div>
+          </div>
+        </article>
+        <article class="rack card">
+          <div class="card-header"><h3>Parked rack</h3><span class="mini">future / hold</span></div>
+          <div class="card-body">
+            <div class="plan-row"><div><strong>Prime Healthcare</strong><p>On hold to 8 / 1.</p></div><div><span class="status-chip warn">hold</span></div><div><span class="mini">8 / 1</span></div></div>
+            <div class="plan-row"><div><strong>Stoutco</strong><p>Simple future-state Excel-wise plan.</p></div><div><span class="status-chip warn">future</span></div><div><span class="mini">7 / 1</span></div></div>
+            <div class="plan-row"><div><strong>Bonnier</strong><p>Future inventory only.</p></div><div><span class="status-chip warn">future</span></div><div><span class="mini">7 / 1</span></div></div>
+            <div class="plan-row"><div><strong>Leiby's</strong><p>Still off the radar.</p></div><div><span class="status-chip warn">future</span></div><div><span class="mini">8 / 1</span></div></div>
+            <div class="plan-row"><div><strong>Canam Bridges</strong><p>Future-dated, but still part of the Banyan number collision story.</p></div><div><span class="status-chip warn">future</span></div><div><span class="mini">10 / 1</span></div></div>
+            <div class="plan-row"><div><strong>Canam Bldgs</strong><p>Pure horizon work.</p></div><div><span class="status-chip warn">future</span></div><div><span class="mini">10 / 1</span></div></div>
+          </div>
+        </article>
+      </div>
+      <div class="footerline"><span>slides 06 / 08</span><span>full rack retained after v0.2 refinement</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead"><span class="brand">operator carry</span><span>what the machine wants next</span></div>
+      <h2>Checkout list</h2>
+      <div class="check-grid">
+        <article class="card">
+          <div class="card-header"><h3>Do next</h3><span class="status-chip flow">operator list</span></div>
+          <div class="card-body">
+            <ul class="checklist">
+              <li><span class="box"></span><span>Fix <strong>COCC</strong> routing, then re-verify the payroll file.</span></li>
+              <li><span class="box"></span><span>Diagnose <strong>Callidi</strong> XKB / XKC route failure and re-run loans.</span></li>
+              <li><span class="box"></span><span>Push <strong>Pella</strong> deferral report through the right channel today, not eventually.</span></li>
+              <li><span class="box"></span><span>Send <strong>Haverhill</strong> NBI email and complete the OOO handoff.</span></li>
+              <li><span class="box"></span><span>Finalize and load <strong>TMG</strong> self-calculated YOS.</span></li>
+              <li><span class="box"></span><span>Confirm <strong>Banyan</strong> case number and naming before the plan spawns more ambiguity.</span></li>
+            </ul>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-header"><h3>System reading</h3><span class="status-chip ok">summary</span></div>
+          <div class="card-body">
+            <p><strong>System health:</strong> better than it looked at the start of the dump.</p>
+            <p><strong>System risk:</strong> still concentrated in routing defects and fuzzy identifiers, not broad portfolio chaos.</p>
+            <p><strong>Operator move:</strong> clear the hot faults first, then let the quieter circuits stay quiet.</p>
+          </div>
+        </article>
+      </div>
+      <div class="footerline"><span>slides 07 / 08</span><span>operator-first ending</span></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <div class="slide-content">
+      <div class="masthead"><span class="brand">atelier note</span><span>why this cut exists</span></div>
+      <h2>This version is better when the week feels mechanical</h2>
+      <article class="card">
+        <div class="card-body">
+          <p class="lede">The newspaper version is better when the goal is orientation and narrative clarity. This atelier version is better when the caseload feels like a machine with load, faults, scheduled runs, and state changes. Same truth. Different instrument.</p>
+          <div class="duo-grid">
+            <div class="story"><strong>Best at:</strong><p>workbench reading, fault isolation, and operational pressure framing.</p></div>
+            <div class="story"><strong>Not trying to be:</strong><p>a leadership deck, a dashboard, or a beautiful lie.</p></div>
+          </div>
+        </div>
+      </article>
+      <div class="footerline"><span>slides 08 / 08</span><span>operations atelier complete</span></div>
+    </div>
+  </section>
+
+  <script>
+    class SlidePresentation {
+      constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.progressBar = document.querySelector('.progress-bar');
+        this.navDotsContainer = document.querySelector('.nav-dots');
+        this.currentSlide = 0;
+        this.setupNavDots();
+        this.setupObservers();
+        this.setupEvents();
+        this.updateUI(0);
+      }
+      setupNavDots() {
+        this.navDotsContainer.innerHTML = '';
+        this.slides.forEach((_, index) => {
+          const dot = document.createElement('button');
+          dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+          dot.addEventListener('click', () => this.goToSlide(index));
+          this.navDotsContainer.appendChild(dot);
+        });
+      }
+      setupObservers() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              this.updateUI(this.slides.indexOf(entry.target));
+            }
+          });
+        }, { threshold: 0.55 });
+        this.slides.forEach((slide) => observer.observe(slide));
+      }
+      setupEvents() {
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'ArrowDown' || event.key === 'ArrowRight' || event.key === ' ' || event.key === 'PageDown') {
+            event.preventDefault();
+            this.goToSlide(Math.min(this.currentSlide + 1, this.slides.length - 1));
+          }
+          if (event.key === 'ArrowUp' || event.key === 'ArrowLeft' || event.key === 'PageUp') {
+            event.preventDefault();
+            this.goToSlide(Math.max(this.currentSlide - 1, 0));
+          }
+        });
+      }
+      goToSlide(index) {
+        this.slides[index].scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      }
+      updateUI(index) {
+        this.currentSlide = index;
+        this.progressBar.style.width = `${((index + 1) / this.slides.length) * 100}%`;
+        Array.from(this.navDotsContainer.children).forEach((dot, i) => dot.classList.toggle('active', i === index));
+      }
+    }
+    new SlidePresentation();
+  </script>
+</body>
+</html>

@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Weekly Brief · Cycle 029 · Mastercard Mock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sofia+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Mastercard palette — direct from DESIGN.md §2 */
+    --mc-red:        #EB001B;
+    --mc-yellow:     #F79E1B;
+    --ink:           #141413;
+    --charcoal:      #262627;
+    --signal:        #CF4500;
+    --signal-light:  #F37338;
+    --clay:          #9A3A0A;
+    --cream:         #F3F0EE;
+    --cream-lifted:  #FCFBFA;
+    --white:         #FFFFFF;
+    --soft-bone:     #F4F4F4;
+    --slate:         #696969;
+    --granite:       #555555;
+    --graphite:      #565656;
+    --dust:          #D1CDC7;
+    --link-blue:     #3860BE;
+    --ghost:         #E8E2DA;
+
+    --shadow-1: rgba(0,0,0,0.04) 0px 4px 24px 0px;
+    --shadow-2: rgba(0,0,0,0.08) 0px 24px 48px 0px;
+
+    --sans: 'Sofia Sans', Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.4;
+    font-weight: 450;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    height: 100vh;
+  }
+
+  .slide {
+    min-height: 100vh;
+    scroll-snap-align: start;
+    padding: 56px 72px 72px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ─────────── floating nav pill ─────────── */
+  .nav-pill {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--white);
+    border-radius: 999px;
+    padding: 14px 32px;
+    box-shadow: var(--shadow-1);
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    z-index: 50;
+  }
+  .nav-pill .logo {
+    display: flex; align-items: center; gap: 0;
+    position: relative;
+    width: 44px; height: 28px;
+  }
+  .nav-pill .logo .red,
+  .nav-pill .logo .yellow {
+    width: 28px; height: 28px; border-radius: 50%;
+    position: absolute; top: 0;
+  }
+  .nav-pill .logo .red { background: var(--mc-red); left: 0; }
+  .nav-pill .logo .yellow { background: var(--mc-yellow); left: 16px; mix-blend-mode: multiply; }
+  .nav-pill .links {
+    display: flex; gap: 36px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.42px;
+    color: var(--ink);
+  }
+  .nav-pill .links a { text-decoration: none; color: inherit; }
+  .nav-pill .search {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--ink);
+    background: transparent;
+    display: grid; place-items: center;
+    cursor: pointer;
+    color: var(--ink);
+  }
+
+  /* ─────────── right nav dots ─────────── */
+  .nav-dots {
+    position: fixed;
+    right: 28px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 14px;
+    z-index: 40;
+  }
+  .nav-dots a {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--dust);
+    display: block;
+    transition: background 180ms, transform 180ms;
+  }
+  .nav-dots a:hover { background: var(--signal); transform: scale(1.3); }
+
+  /* ─────────── masthead / topbar ─────────── */
+  .masthead {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 64px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(20,20,19,0.12);
+    margin-bottom: 56px;
+    font-size: 13px;
+    color: var(--slate);
+    font-weight: 450;
+  }
+  .masthead .wordmark {
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.56px;
+    text-transform: uppercase;
+    color: var(--ink);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .masthead .wordmark::before {
+    content: ""; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--signal-light);
+  }
+  .masthead .meta { font-family: var(--sans); font-size: 13px; color: var(--slate); }
+  .masthead .meta span + span::before { content: "·"; margin: 0 10px; color: var(--dust); }
+
+  /* ─────────── typography ─────────── */
+  .eyebrow {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.56px;
+    text-transform: uppercase;
+    color: var(--ink);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .eyebrow::before {
+    content: ""; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--signal-light);
+  }
+
+  h1.display {
+    font-size: clamp(56px, 8vw, 112px);
+    font-weight: 500;
+    line-height: 1.0;
+    letter-spacing: -2.24px;
+    color: var(--ink);
+    margin-top: 20px;
+  }
+  h1.display em {
+    font-style: normal;
+    color: var(--signal);
+  }
+
+  h2.h2 {
+    font-size: 36px;
+    font-weight: 500;
+    line-height: 1.22;
+    letter-spacing: -0.72px;
+    color: var(--ink);
+  }
+
+  h3.h3 {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.48px;
+    color: var(--ink);
+  }
+
+  h4.h4 {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.56px;
+    text-transform: uppercase;
+    color: var(--slate);
+  }
+
+  p.lede {
+    font-size: 20px;
+    font-weight: 450;
+    line-height: 1.5;
+    color: var(--charcoal);
+    max-width: 62ch;
+  }
+  p.lede b { font-weight: 700; color: var(--ink); }
+
+  p.body {
+    font-size: 16px;
+    font-weight: 450;
+    line-height: 1.5;
+    color: var(--charcoal);
+  }
+  p.body b { font-weight: 700; color: var(--ink); }
+
+  /* ─────────── pills & buttons ─────────── */
+  .btn-ink {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--ink);
+    color: var(--cream);
+    border: 1.5px solid var(--ink);
+    border-radius: 20px;
+    padding: 10px 28px;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.32px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--white);
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+    border-radius: 20px;
+    padding: 10px 28px;
+    font-size: 16px;
+    font-weight: 450;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--white);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid rgba(20,20,19,0.12);
+  }
+  .chip .date { color: var(--slate); font-weight: 450; font-size: 12px; }
+  .chip .note { color: var(--slate); font-weight: 450; font-size: 12px; }
+  .chip.status-prep::before {
+    content: ""; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--signal-light);
+  }
+  .chip.status-wrap::before {
+    content: ""; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--signal);
+  }
+  .chip.status-intake::before {
+    content: ""; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--mc-yellow);
+  }
+  .chip.accent {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+  }
+
+  /* ─────────── circular portrait (gauge) with orbit ─────────── */
+  .gauge-portrait {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background: var(--cream-lifted);
+    box-shadow: var(--shadow-2);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 24px;
+    overflow: visible;
+  }
+  .gauge-portrait .label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.52px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 8px;
+  }
+  .gauge-portrait .num {
+    font-size: 72px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -1.44px;
+    color: var(--ink);
+  }
+  .gauge-portrait .sub {
+    font-size: 13px;
+    color: var(--slate);
+    margin-top: 8px;
+    line-height: 1.3;
+  }
+  /* satellite CTA */
+  .gauge-portrait .satellite {
+    position: absolute;
+    bottom: 8%;
+    right: -6%;
+    width: 52px; height: 52px;
+    background: var(--white);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 20px;
+    color: var(--ink);
+    box-shadow: var(--shadow-1);
+    border: 1px solid rgba(20,20,19,0.06);
+  }
+
+  /* orbital arc overlay */
+  .orbit-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .orbit-layer svg { width: 100%; height: 100%; display: block; }
+  .orbit-layer path {
+    fill: none;
+    stroke: var(--signal-light);
+    stroke-width: 1.2;
+    stroke-linecap: round;
+  }
+
+  /* ghost watermark */
+  .ghost {
+    position: absolute;
+    font-size: clamp(120px, 20vw, 260px);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -5px;
+    color: var(--ghost);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+  }
+
+  /* ─────────── slide 1 cover ─────────── */
+  .cover-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 72px;
+    align-content: center;
+    position: relative;
+    z-index: 1;
+  }
+  .cover-left { position: relative; z-index: 2; }
+  .cover-left .cta-row {
+    display: flex; gap: 12px; margin-top: 36px;
+  }
+
+  .gauges {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    position: relative;
+  }
+  .gauges::before {
+    content: "";
+    position: absolute;
+    inset: -40px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><path d='M 20 200 Q 200 20 380 200 Q 200 380 20 200' fill='none' stroke='%23F37338' stroke-width='1.2'/><path d='M 60 180 Q 200 80 340 200' fill='none' stroke='%23F37338' stroke-width='1'/></svg>") center/100% 100% no-repeat;
+    opacity: 0.7;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .gauges .gauge-portrait { z-index: 1; }
+
+  .operator-strip {
+    margin-top: 56px;
+    padding: 28px 36px;
+    background: var(--cream-lifted);
+    border-radius: 999px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    box-shadow: var(--shadow-1);
+    position: relative;
+    z-index: 1;
+  }
+  .operator-strip .cell {
+    font-size: 12px;
+    color: var(--slate);
+    font-weight: 700;
+    letter-spacing: 0.48px;
+    text-transform: uppercase;
+  }
+  .operator-strip .cell b {
+    display: block;
+    color: var(--ink);
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: -0.34px;
+    text-transform: none;
+    margin-top: 6px;
+  }
+
+  /* ─────────── slide 2 triage ─────────── */
+  .triage-head { position: relative; z-index: 1; }
+
+  .beacon-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-top: 40px;
+    position: relative;
+    z-index: 1;
+  }
+  .beacon {
+    background: var(--cream-lifted);
+    border-radius: 40px;
+    padding: 36px 40px;
+    box-shadow: var(--shadow-2);
+    position: relative;
+  }
+  .beacon .cat {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.52px;
+    text-transform: uppercase;
+    color: var(--slate);
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-bottom: 18px;
+  }
+  .beacon .cat::before {
+    content: ""; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--signal-light);
+  }
+  .beacon.post .cat::before { background: var(--signal); }
+  .beacon .wire-tag {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.78px;
+    color: var(--signal);
+    margin: 8px 0 14px;
+  }
+  .beacon.post .wire-tag { color: var(--clay); }
+  .beacon hr {
+    border: none;
+    border-top: 1px solid rgba(20,20,19,0.1);
+    margin: 24px 0;
+  }
+
+  .ledger-card {
+    margin-top: 40px;
+    background: var(--cream-lifted);
+    border-radius: 40px;
+    padding: 8px;
+    box-shadow: var(--shadow-2);
+    position: relative;
+    z-index: 1;
+  }
+  .ledger-head {
+    display: flex; justify-content: space-between;
+    padding: 20px 32px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.52px;
+    text-transform: uppercase;
+    color: var(--slate);
+  }
+  .ledger-head b { color: var(--ink); }
+  table.ledger {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+    background: var(--white);
+    border-radius: 32px;
+    overflow: hidden;
+  }
+  table.ledger th {
+    text-align: left;
+    padding: 16px 24px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.48px;
+    text-transform: uppercase;
+    color: var(--slate);
+    border-bottom: 1px solid rgba(20,20,19,0.08);
+  }
+  table.ledger td {
+    padding: 18px 24px;
+    color: var(--charcoal);
+    border-bottom: 1px solid rgba(20,20,19,0.06);
+    font-variant-numeric: tabular-nums;
+    vertical-align: middle;
+  }
+  table.ledger tr:last-child td { border-bottom: none; }
+  table.ledger td.num {
+    color: var(--slate); font-size: 13px; font-weight: 700;
+    letter-spacing: 0.52px;
+  }
+  table.ledger td.plan { color: var(--ink); font-weight: 500; }
+  table.ledger td.due {
+    color: var(--signal);
+    font-weight: 700;
+    letter-spacing: 0.52px;
+    font-size: 13px;
+    text-transform: uppercase;
+  }
+  table.ledger td.blocked { color: var(--slate); font-size: 14px; }
+
+  .monitor {
+    margin-top: 40px;
+    position: relative;
+    z-index: 1;
+  }
+  .monitor-label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.52px;
+    text-transform: uppercase;
+    color: var(--slate);
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-bottom: 18px;
+  }
+  .monitor-label::before {
+    content: ""; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--signal-light);
+  }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .closed-strip {
+    margin-top: 28px;
+    padding: 16px 28px;
+    background: var(--cream-lifted);
+    border-radius: 999px;
+    font-size: 14px;
+    color: var(--charcoal);
+    display: flex; align-items: center; gap: 14px;
+    border: 1px solid rgba(20,20,19,0.08);
+    position: relative;
+    z-index: 1;
+  }
+  .closed-strip .tick {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--ink); color: var(--cream);
+    display: grid; place-items: center;
+    font-size: 13px; font-weight: 700;
+  }
+  .closed-strip b { color: var(--ink); font-weight: 500; }
+
+  /* ─────────── slide 3 plan detail ─────────── */
+  .plan-head { position: relative; z-index: 1; }
+  .plan-chips {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-top: 28px;
+  }
+
+  .plan-body {
+    display: grid;
+    grid-template-columns: 1fr 440px;
+    gap: 72px;
+    margin-top: 48px;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+  .plan-col h3 { margin-top: 28px; margin-bottom: 14px; }
+  .plan-col h3:first-child { margin-top: 0; }
+  .plan-col p + p { margin-top: 14px; }
+
+  .fact-card {
+    background: var(--cream-lifted);
+    border-radius: 40px;
+    padding: 36px 40px;
+    box-shadow: var(--shadow-2);
+  }
+  .facts { display: grid; gap: 0; }
+  .fact {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(20,20,19,0.08);
+    align-items: baseline;
+  }
+  .fact:last-child { border-bottom: none; }
+  .fact .k {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.48px;
+    text-transform: uppercase;
+    color: var(--slate);
+  }
+  .fact .v {
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.32px;
+  }
+  .fact .v.soft { color: var(--charcoal); font-weight: 450; }
+
+  .open-items {
+    margin-top: 28px;
+    padding: 28px 32px;
+    background: var(--white);
+    border-radius: 32px;
+    border: 1px solid rgba(20,20,19,0.08);
+  }
+  .open-items h4 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.52px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 16px;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .open-items h4::before {
+    content: ""; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--signal-light);
+  }
+  .open-items ul { list-style: none; }
+  .open-items li {
+    padding: 12px 0;
+    font-size: 15px;
+    color: var(--charcoal);
+    display: flex; gap: 14px; align-items: flex-start;
+    border-bottom: 1px solid rgba(20,20,19,0.06);
+    line-height: 1.4;
+  }
+  .open-items li:last-child { border-bottom: none; }
+  .open-items li::before {
+    content: "";
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+    background: var(--cream);
+  }
+
+  /* decorative orbit SVG absolute positioning per slide */
+  .slide-orbit {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- floating nav pill -->
+<nav class="nav-pill" aria-label="Brand nav">
+  <div class="logo" aria-label="Mastercard">
+    <span class="red"></span><span class="yellow"></span>
+  </div>
+  <div class="links">
+    <a href="#s1">For you</a>
+    <a href="#s2">For business</a>
+    <a href="#s3">For the world</a>
+    <a href="#s1">Innovators</a>
+    <a href="#s2">News</a>
+  </div>
+  <button class="search" aria-label="Search">⌕</button>
+</nav>
+
+<!-- right-side slide dots -->
+<nav class="nav-dots" aria-label="Slide nav">
+  <a href="#s1" title="Cover"></a>
+  <a href="#s2" title="Triage"></a>
+  <a href="#s3" title="Pella"></a>
+</nav>
+
+<!-- ──────────────────────────── SLIDE 1: COVER ──────────────────────────── -->
+<section class="slide" id="s1">
+  <!-- ghost watermark -->
+  <div class="ghost" style="right: -40px; bottom: 60px;">cycle</div>
+
+  <div class="masthead">
+    <div class="wordmark">NBI · WEEKLY BRIEF</div>
+    <div class="meta">
+      <span>WB.029</span><span>rev 2026-04-23</span><span>01 / 03</span>
+    </div>
+  </div>
+
+  <div class="cover-grid">
+    <div class="cover-left">
+      <div class="eyebrow">transmission 029 · fiscal 2026 · wk 17–18</div>
+      <h1 class="display">coverage <em>cycle.</em></h1>
+      <p class="lede" style="margin-top: 32px;">
+        Two weeks, <b>one OOO in the middle</b>, and <b>two wires landing during it</b>. Pella and Haverhill both hit 5/1 — the Monday I'm back. The work this cycle is hand-off quality: get the coverage pack right, stage the post-wire cleanup, and hold projects in their lane.
+      </p>
+      <div class="cta-row">
+        <a href="#s2" class="btn-ink">Open triage →</a>
+        <a href="#s3" class="btn-outline">Plan detail</a>
+      </div>
+    </div>
+
+    <aside class="gauges">
+      <div class="gauge-portrait">
+        <div class="label">Active</div>
+        <div class="num">04</div>
+        <div class="sub">Move this cycle</div>
+        <div class="satellite">→</div>
+      </div>
+      <div class="gauge-portrait">
+        <div class="label">Monitor</div>
+        <div class="num">06</div>
+        <div class="sub">Off the burner</div>
+        <div class="satellite">→</div>
+      </div>
+      <div class="gauge-portrait">
+        <div class="label">OOO</div>
+        <div class="num">05</div>
+        <div class="sub">Apr 27 → May 01</div>
+        <div class="satellite">→</div>
+      </div>
+      <div class="gauge-portrait">
+        <div class="label">Window</div>
+        <div class="num">14</div>
+        <div class="sub">Apr 22 → May 06</div>
+        <div class="satellite">→</div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="operator-strip">
+    <div class="cell">Operator<b>Joel</b></div>
+    <div class="cell">Role<b>Senior Data Consultant</b></div>
+    <div class="cell">Window<b>Apr 22 → May 06</b></div>
+    <div class="cell">Nav<b>scroll · dots right</b></div>
+  </div>
+</section>
+
+<!-- ──────────────────────────── SLIDE 2: TRIAGE BOARD ──────────────────────────── -->
+<section class="slide" id="s2">
+  <div class="ghost" style="left: -30px; top: 140px;">board</div>
+
+  <div class="masthead">
+    <div class="wordmark">NBI · WEEKLY BRIEF</div>
+    <div class="meta"><span>WB.029</span><span>§ 02 · triage board</span><span>02 / 03</span></div>
+  </div>
+
+  <div class="triage-head">
+    <div class="eyebrow">§02 · transmission 029 · triage ledger</div>
+    <h1 class="display">the <em>board.</em></h1>
+    <p class="lede" style="margin-top: 28px;">
+      <b>Four</b> plans need hands this cycle. <b>Two wires</b> land on <b>5/1</b> — mid-OOO. One wrapping up, one still in intake. <b>Six</b> more on monitor. Coverage pack is the through-line.
+    </p>
+  </div>
+
+  <div class="beacon-grid">
+    <div class="beacon">
+      <div class="cat">Pre-wire · going live · 02</div>
+      <h3 class="h3">Pella SC</h3>
+      <div class="wire-tag">WIRE 5 / 01</div>
+      <p class="body">Wire hits Friday, <b>mid-OOO</b>. Records side should be easy — population already in our system. <b>Open thread:</b> get the deferral report from the new ADP rep before the 27th so coverage isn't chasing it.</p>
+
+      <hr>
+
+      <h3 class="h3">Haverhill (Havern)</h3>
+      <div class="wire-tag">WIRE 5 / 01</div>
+      <p class="body">Assets inbound 5/1, same day as Pella, <b>during OOO</b>. Base file loaded, AQT flags placed. <b>Open thread:</b> Damien's missing participants still need a final sweep before the wire lands. Hand-off doc is the lever.</p>
+    </div>
+
+    <div class="beacon post">
+      <div class="cat">Post-wire · cleanup · 01</div>
+      <h3 class="h3">Callidi Tas</h3>
+      <div class="wire-tag">CLOSE TARGET 5 / 06</div>
+      <p class="body">Asset transfer done 4/10. Still blocked on client data (DOB + DOH for the missing-people group) and the one out-of-order loan. Close target: end of this cycle.</p>
+    </div>
+  </div>
+
+  <div class="ledger-card">
+    <div class="ledger-head">
+      <div>ch.02 · active ledger</div>
+      <div>records <b>04</b></div>
+    </div>
+    <table class="ledger">
+      <thead>
+        <tr>
+          <th>№</th><th>Plan</th><th>Stage</th><th>Ball with</th><th>Due</th><th>Next step</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num">01</td>
+          <td class="plan">Pella SC</td>
+          <td><span class="chip status-prep">Preparation</span></td>
+          <td class="blocked">ADP rep</td>
+          <td class="due">MAY 01</td>
+          <td>Get deferral report pre-OOO; confirm base-file need</td>
+        </tr>
+        <tr>
+          <td class="num">02</td>
+          <td class="plan">Haverhill (Havern)</td>
+          <td><span class="chip status-prep">Preparation</span></td>
+          <td class="blocked">Damien</td>
+          <td class="due">MAY 01</td>
+          <td>Close Damien list pre-OOO; prep coverage pack</td>
+        </tr>
+        <tr>
+          <td class="num">03</td>
+          <td class="plan">Callidi Tas</td>
+          <td><span class="chip status-wrap">Wrapping Up</span></td>
+          <td class="blocked">Client · Me</td>
+          <td class="due">MAY 06</td>
+          <td>Nudge DOB/DOH; decide loan re-amort; archive</td>
+        </tr>
+        <tr>
+          <td class="num">04</td>
+          <td class="plan">Int'l School of Denver</td>
+          <td><span class="chip status-intake">Intake</span></td>
+          <td class="blocked">Client · Team</td>
+          <td class="due">JUL 01</td>
+          <td>Ask for deferral file now; write policy framing</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="monitor">
+    <div class="monitor-label">Monitor · off the burner · 06 records</div>
+    <div class="chip-row">
+      <span class="chip">Stoutco <span class="date">7/01</span><span class="note">client mtg next wk</span></span>
+      <span class="chip">Bonnier <span class="date">7/01</span><span class="note">quiet</span></span>
+      <span class="chip">Leiby's Dairy <span class="date">8/01</span></span>
+      <span class="chip">Prime Healthcare <span class="date">8/01</span><span class="note">on hold</span></span>
+      <span class="chip">Canam Bridges <span class="date">10/01</span></span>
+      <span class="chip">Canam Buildings <span class="date">10/01</span></span>
+    </div>
+  </div>
+
+  <div class="closed-strip">
+    <span class="tick">✓</span>
+    Closed last cycle · <b>mapping-validator folded into data-parser</b> · decision logged
+  </div>
+</section>
+
+<!-- ──────────────────────────── SLIDE 3: PLAN DETAIL — PELLA SC ──────────────────────────── -->
+<section class="slide" id="s3">
+  <div class="ghost" style="right: -30px; top: 180px;">pella</div>
+
+  <div class="masthead">
+    <div class="wordmark">NBI · WEEKLY BRIEF</div>
+    <div class="meta"><span>WB.029</span><span>§ 03 · plan detail</span><span>03 / 03</span></div>
+  </div>
+
+  <div class="plan-head">
+    <div class="eyebrow">§03 · active plan · transmission 029</div>
+    <h1 class="display">pella <em>sc.</em></h1>
+    <div class="plan-chips">
+      <span class="chip status-prep">Preparation</span>
+      <span class="chip">Records · Me</span>
+      <span class="chip">Blocked on · ADP rep</span>
+      <span class="chip accent">Wire 5 / 01</span>
+    </div>
+  </div>
+
+  <div class="plan-body">
+    <div class="plan-col">
+      <h3 class="h3">What's the move</h3>
+      <p class="body">Wire hits Friday May 1 — <b>mid-OOO</b>. Records side is straightforward since the population is already in our system. The one live thread is the <b>deferral report</b> from the new ADP rep. Get it pre-OOO so coverage isn't chasing it when assets land.</p>
+      <p class="body">Base file is loaded, AQT flags are placed. Coverage pack should flag this as <b>receive-only</b> during the window — acknowledge wire, route to the staging folder, wait for my return.</p>
+
+      <h3 class="h3">Off-ramp</h3>
+      <p class="body">Off my plate when the post-wire cleanup ships and the plan tips into monitor status. Target mid-May.</p>
+
+      <h3 class="h3">Transmission-worthy</h3>
+      <p class="body">The new ADP rep is still learning our cadence; expect a few back-and-forths on format. Worth noting to the covering person so they don't improvise.</p>
+    </div>
+
+    <aside class="plan-col">
+      <div class="fact-card">
+        <div class="facts">
+          <div class="fact"><span class="k">Plan key</span><span class="v">pella-sc</span></div>
+          <div class="fact"><span class="k">Effective</span><span class="v">5 / 01</span></div>
+          <div class="fact"><span class="k">Wire date</span><span class="v">5 / 01</span></div>
+          <div class="fact"><span class="k">Ball with</span><span class="v soft">ADP rep</span></div>
+          <div class="fact"><span class="k">Records lead</span><span class="v">Joel</span></div>
+          <div class="fact"><span class="k">Coverage</span><span class="v soft">receive-only</span></div>
+          <div class="fact"><span class="k">Last touch</span><span class="v soft">2026-04-22</span></div>
+        </div>
+      </div>
+
+      <div class="open-items">
+        <h4>Open items</h4>
+        <ul>
+          <li>Request deferral report from new ADP rep (pre-4/27)</li>
+          <li>Confirm whether we need a fresh base file pull</li>
+          <li>Stage coverage note: receive wire, don't reconcile yet</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</section>
+
+</body>
+</html>

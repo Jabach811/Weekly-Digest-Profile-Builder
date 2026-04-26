@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Projects Portfolio · Snapshot 2026-04-23 · Stripe Mock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Source+Code+Pro:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple:        #533afd;
+    --purple-hover:  #4434d4;
+    --purple-deep:   #2e2b8c;
+    --purple-mid:    #665efd;
+    --purple-light:  #b9b9f9;
+    --purple-soft:   #d6d9fc;
+
+    --heading:       #061b31;
+    --label:         #273951;
+    --body:          #64748d;
+
+    --brand-dark:    #1c1e54;
+
+    --ruby:          #ea2261;
+    --magenta:       #f96bee;
+    --magenta-light: #ffd7ef;
+
+    --success-bg:    rgba(21,190,83,0.2);
+    --success-brd:   rgba(21,190,83,0.4);
+    --success-txt:   #108c3d;
+
+    --border:        #e5edf5;
+    --white:         #ffffff;
+    --surface-soft:  #fafbfd;
+
+    --shadow-elev:   rgba(50,50,93,0.25) 0px 30px 45px -30px, rgba(0,0,0,0.1) 0px 18px 36px -18px;
+    --shadow-ambi:   rgba(23,23,23,0.08) 0px 15px 35px 0px;
+    --shadow-soft:   rgba(23,23,23,0.06) 0px 3px 6px;
+
+    --sans: 'Inter', 'SF Pro Display', system-ui, -apple-system, sans-serif;
+    --mono: 'Source Code Pro', 'SFMono-Regular', Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--white);
+    color: var(--heading);
+    font-family: var(--sans);
+    font-feature-settings: "ss01";
+    font-size: 16px;
+    line-height: 1.40;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 48px 64px 72px;
+  }
+
+  /* ─── topbar ─── */
+  .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--body);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .topbar .brand { color: var(--heading); display: inline-flex; align-items: center; gap: 10px; }
+  .topbar .brand .logo {
+    display: inline-block; width: 10px; height: 10px; border-radius: 2px;
+    background: linear-gradient(135deg, var(--purple) 0%, var(--magenta) 100%);
+  }
+  .topbar .meta span + span::before { content: " · "; margin: 0 8px; color: var(--border); }
+
+  /* ─── hero ─── */
+  .hero { position: relative; padding-bottom: 32px; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--purple);
+  }
+  h1.display {
+    font-size: 56px;
+    font-weight: 300;
+    line-height: 1.03;
+    letter-spacing: -1.4px;
+    color: var(--heading);
+    margin-top: 18px;
+    font-feature-settings: "ss01";
+  }
+  h1.display em {
+    font-style: normal;
+    background: linear-gradient(90deg, var(--heading) 0%, var(--purple-deep) 45%, var(--purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  p.lede {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.40;
+    color: var(--body);
+    max-width: 64ch;
+    margin-top: 22px;
+    font-feature-settings: "ss01";
+  }
+  p.lede b { color: var(--heading); font-weight: 400; }
+
+  /* ─── counters strip ─── */
+  .counters {
+    margin-top: 40px;
+    padding: 22px 28px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow-elev);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .counters::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--purple) 0%, var(--magenta) 50%, var(--ruby) 100%);
+  }
+  .counters .cell {
+    display: flex; flex-direction: column; gap: 10px;
+    border-right: 1px solid var(--border);
+    padding-right: 20px;
+  }
+  .counters .cell:last-child { border-right: none; padding-right: 0; }
+  .counters .cell .k {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--body);
+  }
+  .counters .cell .row {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  }
+  .counters .cell .v {
+    font-size: 42px;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.84px;
+    color: var(--heading);
+    font-feature-settings: "ss01", "tnum";
+  }
+  .counters .cell.flight .v { color: var(--purple); }
+  .counters .cell.ready .v  { color: var(--success-txt); }
+  .counters .cell.idea .v   { color: var(--label); }
+  .counters .cell.folded .v { color: var(--body); text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: rgba(100,116,141,0.5); }
+  .counters .cell .bar {
+    height: 2px;
+    background: var(--border);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+  .counters .cell .bar i { display: block; height: 100%; background: var(--purple); }
+  .counters .cell.ready  .bar i { background: var(--success-txt); }
+  .counters .cell.idea   .bar i { background: var(--label); }
+  .counters .cell.folded .bar i { background: var(--body); }
+
+  /* ─── state section ─── */
+  .state-section { margin-top: 64px; }
+  .state-section .head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .state-section .head .left { display: flex; align-items: baseline; gap: 16px; }
+  .state-section .head h2 {
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1.10;
+    letter-spacing: -0.64px;
+    color: var(--heading);
+    font-feature-settings: "ss01";
+  }
+  .state-section .head h2 .num {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--body);
+    margin-left: 10px;
+    letter-spacing: 0.06em;
+    font-feature-settings: "tnum";
+    vertical-align: middle;
+  }
+  .state-section .head .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--body);
+  }
+  .state-section.folded .head h2 { color: var(--body); }
+
+  /* ─── state pills ─── */
+  .state-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 1px solid var(--border);
+    background: var(--white);
+  }
+  .state-pill::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor;
+  }
+  .state-pill.flight {
+    background: rgba(83,58,253,0.08);
+    color: var(--purple);
+    border-color: var(--purple-soft);
+  }
+  .state-pill.ready {
+    background: var(--success-bg);
+    color: var(--success-txt);
+    border-color: var(--success-brd);
+  }
+  .state-pill.idea {
+    background: var(--surface-soft);
+    color: var(--label);
+    border-color: var(--border);
+  }
+  .state-pill.folded {
+    background: var(--surface-soft);
+    color: var(--body);
+    border-color: var(--border);
+  }
+  .state-pill.folded::before { background: var(--body); }
+
+  /* ─── project card grid ─── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 900px) { .card-grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 26px 28px 24px;
+    box-shadow: var(--shadow-elev);
+    position: relative;
+    overflow: hidden;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .card::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--purple);
+    opacity: 0.9;
+  }
+  .card.flight::before { background: linear-gradient(90deg, var(--purple) 0%, var(--purple-mid) 100%); }
+  .card.ready::before  { background: linear-gradient(90deg, var(--success-txt) 0%, var(--purple) 100%); }
+  .card.idea::before   { background: var(--border); }
+  .card.folded::before { background: var(--body); opacity: 0.5; }
+
+  .card.folded { box-shadow: var(--shadow-soft); background: var(--surface-soft); }
+  .card.folded .title { color: var(--body); text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: rgba(100,116,141,0.5); }
+
+  .card .head-row {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  .card .num {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--body);
+    letter-spacing: 0.06em;
+    font-feature-settings: "tnum";
+  }
+  .card .title {
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: -0.22px;
+    color: var(--heading);
+    font-feature-settings: "ss01";
+  }
+  .card .pitch {
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.45;
+    color: var(--body);
+    font-feature-settings: "ss01";
+    margin-top: -4px;
+  }
+  .card .pitch em { color: var(--label); font-style: normal; }
+
+  .card .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--body);
+    margin-bottom: 8px;
+  }
+
+  .card ul.state-bullets {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .card ul.state-bullets li {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--label);
+    font-weight: 300;
+    padding-left: 18px;
+    position: relative;
+    font-feature-settings: "ss01";
+  }
+  .card ul.state-bullets li::before {
+    content: "";
+    position: absolute; left: 0; top: 8px;
+    width: 8px; height: 1px;
+    background: var(--purple);
+  }
+  .card.ready ul.state-bullets li::before  { background: var(--success-txt); }
+  .card.idea ul.state-bullets li::before   { background: var(--purple-light); }
+  .card.folded ul.state-bullets li::before { background: var(--body); opacity: 0.5; }
+  .card.folded ul.state-bullets li { color: var(--body); }
+
+  .card ul.state-bullets li b { color: var(--heading); font-weight: 400; }
+  .card.folded ul.state-bullets li b { color: var(--label); }
+
+  .chips {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding-top: 4px;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: var(--white);
+    color: var(--label);
+    border: 1px solid var(--border);
+  }
+  .chip.accent {
+    background: rgba(83,58,253,0.06);
+    color: var(--purple);
+    border-color: var(--purple-soft);
+  }
+
+  .open-q {
+    margin-top: 2px;
+    padding: 14px 16px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--purple);
+    border-radius: 4px;
+  }
+  .open-q .section-label { margin-bottom: 6px; color: var(--purple); }
+  .open-q p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--label);
+    font-weight: 300;
+    font-feature-settings: "ss01";
+  }
+  .card.folded .open-q { border-left-color: var(--body); }
+  .card.folded .open-q .section-label { color: var(--body); }
+
+  /* ─── footer ─── */
+  footer.page-footer {
+    margin-top: 72px;
+    padding: 24px 28px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow-ambi);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  footer.page-footer .cell .k {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--body);
+    display: block;
+    margin-bottom: 6px;
+  }
+  footer.page-footer .cell .v {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--heading);
+    font-feature-settings: "ss01", "tnum";
+  }
+  footer.page-footer .cell .v.mono {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--label);
+  }
+
+  .back-to-top {
+    display: block;
+    margin: 32px auto 0;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--purple);
+    text-decoration: none;
+    padding: 10px 16px;
+    border: 1px solid var(--purple-light);
+    border-radius: 4px;
+    width: fit-content;
+    transition: background 150ms;
+  }
+  .back-to-top:hover { background: rgba(83,58,253,0.05); }
+</style>
+</head>
+<body id="top">
+
+<div class="page">
+
+  <div class="topbar">
+    <div class="brand"><span class="logo"></span> projects · portfolio · snapshot</div>
+    <div class="meta">
+      <span>REV 2026-04-23</span><span>compile 08</span><span>source projects/*.md</span>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="eyebrow">§ 00 · portfolio · projects</div>
+    <h1 class="display">eight side <em>tracks.</em></h1>
+    <p class="lede">
+      Snapshot of the projects board as of <b>2026-04-23</b>. Two in flight, one ready to ship, four ideas on the shelf, one folded. Grouped by state — scroll the deck, skim the cards.
+    </p>
+
+    <div class="counters">
+      <div class="cell flight">
+        <span class="k">Flight</span>
+        <div class="row"><span class="v">02</span><span class="state-pill flight">in flight</span></div>
+        <div class="bar"><i style="width: 25%"></i></div>
+      </div>
+      <div class="cell ready">
+        <span class="k">Ready-to-Ship</span>
+        <div class="row"><span class="v">01</span><span class="state-pill ready">ship</span></div>
+        <div class="bar"><i style="width: 12.5%"></i></div>
+      </div>
+      <div class="cell idea">
+        <span class="k">Idea</span>
+        <div class="row"><span class="v">04</span><span class="state-pill idea">shelf</span></div>
+        <div class="bar"><i style="width: 50%"></i></div>
+      </div>
+      <div class="cell folded">
+        <span class="k">Shipped-Folded</span>
+        <div class="row"><span class="v">01</span><span class="state-pill folded">folded</span></div>
+        <div class="bar"><i style="width: 12.5%"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FLIGHT ─── -->
+  <section class="state-section" id="flight">
+    <div class="head">
+      <div class="left">
+        <span class="state-pill flight">flight</span>
+        <h2>In flight.<span class="num">02 projects</span></h2>
+      </div>
+      <span class="tag">§ 01 / active builds</span>
+    </div>
+
+    <div class="card-grid">
+
+      <article class="card flight">
+        <div class="head-row">
+          <span class="state-pill flight">flight</span>
+          <span class="num">№ 01</span>
+        </div>
+        <div>
+          <h3 class="title">Data Parser</h3>
+          <p class="pitch">Parse and validate incoming data files for plan conversions.</p>
+        </div>
+        <div>
+          <div class="section-label">current state</div>
+          <ul class="state-bullets">
+            <li>Functionality <b>~100%</b>. No more style/design iteration — function only.</li>
+            <li>Decision pending: keep or kill the <b>secondary summary report</b>. Either path needs better test files.</li>
+            <li><b>Mapping Validator</b> lives inside this project — do not extract.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="section-label">deliverables</div>
+          <div class="chips">
+            <span class="chip accent">Parser core</span>
+            <span class="chip accent">Mapping validator</span>
+            <span class="chip">Summary report · TBD</span>
+          </div>
+        </div>
+        <div class="open-q">
+          <div class="section-label">open</div>
+          <p>Golden-set test files · decide summary report · verify mapping coverage.</p>
+        </div>
+      </article>
+
+      <article class="card flight">
+        <div class="head-row">
+          <span class="state-pill flight">flight</span>
+          <span class="num">№ 02</span>
+        </div>
+        <div>
+          <h3 class="title">TA Brain</h3>
+          <p class="pitch">Always-on UI. Search, animations, concepts, demos.</p>
+        </div>
+        <div>
+          <div class="section-label">current state</div>
+          <ul class="state-bullets">
+            <li><b>Animations:</b> priority is MORE animations on processes that lack them.</li>
+            <li><b>Concepts page</b> is bloated; needs lighter categorization without over-categorizing.</li>
+            <li><b>Search:</b> works but could be more visible — add backslash command palette.</li>
+            <li><b>Anthony:</b> aim for Friday demo this week to open the TC section conversation. Demo must prove data-safety.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="section-label">deliverables</div>
+          <div class="chips">
+            <span class="chip accent">Search UI</span>
+            <span class="chip accent">Animations</span>
+            <span class="chip accent">Concepts page</span>
+            <span class="chip">Friday demo</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ─── READY-TO-SHIP ─── -->
+  <section class="state-section" id="ready">
+    <div class="head">
+      <div class="left">
+        <span class="state-pill ready">ready-to-ship</span>
+        <h2>Ready to ship.<span class="num">01 project</span></h2>
+      </div>
+      <span class="tag">§ 02 / one blocker away</span>
+    </div>
+
+    <div class="card-grid">
+      <article class="card ready">
+        <div class="head-row">
+          <span class="state-pill ready">ready-to-ship</span>
+          <span class="num">№ 03</span>
+        </div>
+        <div>
+          <h3 class="title">NBI Search</h3>
+          <p class="pitch">Fast search UI over NBI data. Design is locked and loved.</p>
+        </div>
+        <div>
+          <div class="section-label">current state</div>
+          <ul class="state-bullets">
+            <li>One ship-blocker: replace the <b>file picker</b> with a hard-coded path + refresh button.</li>
+            <li>Off-ramp: <b>path-free launch experience</b> → shippable.</li>
+          </ul>
+        </div>
+        <div>
+          <div class="section-label">deliverables</div>
+          <div class="chips">
+            <span class="chip accent">Search UI</span>
+            <span class="chip accent">Refresh button</span>
+            <span class="chip">Config path</span>
+          </div>
+        </div>
+        <div class="open-q">
+          <div class="section-label">open</div>
+          <p>Remove file-picker · wire refresh button · decide literal vs config path.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ─── IDEA ─── -->
+  <section class="state-section" id="idea">
+    <div class="head">
+      <div class="left">
+        <span class="state-pill idea">idea</span>
+        <h2>On the shelf.<span class="num">04 projects</span></h2>
+      </div>
+      <span class="tag">§ 03 / not active · watching</span>
+    </div>
+
+    <div class="card-grid">
+
+      <article class="card idea">
+        <div class="head-row">
+          <span class="state-pill idea">idea</span>
+          <span class="num">№ 04</span>
+        </div>
+        <div>
+          <h3 class="title">Persistent Brain — Rollout</h3>
+          <p class="pitch">The Weekly Digest itself as a product. Voice-dump → MD brain → brief + exports.</p>
+        </div>
+        <div>
+          <div class="section-label">current state</div>
+          <ul class="state-bullets">
+            <li>Live for Joel. Intake, contradictions, pending flags, brief, snapshot, handoff — all defined.</li>
+            <li>Hypothesis: the pattern generalizes for any consultant with a caseload + a wandering brain.</li>
+            <li>Next move when ready: build profile for one teammate; run a single Friday session; generate their first brief.</li>
+          </ul>
+        </div>
+        <div class="open-q">
+          <div class="section-label">open question</div>
+          <p>Do they own the folder, or does Joel mirror? (Probably they own — the brain is personal.)</p>
+        </div>
+      </article>
+
+      <article class="card idea">
+        <div class="head-row">
+          <span class="state-pill idea">idea</span>
+          <span class="num">№ 05</span>
+        </div>
+        <div>
+          <h3 class="title">App Portfolio Site</h3>
+          <p class="pitch">Future dashboard hosting all side-apps under one roof.</p>
+        </div>
+        <div>
+          <div class="section-label">current state</div>
+          <ul class="state-bullets">
+            <li>Not active. Surfaces when enough apps are shipped to warrant it.</li>
+            <li>Next move (when ready): pick hosting + a minimal index shell.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card idea">
+        <div class="head-row">
+          <span class="state-pill idea">idea</span>
+          <span class="num">№ 06</span>
+        </div>
+        <div>
+          <h3 class="title">Excel → App Pipeline</h3>
+          <p class="pitch">Ongoing pattern: take old Excel one-offs and rebuild as proper small apps.</p>
+        </div>
+        <div>
+          <div class="section-label">current state</div>
+          <ul class="state-bullets">
+            <li>Not a single project — a <b>pattern</b> that catches candidate conversions.</li>
+            <li>Each new conversion spins up its own <b>projects/&lt;key&gt;.md</b>.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card idea">
+        <div class="head-row">
+          <span class="state-pill idea">idea</span>
+          <span class="num">№ 07</span>
+        </div>
+        <div>
+          <h3 class="title">TA Brain — TC Section</h3>
+          <p class="pitch">Unlock a currently off-limits section once Anthony approves.</p>
+        </div>
+        <div>
+          <div class="section-label">current state</div>
+          <ul class="state-bullets">
+            <li>Depends on: <b>Anthony buy-in</b>, which depends on a clean data-safety demo.</li>
+            <li>Next move: land the Anthony demo (tracked in <b>ta-brain</b>).</li>
+          </ul>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ─── SHIPPED-FOLDED ─── -->
+  <section class="state-section folded" id="folded">
+    <div class="head">
+      <div class="left">
+        <span class="state-pill folded">shipped-folded</span>
+        <h2>Shipped, folded.<span class="num">01 project</span></h2>
+      </div>
+      <span class="tag">§ 04 / decision logged · do not revisit</span>
+    </div>
+
+    <div class="card-grid">
+      <article class="card folded">
+        <div class="head-row">
+          <span class="state-pill folded">shipped-folded</span>
+          <span class="num">№ 08</span>
+        </div>
+        <div>
+          <h3 class="title">Mapping Validator</h3>
+          <p class="pitch">Killed as standalone. Lives inside Data Parser.</p>
+        </div>
+        <div>
+          <div class="section-label">current state</div>
+          <ul class="state-bullets">
+            <li>Decision logged <b>2026-04-22</b>. Do not revisit extraction — functionality is already there.</li>
+            <li>This card exists to <b>log the decision</b> and prevent silent re-surfacing.</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    <div class="cell"><span class="k">Compile date</span><span class="v">2026-04-23</span></div>
+    <div class="cell"><span class="k">Projects</span><span class="v">08</span></div>
+    <div class="cell"><span class="k">Source</span><span class="v mono">projects/*.md</span></div>
+    <div class="cell"><span class="k">View</span><span class="v">portfolio · snapshot</span></div>
+  </footer>
+
+  <a href="#top" class="back-to-top">↑ back to top</a>
+
+</div>
+
+</body>
+</html>

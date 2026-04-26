@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Caseload · Snapshot · Rev. 2026-04-24</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500;700&family=Major+Mono+Display&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:           #ede6d3;
+    --bg-panel:     #e3dac3;
+    --bg-panel-2:   #d9cfb4;
+    --ink:          #1a1f1d;
+    --ink-soft:     #3c4541;
+    --ink-mute:     #6a6f69;
+    --rust:         #c65a2e;
+    --rust-deep:    #a04620;
+    --teal:         #2d8e8a;
+    --teal-deep:    #1f6562;
+    --butter:       #b8882e;
+    --butter-soft:  #d4a854;
+    --rule:         rgba(26,31,29,.18);
+    --rule-strong:  rgba(26,31,29,.32);
+    --rule-faint:   rgba(26,31,29,.08);
+    --field-bg:     #f5efde;
+
+    --scanline-color:   rgba(26,31,29,.35);
+    --scanline-opacity: .035;
+
+    --mono:    "Space Mono", "JetBrains Mono", ui-monospace, monospace;
+    --sans:    "DM Sans", system-ui, -apple-system, sans-serif;
+    --display: "Major Mono Display", "Space Mono", monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      var(--scanline-color) 0px,
+      var(--scanline-color) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    opacity: var(--scanline-opacity);
+    pointer-events: none;
+    z-index: 100;
+    mix-blend-mode: multiply;
+  }
+
+  .doc { position: relative; z-index: 2; }
+
+  /* MASTHEAD */
+  .mast {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 18px 40px;
+    background: var(--bg-panel);
+    position: relative;
+  }
+  .mast::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 2px;
+    background: var(--rust);
+  }
+  .mast-left { display: flex; align-items: center; gap: 18px; min-width: 0; }
+  .sigil {
+    width: 38px; height: 38px;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--display);
+    font-size: 17.5px;
+    color: var(--ink);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .sigil::after {
+    content: "";
+    position: absolute; inset: 3px;
+    border: 1px solid var(--rule);
+    border-radius: 50%;
+  }
+  .mast-title {
+    font-family: var(--display);
+    font-size: 19px;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    text-transform: lowercase;
+    white-space: nowrap;
+  }
+  .mast-stencil {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 4px 10px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .mast-stencil .sep { color: var(--rust); margin: 0 6px; font-weight: 700; }
+  .mast-folio {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .mast-folio b { color: var(--ink); font-weight: 700; }
+
+  main { padding: 56px 64px 80px; max-width: 1240px; margin: 0 auto; }
+
+  /* EYE + DISPLAY + LEDE */
+  .eye {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .eye .tick {
+    display: inline-block;
+    width: 22px; height: 1px;
+    background: var(--rust);
+  }
+  .h-display {
+    font-family: var(--display);
+    font-size: clamp(36px, 5.2vw, 64px);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    margin: 0 0 18px;
+    line-height: 1.05;
+    text-transform: lowercase;
+    font-weight: 400;
+  }
+  .h-display em { font-style: normal; color: var(--rust); }
+  .lede-rf {
+    font-family: var(--sans);
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-size: 17px;
+    line-height: 1.5;
+    max-width: 64ch;
+    margin: 0;
+  }
+  .lede-rf b {
+    color: var(--ink);
+    font-weight: 600;
+    border-bottom: 1px dotted var(--rust);
+  }
+
+  /* ACTIVE LEDGER */
+  .ledger-frame {
+    margin-top: 36px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    background: var(--bg);
+  }
+  .ledger-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 16px;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--rule-strong);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .ledger-head .live-dot { color: var(--rust); margin-right: 6px; }
+  .ledger-head .right { color: var(--ink-mute); }
+  .ledger-head .right b { color: var(--ink); font-weight: 700; }
+
+  table.ledger {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  table.ledger th {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule-strong);
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 500;
+    background: var(--bg);
+  }
+  table.ledger td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--rule-faint);
+    color: var(--ink);
+    vertical-align: middle;
+  }
+  table.ledger tbody tr:last-child td { border-bottom: none; }
+  table.ledger tbody tr:hover td { background: rgba(45,142,138,.06); }
+  table.ledger td.num { color: var(--ink-mute); width: 36px; }
+  table.ledger td.plan {
+    font-family: var(--sans);
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  table.ledger td.plan a { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--rust); }
+  table.ledger td.plan a:hover { color: var(--rust); }
+  table.ledger td.blocked { color: var(--ink-soft); white-space: nowrap; }
+  table.ledger td.next {
+    font-family: var(--sans);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+    max-width: 320px;
+  }
+  table.ledger td.off {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--teal-deep);
+    line-height: 1.4;
+    max-width: 280px;
+  }
+
+  /* STATE PILLS */
+  .state {
+    display: inline-block;
+    padding: 3px 9px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 2px;
+    border: 1px solid;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .state.coverage { background: var(--rust); color: #fff; border-color: var(--rust-deep); }
+  .state.waiting  { background: var(--butter); color: #fff; border-color: var(--butter); }
+  .state.ramping  { background: var(--teal); color: #fff; border-color: var(--teal-deep); }
+  .state.open     { background: transparent; color: var(--ink); border-color: var(--ink); }
+  .state.debate   { background: var(--butter-soft); color: var(--ink); border-color: var(--butter); }
+  table.ledger .state { min-width: 108px; text-align: center; }
+
+  /* PLAN SECTIONS */
+  .plan-section {
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 2px solid var(--rust);
+    scroll-margin-top: 24px;
+  }
+  .plan-h1 {
+    font-family: var(--display);
+    font-size: clamp(40px, 5.4vw, 60px);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    margin: 4px 0 14px;
+    line-height: 1.05;
+    text-transform: lowercase;
+    font-weight: 400;
+  }
+  .plan-h1 em { font-style: normal; color: var(--rust); }
+
+  .plan-meta {
+    display: flex; flex-wrap: wrap; gap: 18px; align-items: center;
+    margin: 14px 0 22px;
+    padding-bottom: 14px;
+    border-bottom: 1px dotted var(--rule);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .plan-meta b { color: var(--ink); font-weight: 700; }
+  .plan-meta .sep { color: var(--rust); }
+  .plan-meta .eff {
+    font-weight: 700;
+    color: var(--ink);
+    padding: 3px 8px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .plan-lede {
+    font-family: var(--sans);
+    font-size: 19px;
+    color: var(--ink);
+    line-height: 1.5;
+    margin: 0 0 24px;
+    max-width: 70ch;
+  }
+  .plan-lede b { color: var(--ink); font-weight: 600; border-bottom: 1px dotted var(--rust); }
+
+  /* TRANSMISSION */
+  .transmission {
+    position: relative;
+    border: 1px solid var(--rust);
+    background: var(--bg-panel);
+    padding: 18px 22px 20px 28px;
+    border-radius: 2px;
+    margin-bottom: 28px;
+  }
+  .transmission::before {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 4px;
+    background: var(--rust);
+  }
+  .transmission-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--rust);
+    font-weight: 700;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .transmission-body {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+  .transmission-body b { font-weight: 600; }
+
+  /* PANEL GRID */
+  .panel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-bottom: 28px;
+  }
+  .panel {
+    position: relative;
+    border: 1px solid var(--rule-strong);
+    background: var(--bg);
+    padding: 20px 22px 22px;
+    border-radius: 2px;
+  }
+  .panel::before, .panel::after {
+    content: "";
+    position: absolute;
+    width: 10px; height: 10px;
+  }
+  .panel::before {
+    top: -1px; left: -1px;
+    border-top: 1.5px solid var(--rust);
+    border-left: 1.5px solid var(--rust);
+  }
+  .panel::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 1.5px solid var(--rust);
+    border-right: 1.5px solid var(--rust);
+  }
+  .panel-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* THREAD LIST */
+  .thread-list { list-style: none; padding: 0; margin: 0; }
+  .thread-list li {
+    padding: 11px 0;
+    border-bottom: 1px dotted var(--rule);
+  }
+  .thread-list li:first-child { padding-top: 0; }
+  .thread-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .thread-title {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    line-height: 1.35;
+  }
+  .thread-title::before {
+    content: "▸";
+    color: var(--rust);
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .thread-body {
+    font-family: var(--sans);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    padding-left: 18px;
+    margin-top: 4px;
+  }
+
+  /* TRIGGER SEQUENCE */
+  .trigger-seq {
+    list-style: none; padding: 0; margin: 0;
+    counter-reset: seq;
+  }
+  .trigger-seq li {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 14px;
+    align-items: baseline;
+    padding: 11px 0;
+    border-bottom: 1px dotted var(--rule);
+    counter-increment: seq;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .trigger-seq li:first-child { padding-top: 0; }
+  .trigger-seq li:last-child { border-bottom: none; padding-bottom: 0; }
+  .trigger-seq li::before {
+    content: counter(seq, decimal-leading-zero);
+    font-family: var(--mono);
+    color: var(--rust);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    font-variant-numeric: tabular-nums;
+  }
+  .trigger-seq li::after {
+    content: "→";
+    color: var(--ink-mute);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  /* FOOTERS — off-plate (teal) and handoff (dark) */
+  .off-plate {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--bg-panel);
+    border-left: 3px solid var(--teal);
+    border-radius: 2px;
+  }
+  .off-plate-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--teal-deep);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .off-plate-text {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .off-plate-text b { font-weight: 600; }
+
+  .handoff {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 24px;
+    align-items: center;
+    padding: 16px 22px;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 2px;
+  }
+  .handoff-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--rust);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .handoff-text {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--bg);
+    line-height: 1.5;
+  }
+  .handoff-text b { color: #fff; font-weight: 600; }
+  .handoff-deadline {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--bg-panel);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .handoff-deadline b {
+    color: #fff; font-weight: 700;
+    display: block; font-size: 14px; margin-top: 2px;
+  }
+
+  /* FOOTER STRIP */
+  footer.foot {
+    margin-top: 64px;
+    padding: 18px 24px;
+    background: var(--bg-panel);
+    border-top: 2px solid var(--rust);
+    border-bottom: 1px solid var(--rule);
+    display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  footer.foot b { color: var(--ink); font-weight: 700; }
+  footer.foot .src { color: var(--ink-mute); }
+
+  @media (max-width: 920px) {
+    main { padding: 36px 28px 60px; }
+    .panel-grid { grid-template-columns: 1fr; }
+    .plan-meta { gap: 10px; }
+    table.ledger { font-size: 11px; }
+    table.ledger td.next, table.ledger td.off { max-width: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="doc">
+
+  <header class="mast">
+    <div class="mast-left">
+      <div class="sigil">jb</div>
+      <div class="mast-title">nbi · caseload snapshot</div>
+    </div>
+    <div class="mast-stencil">CASELOAD<span class="sep">/</span>SNAPSHOT<span class="sep">/</span>REV. 2026-04-24</div>
+    <div class="mast-folio">DOC <b>00 / 01</b></div>
+  </header>
+
+  <main>
+
+    <div class="eye"><span class="tick"></span>§ 00 / SNAPSHOT / CASELOAD</div>
+    <h1 class="h-display">caseload as of <em>4 / 24.</em></h1>
+    <p class="lede-rf">
+      <b>3 active</b> · <b>1 waiting</b> · 0 final. Compiled from
+      <b>caseload/*.md</b>. Future and on-hold plans excluded by spec.
+    </p>
+
+    <!-- ========== ACTIVE LEDGER ========== -->
+    <div class="ledger-frame">
+      <div class="ledger-head">
+        <div><span class="live-dot">●</span> ACTIVE LEDGER</div>
+        <div class="right">ROWS · <b>04</b></div>
+      </div>
+      <table class="ledger">
+        <thead>
+          <tr>
+            <th>№</th>
+            <th>Plan</th>
+            <th>State</th>
+            <th>Blocked By</th>
+            <th>Next Move</th>
+            <th>Off-Ramp</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num">01</td>
+            <td class="plan"><a href="#plan-haverhill">Haverhill</a></td>
+            <td><span class="state ramping">Ramping</span></td>
+            <td class="blocked">Self · OOO coverage</td>
+            <td class="next">Follow up with Damien on un-loaded participants. Plan coverage 4 / 27 → 5 / 01.</td>
+            <td class="off">Assets loaded post-wire, recon clean.</td>
+          </tr>
+          <tr>
+            <td class="num">02</td>
+            <td class="plan"><a href="#plan-pella">Pella SC</a></td>
+            <td><span class="state ramping">Ramping</span></td>
+            <td class="blocked">ADP · deferral report</td>
+            <td class="next">Email new ADP rep for deferral report ahead of time. Confirm whether base file is needed.</td>
+            <td class="off">Deferral report in hand + liquidation complete → load and move on.</td>
+          </tr>
+          <tr>
+            <td class="num">03</td>
+            <td class="plan"><a href="#plan-isd">ISD</a></td>
+            <td><span class="state debate">Debate</span></td>
+            <td class="blocked">Policy · deferral workflow</td>
+            <td class="next">Deliver clean analysis package on the deferral workflow. Raise the "get the file earlier" question.</td>
+            <td class="off">Live date hits, deferrals imported, no overrides stomp self-elections.</td>
+          </tr>
+          <tr>
+            <td class="num">04</td>
+            <td class="plan"><a href="#plan-callidi">Callidi Tas</a></td>
+            <td><span class="state waiting">Waiting</span></td>
+            <td class="blocked">Client · DOB / DOH</td>
+            <td class="next">Nudge client for missing DOB / DOH. Resolve loan order discrepancy.</td>
+            <td class="off">Participants + balances + loan loaded → off the plate. EOW · 4 / 24.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ========== HAVERHILL ========== -->
+    <section class="plan-section" id="plan-haverhill">
+      <div class="eye"><span class="tick"></span>§ 01 / SNAPSHOT / HAVERHILL</div>
+      <h2 class="plan-h1">haverhill <em>(havern school).</em></h2>
+      <div class="plan-meta">
+        <span><span class="state ramping">Ramping</span></span>
+        <span class="sep">/</span>
+        <span>Blocked: <b>Self · OOO coverage during asset arrival</b></span>
+        <span class="sep">/</span>
+        <span>EFF <span class="eff">5 / 01</span></span>
+        <span class="sep">/</span>
+        <span>WIRE <span class="eff">5 / 01</span></span>
+      </div>
+      <p class="plan-lede">
+        Cracking soon. <b>5 / 01 assets inbound</b>, mid-OOO. Base file loaded;
+        contact change handled (backup has been on the plan throughout).
+      </p>
+
+      <div class="transmission">
+        <div class="transmission-label">Finding Worth Raising</div>
+        <div class="transmission-body">
+          Original client contact had brain surgery. The backup has been with the
+          plan the whole time, so continuity is fine — but coverage should know
+          who to talk to and that the change is benign.
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Open Threads</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">Un-loaded participants</div>
+              <div class="thread-body">Beth got everyone in; AQT fix explained; flags placed. Damien still owes the trailing names + dates.</div>
+            </li>
+            <li>
+              <div class="thread-title">OOO coverage 4 / 27 → 5 / 01</div>
+              <div class="thread-body">Hand-off doc owed before window. Coverage owns 5 / 01 asset load and post-wire reconciliation.</div>
+            </li>
+            <li>
+              <div class="thread-title">Contact handover</div>
+              <div class="thread-body">Direct coverage to the backup contact — original is out indefinitely.</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <div class="panel-label">Next Moves</div>
+          <ol class="trigger-seq">
+            <li>Follow up with Damien on the participants who didn't land in the loaded set — add them if needed, note dates.</li>
+            <li>Write hand-off doc covering 5 / 01 asset load + post-wire steps.</li>
+            <li>Confirm coverage contact and brief them on the contact change.</li>
+            <li>Post-OOO: reconcile asset load, close the loop with backup contact.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="handoff">
+        <div class="handoff-label">Hand-Off Required</div>
+        <div class="handoff-text">
+          Coverage owns the <b>5 / 01 asset load</b> and post-wire reconciliation.
+          Talk to the <b>backup contact</b> — original is out.
+        </div>
+        <div class="handoff-deadline">Hand-Off Doc By<b>4 / 25</b></div>
+      </div>
+    </section>
+
+    <!-- ========== PELLA ========== -->
+    <section class="plan-section" id="plan-pella">
+      <div class="eye"><span class="tick"></span>§ 02 / SNAPSHOT / PELLA</div>
+      <h2 class="plan-h1">pella <em>sc.</em></h2>
+      <div class="plan-meta">
+        <span><span class="state ramping">Ramping</span></span>
+        <span class="sep">/</span>
+        <span>Blocked: <b>ADP · deferral report</b></span>
+        <span class="sep">/</span>
+        <span>EFF <span class="eff">5 / 01</span></span>
+        <span class="sep">/</span>
+        <span>WIRE <span class="eff">5 / 01</span></span>
+      </div>
+      <p class="plan-lede">
+        Population already largely in our system — records side should be easy.
+        ADP is the source; the workaround is the only real shape risk.
+      </p>
+
+      <div class="transmission">
+        <div class="transmission-label">Workaround · ADP Deferral Ambiguity</div>
+        <div class="transmission-body">
+          ADP records are clean for census but historically broken for deferrals
+          (can't tell if a participant is truly still in default within the min/max
+          window). <b>Known workaround:</b> load everyone out of default at their
+          current %, hand the client the ambiguous in-window group so they can
+          notify those participants directly.
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Open Threads</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">New ADP rep</div>
+              <div class="thread-body">Replaced previous rep; she seems ready. Need her name + email logged.</div>
+            </li>
+            <li>
+              <div class="thread-title">Deferral report timing</div>
+              <div class="thread-body">Get it ahead of time — don't wait for the workaround flow to surface the in-window group late.</div>
+            </li>
+            <li>
+              <div class="thread-title">Base file decision</div>
+              <div class="thread-body">Confirm whether a base file is needed given how much population is already in-system.</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <div class="panel-label">Next Moves</div>
+          <ol class="trigger-seq">
+            <li>Email new ADP rep — request deferral report ahead of cycle.</li>
+            <li>Log her name + email to the contacts row.</li>
+            <li>Confirm with payroll whether a base file is required.</li>
+            <li>Once deferral report lands: walk the workaround, isolate the in-window group for client notification.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="off-plate">
+        <div class="off-plate-label">Off Your Plate When</div>
+        <div class="off-plate-text">
+          <b>Deferral report in hand + liquidation complete</b> → load and move on.
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ISD ========== -->
+    <section class="plan-section" id="plan-isd">
+      <div class="eye"><span class="tick"></span>§ 03 / SNAPSHOT / ISD</div>
+      <h2 class="plan-h1">isd <em>(intl school of denver).</em></h2>
+      <div class="plan-meta">
+        <span><span class="state debate">Debate</span></span>
+        <span class="sep">/</span>
+        <span>Blocked: <b>Policy · deferral workflow</b></span>
+        <span class="sep">/</span>
+        <span>EFF <span class="eff">7 / 01</span></span>
+        <span class="sep">/</span>
+        <span>SCOPE <b>partial</b></span>
+      </div>
+      <p class="plan-lede">
+        Partial scope: census + elections + deferrals only, no asset transfer.
+        Merger being treated as a startup. The shape sets a precedent for plans
+        coming behind it.
+      </p>
+
+      <div class="transmission">
+        <div class="transmission-label">Strategic Debate</div>
+        <div class="transmission-body">
+          One camp says startup = clean start with no blackout; the other says the
+          delayed-load workflow sets a bad precedent. Multiple incoming plans will
+          hit the same shape. Worth raising: <b>if the client already has the
+          deferral file, ask for it now</b> rather than after — no stated reason
+          to wait.
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Open Threads</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">Limited-access window waiver</div>
+              <div class="thread-body">Nothing loaded at go-live. Participants get a window to self-elect.</div>
+            </li>
+            <li>
+              <div class="thread-title">Deferral file precedence</div>
+              <div class="thread-body">Client deferral file imports over the top — existing self-elected entries override via effective-dated precedence.</div>
+            </li>
+            <li>
+              <div class="thread-title">Policy precedent</div>
+              <div class="thread-body">Decision here shapes how the next batch of similar plans gets handled. Worth a wider conversation.</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <div class="panel-label">Next Moves</div>
+          <ol class="trigger-seq">
+            <li>Deliver clean analysis package on the deferral workflow.</li>
+            <li>Raise the "get the file earlier" question with the client.</li>
+            <li>Surface the precedent debate — flag for broader policy discussion.</li>
+            <li>Confirm partial-scope boundaries with the team (no payroll, no wire).</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="off-plate">
+        <div class="off-plate-label">Off Your Plate When</div>
+        <div class="off-plate-text">
+          <b>Live date hits</b>, deferrals imported, no overrides stomp on
+          self-elections.
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== CALLIDI ========== -->
+    <section class="plan-section" id="plan-callidi">
+      <div class="eye"><span class="tick"></span>§ 04 / SNAPSHOT / CALLIDI</div>
+      <h2 class="plan-h1">callidi <em>tas.</em></h2>
+      <div class="plan-meta">
+        <span><span class="state waiting">Waiting</span></span>
+        <span class="sep">/</span>
+        <span>Blocked: <b>Client · DOB / DOH</b></span>
+        <span class="sep">/</span>
+        <span>EFF <span class="eff">4 / 01</span></span>
+        <span class="sep">/</span>
+        <span>WIRE <span class="eff">4 / 10</span></span>
+        <span class="sep">/</span>
+        <span>TARGET OUT <span class="eff">EOW · 4 / 24</span></span>
+      </div>
+      <p class="plan-lede">
+        Blocked on client. Ready to pull the trigger the moment data lands.
+        One contained loan discrepancy still owed.
+      </p>
+
+      <div class="transmission">
+        <div class="transmission-label">Finding Worth Raising</div>
+        <div class="transmission-body">
+          The client's <b>balance file was incomplete</b> — missing participants
+          who were in the asset transfer but not in our system. Cross-checked SSNs
+          on our side; the gap is real. This is a <b>client data-completeness
+          issue</b> worth flagging up the chain.
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Open Threads</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">Missing DOB + DOH</div>
+              <div class="thread-body">Need from client for the participants who landed in transfer but not in our system.</div>
+            </li>
+            <li>
+              <div class="thread-title">One out-of-order loan</div>
+              <div class="thread-body">Payment either logged but not made, or made but not logged. Loans on this plan have been frozen / unfrozen previously — may need a re-amortize. One participant, one loan — contained.</div>
+            </li>
+            <li>
+              <div class="thread-title">Balance file completeness</div>
+              <div class="thread-body">Transmission-worthy. Surface to the team as a client data-quality flag.</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <div class="panel-label">Next Moves</div>
+          <ol class="trigger-seq">
+            <li>Nudge client this week for missing DOB / DOH.</li>
+            <li>Diagnose the loan order discrepancy — frozen / unfrozen history check.</li>
+            <li>Decide whether the one loan needs a re-amortize.</li>
+            <li>Once data lands → load participants, balances, and loan in one pass.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="off-plate">
+        <div class="off-plate-label">Off Your Plate When</div>
+        <div class="off-plate-text">
+          Participants + balances + loan all loaded. <b>Target: end of week (4 / 24)</b>.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <div>Compile date <b>2026-04-24</b> · plans <b>04</b> (3 active · 1 waiting)</div>
+    <div class="src">source · caseload/*.md · persistent brain</div>
+  </footer>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,2533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Caseload Brief — Two-Week Plan · Consulting Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,500;8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Consulting palette — restrained, corporate, high-contrast */
+    --paper:        #ffffff;
+    --paper-soft:   #f7f8fa;
+    --paper-panel:  #eef1f5;
+    --ink:          #051C2C;   /* McKinsey-deep navy */
+    --ink-body:     #1F2D3D;
+    --ink-mute:     #5A6A7A;
+    --ink-faint:    #8A97A6;
+    --rule:         #D6DBE0;
+    --rule-soft:    #EBEEF2;
+    --rule-strong:  #A9B1BA;
+
+    --accent:       #00A9E0;   /* crisp corporate cyan */
+    --accent-deep:  #0071A1;
+    --navy:         #051C2C;
+    --red:          #C8322A;
+    --red-soft:     #F4E1DF;
+    --amber:        #C48A16;
+    --amber-soft:   #F8EFD6;
+    --green:        #1E7A4D;
+    --green-soft:   #DCEBE2;
+    --slate:        #55606B;
+
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --sans:  "Inter", "Helvetica Neue", Arial, system-ui, sans-serif;
+    --mono:  "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: #E2E6EB;  /* room around the slide */
+    color: var(--ink-body);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow: hidden;
+  }
+
+  .app { position: relative; height: 100vh; display: flex; flex-direction: column; }
+
+  /* ────────── TOP BAR ────────── */
+  header.topbar {
+    padding: 10px 24px;
+    background: var(--navy);
+    color: #fff;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    border-bottom: 3px solid var(--accent);
+  }
+  header.topbar .brand {
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    display: flex; align-items: center; gap: 10px;
+  }
+  header.topbar .brand::before {
+    content: "";
+    display: inline-block;
+    width: 10px; height: 10px;
+    background: var(--accent);
+  }
+  header.topbar .meta { color: #9BB0C1; font-weight: 500; }
+  header.topbar .meta span + span::before {
+    content: "│"; color: var(--accent); margin: 0 10px;
+  }
+
+  /* ────────── STAGE / SLIDE ────────── */
+  .stage {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    padding: 24px;
+    background: #E2E6EB;
+  }
+  .slide-frame {
+    position: absolute;
+    inset: 24px;
+    background: var(--paper);
+    box-shadow: 0 1px 0 rgba(5,28,44,.06), 0 8px 24px rgba(5,28,44,.08);
+  }
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .slide.active { opacity: 1; pointer-events: auto; }
+
+  /* ────────── SLIDE ANATOMY ────────── */
+  /* Eyebrow / kicker */
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 600;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow .sep { color: var(--accent); font-weight: 700; }
+  .eyebrow::before {
+    content: "";
+    width: 24px; height: 2px;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  /* Action title — the single most important line on the slide */
+  .action-title {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 1.25;
+    color: var(--navy);
+    letter-spacing: -0.005em;
+    max-width: 92%;
+  }
+  .action-title em {
+    font-style: italic;
+    color: var(--accent-deep);
+    font-weight: 600;
+  }
+  .subtitle {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink-mute);
+    line-height: 1.5;
+    max-width: 88ch;
+  }
+  .subtitle b { color: var(--ink-body); font-weight: 600; }
+
+  /* Title block — consistent header band on every slide */
+  .title-block {
+    padding: 26px 48px 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* Body region */
+  .slide-body {
+    flex: 1;
+    padding: 22px 48px 18px;
+    overflow-y: auto;
+    display: flex; flex-direction: column;
+    gap: 16px;
+  }
+  .slide-body::-webkit-scrollbar { width: 6px; }
+  .slide-body::-webkit-scrollbar-thumb { background: var(--rule); }
+
+  /* Footer — source + folio */
+  .slide-foot {
+    padding: 10px 48px 14px;
+    border-top: 1px solid var(--rule-soft);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--sans);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+  }
+  .slide-foot .src b { color: var(--ink-mute); font-weight: 600; }
+  .slide-foot .folio {
+    font-family: var(--mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 10.5px;
+  }
+  .slide-foot .folio b { color: var(--ink); font-weight: 700; }
+
+  /* ────────── EXHIBIT PRIMITIVES ────────── */
+  .exhibit-label {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink);
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--ink);
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+  .exhibit-sub {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-mute);
+    margin-top: -8px;
+    margin-bottom: 14px;
+  }
+
+  /* Takeaway callout — the "key insight" box McKinsey uses */
+  .takeaway {
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent);
+    background: var(--paper-soft);
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  .takeaway-label {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent-deep);
+    padding-top: 3px;
+  }
+  .takeaway-body {
+    font-size: 13.5px;
+    color: var(--ink-body);
+    line-height: 1.55;
+  }
+  .takeaway-body b { color: var(--navy); font-weight: 600; }
+
+  .takeaway.warn { border-left-color: var(--red); }
+  .takeaway.warn .takeaway-label { color: var(--red); }
+  .takeaway.amber { border-left-color: var(--amber); }
+  .takeaway.amber .takeaway-label { color: var(--amber); }
+
+  /* Harvey Balls — status circles */
+  .harvey {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    position: relative;
+    vertical-align: middle;
+  }
+  .harvey.q25::after,
+  .harvey.q50::after,
+  .harvey.q75::after,
+  .harvey.q100::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: 50%;
+    background: var(--ink);
+  }
+  .harvey.q25::after  { clip-path: polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%); }
+  .harvey.q50::after  { clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%); }
+  .harvey.q75::after  { clip-path: polygon(50% 0, 100% 0, 100% 100%, 0 100%, 0 50%, 50% 50%); }
+  .harvey.q100::after { clip-path: none; }
+
+  /* State chips — consistent taxonomy across slides */
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--sans);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 3px 8px;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper);
+    color: var(--ink-body);
+    white-space: nowrap;
+  }
+  .chip::before {
+    content: "";
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--ink-mute);
+  }
+  .chip.waiting    { color: var(--amber); border-color: var(--amber); background: var(--amber-soft); }
+  .chip.waiting::before    { background: var(--amber); }
+  .chip.coverage   { color: var(--red); border-color: var(--red); background: var(--red-soft); }
+  .chip.coverage::before   { background: var(--red); }
+  .chip.ramping    { color: var(--accent-deep); border-color: var(--accent-deep); background: #DDF0F7; }
+  .chip.ramping::before    { background: var(--accent-deep); }
+  .chip.open       { color: var(--green); border-color: var(--green); background: var(--green-soft); }
+  .chip.open::before       { background: var(--green); }
+  .chip.debate     { color: var(--slate); border-color: var(--slate); background: var(--paper-panel); }
+  .chip.debate::before     { background: var(--slate); }
+  .chip.closed     { color: var(--green); border-color: var(--green); background: var(--green-soft); }
+  .chip.closed::before     { background: var(--green); }
+  .chip.scaffold   { color: var(--accent-deep); border-color: var(--accent-deep); background: #DDF0F7; }
+  .chip.scaffold::before   { background: var(--accent-deep); }
+  .chip.flight     { color: var(--amber); border-color: var(--amber); background: var(--amber-soft); }
+  .chip.flight::before     { background: var(--amber); }
+  .chip.idea       { color: var(--slate); border-color: var(--slate); background: var(--paper-panel); }
+  .chip.idea::before       { background: var(--slate); }
+
+  /* Standard tables — McKinsey style */
+  table.mk {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  table.mk thead th {
+    text-align: left;
+    padding: 10px 12px;
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink);
+    border-bottom: 2px solid var(--ink);
+    background: var(--paper);
+  }
+  table.mk tbody td {
+    padding: 11px 12px;
+    border-bottom: 1px solid var(--rule-soft);
+    color: var(--ink-body);
+    vertical-align: top;
+  }
+  table.mk tbody tr:hover td { background: var(--paper-soft); }
+  table.mk td.num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.08em;
+    width: 32px;
+  }
+  table.mk td.plan {
+    font-weight: 600;
+    color: var(--navy);
+    font-size: 13px;
+  }
+  table.mk td.eff,
+  table.mk td.date {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-body);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  table.mk td.dim { color: var(--ink-mute); font-size: 12px; }
+
+  /* Footnote asterisk style */
+  sup.fn {
+    font-family: var(--sans);
+    font-size: 9px;
+    color: var(--accent-deep);
+    font-weight: 700;
+    margin-left: 2px;
+  }
+
+  /* ────────── NAV FOOTER ────────── */
+  nav.nav {
+    padding: 10px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--paper);
+    border-top: 1px solid var(--rule);
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  nav.nav .dots { display: flex; gap: 4px; }
+  nav.nav .dot {
+    width: 22px; height: 3px;
+    background: var(--rule-strong);
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  nav.nav .dot:hover { background: var(--ink-mute); }
+  nav.nav .dot.active { background: var(--accent); }
+  nav.nav button.navbtn {
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    font: inherit;
+    padding: 6px 14px;
+    cursor: pointer;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: background 0.15s, color 0.15s;
+  }
+  nav.nav button.navbtn:hover { background: var(--ink); color: #fff; }
+  nav.nav button.navbtn:disabled { opacity: 0.3; cursor: not-allowed; }
+  nav.nav .kbd { color: var(--ink-faint); font-family: var(--mono); letter-spacing: 0.08em; }
+
+  /* ==================================================
+     SLIDE 1 — COVER
+     ================================================== */
+  .cover {
+    flex-direction: row;
+  }
+  .cover-left {
+    flex: 1.2;
+    padding: 56px 56px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--paper);
+    min-width: 0;
+  }
+  .cover-right {
+    flex: 1;
+    background: var(--navy);
+    color: #fff;
+    padding: 56px 48px 36px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover-right::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: var(--accent);
+  }
+  .cover-client {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--ink);
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .cover-client b { color: var(--ink); font-weight: 700; }
+  .cover-title {
+    font-family: var(--serif);
+    font-size: 48px;
+    line-height: 1.1;
+    color: var(--navy);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-top: 32px;
+  }
+  .cover-title em {
+    font-style: italic;
+    color: var(--accent-deep);
+  }
+  .cover-strap {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--ink-mute);
+    font-weight: 400;
+    margin-top: 18px;
+    max-width: 42ch;
+    line-height: 1.45;
+  }
+  .cover-prepared {
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 32px;
+  }
+  .cover-prepared dt {
+    font-family: var(--sans);
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  .cover-prepared dd {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .cover-right .eyebrow-dark {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .cover-right h2.cover-rh {
+    font-family: var(--serif);
+    font-size: 20px;
+    line-height: 1.3;
+    font-weight: 500;
+    color: #fff;
+    margin-top: 14px;
+    font-style: italic;
+    max-width: 30ch;
+  }
+  .cover-gauges {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: rgba(255,255,255,0.14);
+    margin-top: 32px;
+  }
+  .cover-gauge {
+    background: var(--navy);
+    padding: 16px 14px;
+  }
+  .cover-gauge .g-label {
+    font-family: var(--sans);
+    font-size: 9.5px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #9BB0C1;
+    font-weight: 600;
+  }
+  .cover-gauge .g-value {
+    font-family: var(--serif);
+    font-size: 42px;
+    line-height: 1;
+    color: #fff;
+    font-weight: 600;
+    margin-top: 6px;
+    letter-spacing: -0.02em;
+  }
+  .cover-gauge .g-sub {
+    font-family: var(--sans);
+    font-size: 11px;
+    color: #9BB0C1;
+    margin-top: 3px;
+  }
+  .cover-gauge .g-bar {
+    margin-top: 10px;
+    display: flex; gap: 3px;
+  }
+  .cover-gauge .g-bar i {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.15);
+  }
+  .cover-gauge .g-bar i.on { background: var(--accent); }
+  .cover-foot-dark {
+    margin-top: 28px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #6D8394;
+  }
+
+  /* ==================================================
+     SLIDE 2 — TRIAGE BOARD
+     ================================================== */
+  .board-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  .coverage-banner {
+    background: var(--red-soft);
+    border: 1px solid var(--red);
+    border-left: 5px solid var(--red);
+    padding: 12px 16px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .coverage-banner .cb-icon {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--red);
+    font-weight: 700;
+  }
+  .coverage-banner .cb-text {
+    font-size: 12.5px;
+    color: var(--ink-body);
+    line-height: 1.45;
+  }
+  .coverage-banner .cb-text b { color: var(--navy); font-weight: 600; }
+  .coverage-banner .cb-deadline {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-align: right;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .coverage-banner .cb-deadline b { color: var(--red); font-weight: 700; display: block; font-size: 12px; }
+
+  /* Load bar — mini bar chart */
+  .loadbar {
+    display: grid;
+    grid-template-columns: 80px 1fr 40px;
+    gap: 10px;
+    align-items: center;
+    font-size: 11.5px;
+    margin-bottom: 6px;
+  }
+  .loadbar-label { color: var(--ink-body); font-weight: 500; }
+  .loadbar-track {
+    height: 14px;
+    background: var(--rule-soft);
+    position: relative;
+  }
+  .loadbar-fill {
+    position: absolute; top: 0; left: 0; bottom: 0;
+    background: var(--accent-deep);
+  }
+  .loadbar-fill.amber { background: var(--amber); }
+  .loadbar-fill.red { background: var(--red); }
+  .loadbar-fill.slate { background: var(--slate); }
+  .loadbar-val {
+    font-family: var(--mono);
+    font-weight: 600;
+    text-align: right;
+    color: var(--ink);
+    font-size: 12px;
+  }
+
+  .mini-panel {
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    padding: 14px 16px;
+  }
+  .mini-panel + .mini-panel { margin-top: 12px; }
+  .mini-panel-head {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink);
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .mini-panel-head .meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+    font-weight: 500;
+  }
+
+  .monitor-chips {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .mchip {
+    font-size: 11px;
+    padding: 4px 9px;
+    background: var(--paper-soft);
+    border: 1px solid var(--rule);
+    color: var(--ink-body);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .mchip .d {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-mute);
+  }
+  .mchip .note {
+    font-size: 10px;
+    color: var(--red);
+    font-style: italic;
+  }
+
+  /* ==================================================
+     SLIDES 3–7 — PLAN DETAIL
+     ================================================== */
+  .plan-meta-row {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    font-family: var(--sans);
+    font-size: 11px;
+    color: var(--ink-mute);
+  }
+  .plan-meta-row .sep { color: var(--rule-strong); }
+  .plan-meta-row .meta-item {
+    display: inline-flex; align-items: baseline; gap: 6px;
+  }
+  .plan-meta-row .meta-label {
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+  }
+  .plan-meta-row .meta-val {
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  .plan-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .plan-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+  .plan-col {
+    border-top: 2px solid var(--ink);
+    padding-top: 12px;
+  }
+  .plan-col h4 {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .plan-col.accent { border-top-color: var(--accent); }
+  .plan-col.red { border-top-color: var(--red); }
+  .plan-col.amber { border-top-color: var(--amber); }
+  .plan-col.green { border-top-color: var(--green); }
+
+  .bullets {
+    list-style: none;
+    padding: 0;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .bullets li {
+    position: relative;
+    padding-left: 16px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--ink-body);
+  }
+  .bullets li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 8px;
+    width: 6px; height: 6px;
+    background: var(--ink);
+  }
+  .bullets li b { color: var(--navy); font-weight: 600; }
+  .bullets li .item-title {
+    font-weight: 600;
+    color: var(--navy);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .numlist {
+    list-style: none;
+    padding: 0;
+    counter-reset: step;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .numlist li {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 10px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--ink-body);
+    counter-increment: step;
+  }
+  .numlist li::before {
+    content: counter(step, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent-deep);
+    letter-spacing: 0.05em;
+    padding-top: 1px;
+  }
+  .numlist li b { color: var(--navy); font-weight: 600; }
+
+  /* MECE framework box — two columns for scenarios */
+  .mece-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--rule);
+  }
+  .mece-cell {
+    padding: 16px 18px;
+    border-right: 1px solid var(--rule);
+  }
+  .mece-cell:last-child { border-right: 0; }
+  .mece-head {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .mece-head .scen {
+    color: var(--accent-deep);
+    margin-right: 6px;
+  }
+  .mece-head.red .scen { color: var(--red); }
+  .mece-head.green .scen { color: var(--green); }
+  .mece-head.amber .scen { color: var(--amber); }
+  .mece-title {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--navy);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  /* ==================================================
+     SLIDE 8 — MONITOR
+     ================================================== */
+  .type-pill {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 2px 7px;
+    border: 1px solid var(--rule-strong);
+  }
+  .type-pill.full { color: var(--accent-deep); border-color: var(--accent-deep); background: #DDF0F7; }
+  .type-pill.excel { color: var(--slate); background: var(--paper-panel); }
+
+  .closed-banner {
+    background: var(--green-soft);
+    border: 1px solid var(--green);
+    padding: 10px 16px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12.5px;
+    color: var(--ink-body);
+    margin-top: 14px;
+  }
+  .closed-banner .check {
+    width: 20px; height: 20px;
+    background: var(--green);
+    color: #fff;
+    display: grid; place-items: center;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .closed-banner b { color: var(--navy); }
+
+  /* ==================================================
+     SLIDE 9 — LAB
+     ================================================== */
+  .lab-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .lab-card {
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    padding: 14px 14px 12px;
+    display: flex; flex-direction: column; gap: 8px;
+    border-top: 3px solid var(--ink);
+  }
+  .lab-card.scaffold { border-top-color: var(--accent-deep); }
+  .lab-card.flight { border-top-color: var(--amber); }
+  .lab-card.idea { border-top-color: var(--slate); }
+  .lab-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .lab-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+  .lab-title {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--navy);
+    line-height: 1.25;
+  }
+  .lab-pitch {
+    font-size: 11.5px;
+    line-height: 1.48;
+    color: var(--ink-body);
+  }
+  .lab-derived {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-top: 8px;
+    border-top: 1px dashed var(--rule);
+    margin-top: auto;
+  }
+  .lab-derived b { color: var(--accent-deep); font-weight: 700; }
+
+  /* ==================================================
+     SLIDE 10 — 14 DAYS
+     ================================================== */
+  .cycle-head {
+    display: grid;
+    grid-template-columns: 140px 1fr 1fr;
+    gap: 14px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 6px;
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .cycle-head .col-lab { color: var(--accent-deep); }
+  .cycle-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 1fr;
+    gap: 14px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .cycle-row.today { background: var(--paper-soft); margin: 0 -12px; padding-left: 12px; padding-right: 12px; }
+  .cycle-row.ooo { background: var(--red-soft); margin: 0 -12px; padding-left: 12px; padding-right: 12px; }
+  .cycle-row.handoff { border-left: 3px solid var(--amber); padding-left: 12px; margin-left: -12px; }
+  .cycle-date {
+    display: flex; align-items: baseline; gap: 10px;
+    flex-wrap: wrap;
+  }
+  .cycle-day {
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--ink-mute);
+  }
+  .cycle-num {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--navy);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .cycle-num em { font-style: italic; color: var(--accent-deep); }
+  .cycle-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 2px 5px;
+    color: #fff;
+    font-weight: 600;
+  }
+  .cycle-tag.today { background: var(--accent-deep); }
+  .cycle-tag.handoff { background: var(--amber); }
+  .cycle-tag.ooo { background: var(--red); }
+  .cycle-tag.cycle-end { background: var(--ink); }
+  .cycle-list {
+    list-style: none; padding: 0;
+    display: flex; flex-direction: column; gap: 4px;
+    font-size: 12px;
+    color: var(--ink-body);
+    line-height: 1.4;
+  }
+  .cycle-list li { padding-left: 12px; position: relative; }
+  .cycle-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0; top: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .cycle-list li.muted { color: var(--ink-faint); font-style: italic; }
+  .cycle-list li.muted::before { color: var(--ink-faint); }
+
+  /* ==================================================
+     SLIDE 11 — CHECKLIST
+     ================================================== */
+  .check-meta {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: end;
+  }
+  .progress-block {
+    min-width: 280px;
+  }
+  .progress-num {
+    font-family: var(--serif);
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .progress-num .done { color: var(--accent-deep); }
+  .progress-num .total { color: var(--ink-mute); font-size: 20px; }
+  .progress-label {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--rule);
+    margin-top: 10px;
+    position: relative;
+  }
+  .progress-bar-fill {
+    position: absolute; top: 0; left: 0; bottom: 0;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  .filter-bar {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .filter-chip {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 5px 10px;
+    background: var(--paper);
+    border: 1px solid var(--rule-strong);
+    color: var(--ink-body);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-chip:hover { border-color: var(--ink); }
+  .filter-chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .filter-chip .count {
+    font-family: var(--mono);
+    font-size: 10px;
+    margin-left: 4px;
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+  .filter-chip.active .count { color: #9BB0C1; }
+
+  .check-section {
+    margin-top: 16px;
+  }
+  .check-section-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-bottom: 6px;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 8px;
+  }
+  .check-section-head .label {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .check-section-head .count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+    font-weight: 500;
+  }
+  .check-section-head .count b { color: var(--accent-deep); font-weight: 700; }
+
+  .check-item {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 10px;
+    padding: 8px 8px 8px 0;
+    cursor: pointer;
+    border-bottom: 1px solid var(--rule-soft);
+    transition: background 0.15s;
+  }
+  .check-item:hover { background: var(--paper-soft); }
+  .check-item.hidden { display: none; }
+  .check-box {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    margin-top: 2px;
+    display: grid; place-items: center;
+    transition: all 0.15s;
+  }
+  .check-item.done .check-box {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .check-item.done .check-box::after {
+    content: "✓";
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .check-item.done .check-title {
+    color: var(--ink-faint);
+    text-decoration: line-through;
+    text-decoration-color: var(--rule-strong);
+  }
+  .check-title {
+    font-size: 12.5px;
+    color: var(--ink-body);
+    line-height: 1.4;
+  }
+  .check-meta {
+    display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap;
+  }
+  .tag-plan, .tag-urgent, .tag-handoff {
+    font-family: var(--sans);
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 2px 6px;
+    border: 1px solid var(--rule-strong);
+    color: var(--ink-mute);
+  }
+  .tag-urgent { background: var(--red-soft); color: var(--red); border-color: var(--red); }
+  .tag-handoff { background: var(--amber-soft); color: var(--amber); border-color: var(--amber); }
+
+  .checklist-foot {
+    margin-top: 16px; padding-top: 10px;
+    border-top: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .checklist-foot button {
+    font-family: var(--sans);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 5px 12px;
+    background: var(--paper);
+    border: 1px solid var(--rule-strong);
+    color: var(--ink-mute);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .checklist-foot button:hover { background: var(--red); color: #fff; border-color: var(--red); }
+
+  /* Executive summary stat tiles */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .stat-tile {
+    background: var(--paper);
+    padding: 14px 16px;
+  }
+  .stat-label {
+    font-family: var(--sans);
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+  }
+  .stat-value {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-top: 4px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .stat-sub {
+    font-size: 11px;
+    color: var(--ink-mute);
+    margin-top: 4px;
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 1200px) {
+    .action-title { font-size: 22px; }
+    .cover-title { font-size: 40px; }
+    .lab-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="brand">NBI · Caseload Advisory</div>
+    <div class="meta">
+      <span id="slide-label">01 · Cover</span>
+      <span>Cycle 026 · Apr 22 → May 06, 2026</span>
+      <span>Confidential · Working Document</span>
+    </div>
+  </header>
+
+  <!-- STAGE -->
+  <main class="stage" id="stage">
+    <div class="slide-frame">
+
+      <!-- ==================================================
+           SLIDE 1 — COVER
+           ================================================== -->
+      <section class="slide cover active" data-label="01 · Cover">
+        <div class="cover-left">
+          <div>
+            <div class="cover-client">
+              <span>Prepared for</span><b>Joel · Senior Data Consultant</b>
+            </div>
+            <h1 class="cover-title">Caseload brief<br/><em>— next two weeks.</em></h1>
+            <p class="cover-strap">
+              A working document for cycle 026 — caseload triage, side-project output, and a live checklist that travels with the operator.
+            </p>
+          </div>
+
+          <dl class="cover-prepared">
+            <div>
+              <dt>Cycle</dt>
+              <dd>026 · FY 2026 · Wk 17–18</dd>
+            </div>
+            <div>
+              <dt>Window</dt>
+              <dd>Apr 22 → May 06, 2026</dd>
+            </div>
+            <div>
+              <dt>Operator</dt>
+              <dd>Joel</dd>
+            </div>
+            <div>
+              <dt>OOO</dt>
+              <dd>Apr 27 → May 01</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="cover-right">
+          <div>
+            <div class="eyebrow-dark">Cycle at a glance</div>
+            <h2 class="cover-rh">Five active plans, one coverage window, eight lab tools in flight.</h2>
+          </div>
+
+          <div class="cover-gauges" aria-label="Cycle summary">
+            <div class="cover-gauge">
+              <div class="g-label">Active plans</div>
+              <div class="g-value">5</div>
+              <div class="g-sub">Hands-on this cycle</div>
+              <div class="g-bar"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+            </div>
+            <div class="cover-gauge">
+              <div class="g-label">Monitor</div>
+              <div class="g-value">6</div>
+              <div class="g-sub">Off the burner</div>
+              <div class="g-bar"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+            </div>
+            <div class="cover-gauge">
+              <div class="g-label">Lab tools</div>
+              <div class="g-value">8</div>
+              <div class="g-sub">In flight / idea</div>
+              <div class="g-bar"><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i></div>
+            </div>
+            <div class="cover-gauge">
+              <div class="g-label">Days in window</div>
+              <div class="g-value">14</div>
+              <div class="g-sub">Apr 22 → May 06</div>
+              <div class="g-bar"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
+          </div>
+
+          <div class="cover-foot-dark">
+            WB.026 / Caseload Ledger / Rev. 2026·04·22
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================
+           SLIDE 2 — TRIAGE BOARD
+           ================================================== -->
+      <section class="slide" data-label="02 · Triage Board">
+        <div class="title-block">
+          <div class="eyebrow">Section 02<span class="sep">/</span>Caseload overview</div>
+          <h1 class="action-title">
+            Five of eleven plans require hands-on work this cycle; <em>hand-off risk concentrates around the Apr 27 – May 01 OOO window</em>
+          </h1>
+          <p class="subtitle">
+            Eleven plans on the roster — <b>5 active</b>, 6 monitor, 1 closed. One five-day coverage window cuts across the cycle, driving hand-off work on Callidi Tas and Haverhill before Friday.
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="coverage-banner">
+            <div class="cb-icon">⚑</div>
+            <div class="cb-text">
+              <b>Coverage beacon — OOO Apr 27 → May 01.</b>
+              Haverhill assets land 5/1 while operator is out; Callidi Tas may unblock mid-week. Hand-off required on both before EOD Friday.
+            </div>
+            <div class="cb-deadline">
+              Hand-off by<b>Fri · Apr 24</b>
+              Owner: TBD
+            </div>
+          </div>
+
+          <div class="board-grid">
+
+            <div>
+              <div class="exhibit-label">Exhibit 1 · Active ledger (5 plans)</div>
+              <table class="mk">
+                <thead>
+                  <tr>
+                    <th style="width:28px;">#</th>
+                    <th>Plan</th>
+                    <th style="width:110px;">State</th>
+                    <th>Blocked by</th>
+                    <th style="width:78px;">Effective</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="num">01</td>
+                    <td class="plan">Callidi Tas</td>
+                    <td><span class="chip waiting">Waiting</span></td>
+                    <td class="dim">Client · DOB / DOH</td>
+                    <td class="eff">EOW</td>
+                  </tr>
+                  <tr>
+                    <td class="num">02</td>
+                    <td class="plan">Haverhill School</td>
+                    <td><span class="chip coverage">Coverage</span></td>
+                    <td class="dim">Damien · Asset 5/1</td>
+                    <td class="eff">5 / 01</td>
+                  </tr>
+                  <tr>
+                    <td class="num">03</td>
+                    <td class="plan">Pella SC</td>
+                    <td><span class="chip ramping">Ramping</span></td>
+                    <td class="dim">ADP · Deferral report</td>
+                    <td class="eff">~ 2 wk</td>
+                  </tr>
+                  <tr>
+                    <td class="num">04</td>
+                    <td class="plan">Cutting Edge Staffing</td>
+                    <td><span class="chip open">Open</span></td>
+                    <td class="dim">Self · Verify</td>
+                    <td class="eff">6 / 01</td>
+                  </tr>
+                  <tr>
+                    <td class="num">05</td>
+                    <td class="plan">Int'l School of Denver</td>
+                    <td><span class="chip debate">Debate</span></td>
+                    <td class="dim">Internal alignment</td>
+                    <td class="eff">7 / 01</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="takeaway" style="margin-top:18px;">
+                <div class="takeaway-label">Key takeaway</div>
+                <div class="takeaway-body">
+                  Three of five active plans <b>unblock externally</b> (client, ADP, vendor). Operator-owned work is concentrated in <b>Haverhill hand-off</b> and <b>Cutting Edge verification</b>, both resolvable by Friday.
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="mini-panel">
+                <div class="mini-panel-head">
+                  <span>Exhibit 2 · Caseload mix</span>
+                  <span class="meta">n = 11</span>
+                </div>
+                <div class="loadbar">
+                  <span class="loadbar-label">Active</span>
+                  <span class="loadbar-track"><span class="loadbar-fill" style="width:45%;"></span></span>
+                  <span class="loadbar-val">5</span>
+                </div>
+                <div class="loadbar">
+                  <span class="loadbar-label">Monitor</span>
+                  <span class="loadbar-track"><span class="loadbar-fill slate" style="width:55%;"></span></span>
+                  <span class="loadbar-val">6</span>
+                </div>
+                <div class="loadbar">
+                  <span class="loadbar-label">Closed</span>
+                  <span class="loadbar-track"><span class="loadbar-fill" style="width:9%; background:var(--green);"></span></span>
+                  <span class="loadbar-val">1</span>
+                </div>
+              </div>
+
+              <div class="mini-panel">
+                <div class="mini-panel-head">
+                  <span>Exhibit 3 · Monitor — off the burner</span>
+                  <span class="meta">n = 6</span>
+                </div>
+                <div class="monitor-chips">
+                  <span class="mchip">Prime Healthcare <span class="d">8/01</span><span class="note">pushed</span></span>
+                  <span class="mchip">Can-Am Bridges <span class="d">10/01</span></span>
+                  <span class="mchip">Can-Am Buildings <span class="d">10/01</span></span>
+                  <span class="mchip">Stout Co. <span class="d">7/01</span><span class="note">excel-wise</span></span>
+                  <span class="mchip">Bonnie Corp. <span class="d">7/01</span><span class="note">excel-wise</span></span>
+                  <span class="mchip">Leiby's Dairy <span class="d">8/01</span><span class="note">cancelled</span></span>
+                </div>
+              </div>
+
+              <div class="closed-banner">
+                <span class="check">✓</span>
+                <span><b>Episcopal</b> — closed, off the list this cycle. No further action.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span class="src">Source: <b>Internal caseload review, Cycle 026</b> · operator-maintained ledger · Apr 22, 2026</span>
+          <span class="folio">Page<b> 2</b> of 11</span>
+        </div>
+      </section>
+
+      <!-- ==================================================
+           SLIDE 3 — CALLIDI TAS
+           ================================================== -->
+      <section class="slide" data-label="03 · Callidi Tas">
+        <div class="title-block">
+          <div class="eyebrow">Section 03<span class="sep">/</span>Active plan · 01 of 05</div>
+          <h1 class="action-title">
+            Callidi Tas is blocked on client-side participant data; turnaround is <em>48 hours from receipt</em>, positioning EOW close-out
+          </h1>
+          <p class="subtitle">
+            Participant records missing on the balance file are a <b>client data-completeness issue</b>, not a mapping error. One loan anomaly is in scope; re-amortization may be required.
+          </p>
+          <div class="plan-meta-row" style="margin-top:4px;">
+            <span class="chip waiting">Waiting</span>
+            <span class="meta-item"><span class="meta-label">Blocked by</span><span class="meta-val">Client · DOB / DOH</span></span>
+            <span class="sep">│</span>
+            <span class="meta-item"><span class="meta-label">Loan flag</span><span class="meta-val">1 of 1 out of order</span></span>
+            <span class="sep">│</span>
+            <span class="meta-item"><span class="meta-label">Target out</span><span class="meta-val">EOW · 4/24</span></span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="takeaway warn">
+            <div class="takeaway-label">Finding · raise</div>
+            <div class="takeaway-body">
+              The balance file from the client was <b>missing people</b>. Cross-checked by SSN — not a mapping error on our side. This is a <b>client-side data completeness</b> issue and should be flagged upstream before future cycles.
+            </div>
+          </div>
+
+          <div class="plan-grid-2">
+            <div class="plan-col">
+              <h4>Open threads</h4>
+              <ul class="bullets">
+                <li>
+                  <span class="item-title">Participant data</span>
+                  Waiting on client for DOB and date of hire (primary); address + demographics (secondary). Money is invested and sitting — balances post once participants are in.
+                </li>
+                <li>
+                  <span class="item-title">Loan anomaly</span>
+                  One loan, one participant — out of order. Possible missing or miscoded payment. Loans were frozen then unfrozen; re-amortization may be needed. Scope is small.
+                </li>
+              </ul>
+            </div>
+            <div class="plan-col accent">
+              <h4>Trigger sequence · on data receipt</h4>
+              <ol class="numlist">
+                <li>Receive participant details from client</li>
+                <li>Load new participants into system</li>
+                <li>Apply balances to accounts</li>
+                <li>Resolve the loan discrepancy</li>
+                <li>Re-amortize if required → load loans</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="takeaway">
+            <div class="takeaway-label">Off plate when</div>
+            <div class="takeaway-body">
+              Client delivers data → turnaround is <b>same-day to 48 hrs</b>. Target: off the list by end of this week.
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span class="src">Source: <b>Callidi Tas plan file</b> · client correspondence · internal SSN reconciliation</span>
+          <span class="folio">Page<b> 3</b> of 11</span>
+        </div>
+      </section>
+
+      <!-- ==================================================
+           SLIDE 4 — HAVERHILL
+           ================================================== -->
+      <section class="slide" data-label="04 · Haverhill">
+        <div class="title-block">
+          <div class="eyebrow">Section 04<span class="sep">/</span>Active plan · 02 of 05</div>
+          <h1 class="action-title">
+            Haverhill requires <em>written hand-off by Friday</em> to protect the 5/1 asset load while operator is OOO
+          </h1>
+          <p class="subtitle">
+            Original client contact had brain surgery; plan handed to a colleague who has been engaged throughout — <b>continuity should hold</b>. Outstanding work with Damien must close before the OOO window opens.
+          </p>
+          <div class="plan-meta-row" style="margin-top:4px;">
+            <span class="chip coverage">Coverage</span>
+            <span class="meta-item"><span class="meta-label">Blocked by</span><span class="meta-val">Damien · Outstanding list</span></span>
+            <span class="sep">│</span>
+            <span class="meta-item"><span class="meta-label">Operator</span><span class="meta-val">OOO Apr 27 → May 01</span></span>
+            <span class="sep">│</span>
+            <span class="meta-item"><span class="meta-label">Asset load</span><span class="meta-val">5 / 01</span></span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="plan-grid-2">
+            <div class="plan-col green">
+              <h4>Done · this cycle</h4>
+              <ul class="bullets">
+                <li><span class="item-title">Base file loaded</span></li>
+                <li><span class="item-title">Beth has everyone in, ran checks</span></li>
+                <li><span class="item-title">AQT fixed so all participants show</span></li>
+                <li><span class="item-title">Flags applied where needed</span></li>
+              </ul>
+            </div>
+            <div class="plan-col red">
+              <h4>Remaining · before Friday</h4>
+              <ul class="bullets">
+                <li>
+                  <span class="item-title">Damien follow-up</span>
+                  Confirm participants not in file: add or skip? Pull dates if add. Wrap by EOW.
+                </li>
+                <li>
+                  <span class="item-title">Hand-off document</span>
+                  Damien outstanding · base-file state · AQT config. Owner identified before Friday.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="takeaway warn">
+            <div class="takeaway-label">Hand-off · required</div>
+            <div class="takeaway-body">
+              Identify coverage for the <b>5/1 asset load</b> before operator leaves. Document Damien outstanding, base-file state, AQT config. <b>Deadline: Fri · Apr 24.</b>
+            </div>
+          </div>
+
+          <div class="takeaway">
+            <div class="takeaway-label">Context · transition</div>
+            <div class="takeaway-body">
+              Original client contact had brain surgery; plan handed to a colleague who has been on it the whole time. Not a disruptive swap — <b>continuity should hold</b>, no renegotiation expected.
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span class="src">Source: <b>Haverhill plan file</b> · Damien correspondence · internal AQT audit trail</span>
+          <span class="folio">Page<b> 4</b> of 11</span>
+        </div>
+      </section>
+
+      <!-- ==================================================
+           SLIDE 5 — PELLA SC
+           ================================================== -->
+      <section class="slide" data-label="05 · Pella SC">
+        <div class="title-block">
+          <div class="eyebrow">Section 05<span class="sep">/</span>Active plan · 03 of 05</div>
+          <h1 class="action-title">
+            Pella SC round two is <em>materially easier</em>; the ADP deferral ambiguity has a defined four-step workaround
+          </h1>
+          <p class="subtitle">
+            Population largely already in system, ADP records clean except deferrals, new rep appears responsive. The pain points are known and the <b>workaround is written</b>.
+          </p>
+          <div class="plan-meta-row" style="margin-top:4px;">
+            <span class="chip ramping">Ramping</span>
+            <span class="meta-item"><span class="meta-label">Blocked by</span><span class="meta-val">ADP · Deferral report</span></span>
+            <span class="sep">│</span>
+            <span class="meta-item"><span class="meta-label">Round</span><span class="meta-val">Two · pain points known</span></span>
+            <span class="sep">│</span>
+            <span class="meta-item"><span class="meta-label">Liquidation</span><span class="meta-val">~ 2 weeks</span></span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="plan-grid-2">
+            <div class="plan-col green">
+              <h4>Why this round is easier</h4>
+              <ul class="bullets">
+                <li>Population mostly already in our system</li>
+                <li>ADP records clean everywhere <b>except deferrals</b></li>
+                <li>Operator knows exactly where the deferral report lives</li>
+                <li>New ADP rep appears ready to move</li>
+              </ul>
+            </div>
+            <div class="plan-col accent">
+              <h4>Immediate next moves</h4>
+              <ol class="numlist">
+                <li>Email new ADP rep — request deferral report</li>
+                <li>Confirm whether a base file is needed</li>
+                <li>Stage the three-bucket split for liquidation</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="takeaway amber">
+            <div class="takeaway-label">The workaround</div>
+            <div class="takeaway-body">
+              ADP cannot reliably identify who is <em>still</em> in default once marked "in default" within the min → (max − 1) window. Four-step play:
+              <ol class="numlist" style="margin-top:8px;">
+                <li>Load everyone at current % — <b>out of default</b></li>
+                <li>Identify the ambiguous set (in default, inside the window)</li>
+                <li>Client notifies those participants: auto-escalate won't apply; locked at current % unless they self-change</li>
+                <li>Protects participants first; firm by extension</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span class="src">Source: <b>Pella SC round-one post-mortem</b> · ADP API documentation · internal liquidation playbook</span>
+          <span class="folio">Page<b> 5</b> of 11</span>
+        </div>
+      </section>
+
+      <!-- ==================================================
+           SLIDE 6 — CUTTING EDGE
+           ================================================== -->
+      <section class="slide" data-label="06 · Cutting Edge">
+        <div class="title-block">
+          <div class="eyebrow">Section 06<span class="sep">/</span>Active plan · 04 of 05</div>
+          <h1 class="action-title">
+            Cutting Edge resolves in <em>1–2 days of focused work</em>; one verification step gates whether that means rebuild or stand-by
+          </h1>
+          <p class="subtitle">
+            The client/vendor issue appears resolved. Before rebuilding anything, confirm whether the base file <b>already went out for testing</b> — five minutes of looking may save a day of redoing.
+          </p>
+          <div class="plan-meta-row" style="margin-top:4px;">
+            <span class="chip open">Open</span>
+            <span class="meta-item"><span class="meta-label">Blocked by</span><span class="meta-val">Self · Verify base file</span></span>
+            <span class="sep">│</span>
+            <span class="meta-item"><span class="meta-label">Risk</span><span class="meta-val">Date may push</span></span>
+            <span class="sep">│</span>
+            <span class="meta-item"><span class="meta-label">Effective</span><span class="meta-val">6 / 01</span></span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="takeaway">
+            <div class="takeaway-label">First check</div>
+            <div class="takeaway-body">
+              Verify whether the base file <b>already went out for testing</b> before rebuilding anything. Five minutes of looking saves a day of redoing.
+            </div>
+          </div>
+
+          <div class="exhibit-label">Exhibit · Decision tree</div>
+          <div class="mece-grid">
+            <div class="mece-cell">
+              <div class="mece-head green"><span class="scen">Scenario A</span> · If file was sent</div>
+              <div class="mece-title">Stand by; confirm with vendor</div>
+              <ul class="bullets">
+                <li>
+                  <span class="item-title">Confirm test status with vendor</span>
+                  Surface any issues from their side; otherwise stand by.
+                </li>
+                <li>
+                  <span class="item-title">Log date in cycle record</span>
+                  So next week's check doesn't repeat the question.
+                </li>
+              </ul>
+            </div>
+            <div class="mece-cell">
+              <div class="mece-head amber"><span class="scen">Scenario B</span> · If not sent</div>
+              <div class="mece-title">Build and deliver within 1–2 days</div>
+              <ol class="numlist">
+                <li>Build base file</li>
+                <li>Build payroll template</li>
+                <li>Send out — target EOW, realistic 1–2 days</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="takeaway">
+            <div class="takeaway-label">Off plate when</div>
+            <div class="takeaway-body">
+              Base file + payroll template land with vendor for testing. <b>1–2 days of focused work</b>, not more.
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span class="src">Source: <b>Cutting Edge Staffing plan file</b> · vendor correspondence · prior cycle log</span>
+          <span class="folio">Page<b> 6</b> of 11</span>
+        </div>
+      </section>
+
+      <!-- ==================================================
+           SLIDE 7 — ISD DENVER
+           ================================================== -->
+      <section class="slide" data-label="07 · ISD Denver">
+        <div class="title-block">
+          <div class="eyebrow">Section 07<span class="sep">/</span>Active plan · 05 of 05</div>
+          <h1 class="action-title">
+            ISD execution is <em>light in either scenario</em>; the internal deferral-timing debate — not technical work — is the true blocker
+          </h1>
+          <p class="subtitle">
+            Plan is being treated as a startup despite merger-ish origins. Two camps disagree on timing. Operator's lift is small regardless of which camp wins; prep the analysis package either way.
+          </p>
+          <div class="plan-meta-row" style="margin-top:4px;">
+            <span class="chip debate">Debate</span>
+            <span class="meta-item"><span class="meta-label">Blocked by</span><span class="meta-val">Internal alignment</span></span>
+            <span class="sep">│</span>
+            <span class="meta-item"><span class="meta-label">Lift</span><span class="meta-val">Light · regardless</span></span>
+            <span class="sep">│</span>
+            <span class="meta-item"><span class="meta-label">Go-live</span><span class="meta-val">7 / 01</span></span>
+          </div>
+        </div>
+
+        <div class="slide-body">
+          <div class="exhibit-label">Exhibit · The debate</div>
+          <div class="mece-grid">
+            <div class="mece-cell">
+              <div class="mece-head green"><span class="scen">Camp A</span> · Pure startup</div>
+              <div class="mece-title">No blackout. Clean launch at go-live.</div>
+              <p style="font-size:12px; color:var(--ink-body); line-height:1.5;">Treat as greenfield. Don't preload elections. Give participants a self-elect window. Client sends deferral file later. Import with 7/1 effective — self-entries override, no filtering.</p>
+            </div>
+            <div class="mece-cell">
+              <div class="mece-head amber"><span class="scen">Camp B</span> · Post-facto load</div>
+              <div class="mece-title">Loading deferrals after the fact is extra work and sets a precedent.</div>
+              <p style="font-size:12px; color:var(--ink-body); line-height:1.5;">Favors pre-seeded elections before go-live. Avoids post-launch cleanup. Concern: sets an expectation that backfill is acceptable process going forward.</p>
+            </div>
+          </div>
+
+          <div class="plan-grid-2">
+            <div class="plan-col accent">
+              <h4>Operator's play · either camp</h4>
+              <ol class="numlist">
+                <li>Don't preload elections</li>
+                <li>Give participants a self-elect window</li>
+                <li>Client sends deferral file later</li>
+                <li>Import with 7/1 effective — self-entries override, no filtering</li>
+              </ol>
+            </div>
+            <div class="plan-col">
+              <h4>Question to raise · and the lift</h4>
+              <ul class="bullets">
+                <li>
+                  <span class="item-title">If the file exists now, why wait?</span>
+                  Push for it early. Removes post-launch cleanup and kills the precedent debate.
+                </li>
+                <li>
+                  <span class="item-title">Operator lift is light</span>
+                  Load census · default elections · process deferrals after. Prep the analysis package regardless of which camp wins.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="takeaway">
+            <div class="takeaway-label">Recommendation</div>
+            <div class="takeaway-body">
+              Push the <b>"give us the file now"</b> angle with team; the internal alignment question is the only real constraint — execution work is light in either direction.
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span class="src">Source: <b>ISD Denver plan file</b> · internal alignment thread · startup-plan precedent review</span>
+          <span class="folio">Page<b> 7</b> of 11</span>
+        </div>
+      </section>
+
+      <!-- ==================================================
+           SLIDE 8 — MONITOR
+           ================================================== -->
+      <section class="slide" data-label="08 · Monitor">
+        <div class="title-block">
+          <div class="eyebrow">Section 08<span class="sep">/</span>Monitor · off the burner</div>
+          <h1 class="action-title">
+            Six monitored plans require <em>no action this cycle</em>; all track toward effective dates July–October
+          </h1>
+          <p class="subtitle">
+            Kept visible so nothing drifts out of awareness — <b>nothing here moves this week</b>. One plan (Episcopal) closed during this cycle.
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="exhibit-label">Exhibit · Monitor ledger</div>
+          <table class="mk">
+            <thead>
+              <tr>
+                <th style="width:28px;">#</th>
+                <th>Plan</th>
+                <th style="width:110px;">Type</th>
+                <th style="width:72px;">Effective</th>
+                <th>Last touch</th>
+                <th>Watch for</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">01</td>
+                <td class="plan">Prime Healthcare / Central Maine</td>
+                <td><span class="type-pill full">Full</span></td>
+                <td class="eff">8 / 01</td>
+                <td class="dim">Pushed off cycle</td>
+                <td class="dim">Reschedule signal from client</td>
+              </tr>
+              <tr>
+                <td class="num">02</td>
+                <td class="plan">Can-Am Bridges</td>
+                <td><span class="type-pill full">Full</span></td>
+                <td class="eff">10 / 01</td>
+                <td class="dim">Just started</td>
+                <td class="dim">Initial scoping meeting</td>
+              </tr>
+              <tr>
+                <td class="num">03</td>
+                <td class="plan">Can-Am Buildings</td>
+                <td><span class="type-pill full">Full</span></td>
+                <td class="eff">10 / 01</td>
+                <td class="dim">Just started</td>
+                <td class="dim">Initial scoping meeting</td>
+              </tr>
+              <tr>
+                <td class="num">04</td>
+                <td class="plan">Stout Co.</td>
+                <td><span class="type-pill excel">Excel-Wise</span></td>
+                <td class="eff">7 / 01</td>
+                <td class="dim">No meeting yet</td>
+                <td class="dim">First sync · usually straightforward</td>
+              </tr>
+              <tr>
+                <td class="num">05</td>
+                <td class="plan">Bonnie Corp.</td>
+                <td><span class="type-pill excel">Excel-Wise</span></td>
+                <td class="eff">7 / 01</td>
+                <td class="dim">Nothing active</td>
+                <td class="dim">First sync</td>
+              </tr>
+              <tr>
+                <td class="num">06</td>
+                <td class="plan">Leiby's Dairy</td>
+                <td><span class="type-pill excel">Excel-Wise</span></td>
+                <td class="eff">8 / 01</td>
+                <td class="dim">Meeting cancelled today</td>
+                <td class="dim">Reschedule</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="plan-grid-2" style="margin-top:18px;">
+            <div class="takeaway">
+              <div class="takeaway-label">Observation</div>
+              <div class="takeaway-body">
+                Monitor mix skews <b>1:1 between full and Excel-Wise</b> implementations. Effective dates cluster in July–October, giving two clean cycles before any active work is required.
+              </div>
+            </div>
+            <div class="closed-banner" style="margin-top:0; align-self:center;">
+              <span class="check">✓</span>
+              <span><b>Closed · Episcopal</b> — off the list this cycle. No further action required.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span class="src">Source: <b>Caseload monitor ledger, Cycle 026</b> · plan-by-plan effective-date tracking</span>
+          <span class="folio">Page<b> 8</b> of 11</span>
+        </div>
+      </section>
+
+      <!-- ==================================================
+           SLIDE 9 — LAB
+           ================================================== -->
+      <section class="slide" data-label="09 · The Lab">
+        <div class="title-block">
+          <div class="eyebrow">Section 09<span class="sep">/</span>The personal lab</div>
+          <h1 class="action-title">
+            Eight lab tools in development; <em>five are direct derivatives</em> of this cycle's real caseload problems
+          </h1>
+          <p class="subtitle">
+            Tools built from real one-off work that would otherwise be done twice. <b>No deadlines.</b> They ship when they ship — usually fast. Classification: scaffold (2), in flight (1), idea (5).
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="lab-grid">
+
+            <div class="lab-card scaffold">
+              <div class="lab-head">
+                <span class="chip scaffold">Scaffold</span>
+                <span class="lab-num">№ 01</span>
+              </div>
+              <h4 class="lab-title">Plan Ops Dashboard</h4>
+              <p class="lab-pitch">A living version of this brief. Type a plan name, get status, blockers, next moves. The deck — but self-serve, for the whole caseload.</p>
+              <div class="lab-derived">Derived from <b>this brief itself</b></div>
+            </div>
+
+            <div class="lab-card flight">
+              <div class="lab-head">
+                <span class="chip flight">In flight</span>
+                <span class="lab-num">№ 02</span>
+              </div>
+              <h4 class="lab-title">Census Validator · Web</h4>
+              <p class="lab-pitch">Wrap the Python version in a browser UI. Drag a file in, see the checks, download the report. Ships the logic for the whole team.</p>
+              <div class="lab-derived">Derived from <b>existing Python tool</b></div>
+            </div>
+
+            <div class="lab-card idea">
+              <div class="lab-head">
+                <span class="chip idea">Idea</span>
+                <span class="lab-num">№ 03</span>
+              </div>
+              <h4 class="lab-title">Deferral Ambiguity Analyzer</h4>
+              <p class="lab-pitch">Drop an ADP-style export. Get the three buckets — clean, ambiguous, out-of-range — plus a client-facing notification list. Generalizes the workaround.</p>
+              <div class="lab-derived">Derived from <b>Pella SC · ADP workaround</b></div>
+            </div>
+
+            <div class="lab-card idea">
+              <div class="lab-head">
+                <span class="chip idea">Idea</span>
+                <span class="lab-num">№ 04</span>
+              </div>
+              <h4 class="lab-title">Balance File Completeness Checker</h4>
+              <p class="lab-pitch">Cross-references a balance file against participant master by SSN. Surfaces anyone with a balance who isn't in system. Two minutes vs. two days.</p>
+              <div class="lab-derived">Derived from <b>Callidi Tas · missing-people finding</b></div>
+            </div>
+
+            <div class="lab-card idea">
+              <div class="lab-head">
+                <span class="chip idea">Idea</span>
+                <span class="lab-num">№ 05</span>
+              </div>
+              <h4 class="lab-title">Hand-off Doc Generator</h4>
+              <p class="lab-pitch">Structured form → clean hand-off doc. Base-file state, AQT config, outstanding items, owner. Kills the Friday-afternoon scramble.</p>
+              <div class="lab-derived">Derived from <b>this cycle · Haverhill + Callidi hand-offs</b></div>
+            </div>
+
+            <div class="lab-card idea">
+              <div class="lab-head">
+                <span class="chip idea">Idea</span>
+                <span class="lab-num">№ 06</span>
+              </div>
+              <h4 class="lab-title">Loan Anomaly Inspector</h4>
+              <p class="lab-pitch">Feed a loan history with payment + freeze/unfreeze events. Get a timeline view, surfaced discrepancies, and a re-amortization flag with reasoning.</p>
+              <div class="lab-derived">Derived from <b>Callidi Tas · out-of-order loan</b></div>
+            </div>
+
+            <div class="lab-card idea">
+              <div class="lab-head">
+                <span class="chip idea">Idea</span>
+                <span class="lab-num">№ 07</span>
+              </div>
+              <h4 class="lab-title">Onboarding Tracker · Web</h4>
+              <p class="lab-pitch">Phase-driven, browser-native version of the Excel + VBA + Visio tracker. No file passed around — visible across team, read-only for stakeholders.</p>
+              <div class="lab-derived">Derived from <b>existing Excel / VBA / Visio tool</b></div>
+            </div>
+
+            <div class="lab-card scaffold">
+              <div class="lab-head">
+                <span class="chip scaffold">Scaffold</span>
+                <span class="lab-num">№ 08</span>
+              </div>
+              <h4 class="lab-title">Personal Lab · Index</h4>
+              <p class="lab-pitch">Single-page anchor for the whole lab. Each tool gets a tile — screenshot, one paragraph, link to demo. The "what have I built" page.</p>
+              <div class="lab-derived">Derived from <b>everything above</b></div>
+            </div>
+
+          </div>
+
+          <div class="takeaway">
+            <div class="takeaway-label">Portfolio insight</div>
+            <div class="takeaway-body">
+              Five of eight tools <b>trace directly to Cycle 026 caseload</b> — evidence that one-off consulting work naturally compounds into reusable product when captured systematically.
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-foot">
+          <span class="src">Source: <b>Personal lab registry</b> · cycle-derived tool catalog · Rev. 2026·04·22</span>
+          <span class="folio">Page<b> 9</b> of 11</span>
+        </div>
+      </section>
+
+      <!-- ==================================================
+           SLIDE 10 — 14 DAYS
+           ================================================== -->
+      <section class="slide" data-label="10 · 14 Days">
+        <div class="title-block">
+          <div class="eyebrow">Section 10<span class="sep">/</span>Cycle plan · Apr 22 → May 06</div>
+          <h1 class="action-title">
+            The fourteen-day cycle <em>front-loads hand-offs before OOO</em> and resumes execution on May 4
+          </h1>
+          <p class="subtitle">
+            Work on the left, <b>lab on the right</b>. Both lanes move daily — the lab is a standing channel, not an afterthought. Cycle-end deliverable: next-cycle brief with rolled-forward items.
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="exhibit-label">Exhibit · Two-lane cycle plan</div>
+
+          <div class="cycle-head">
+            <div>Date</div>
+            <div>Work · caseload</div>
+            <div class="col-lab">Lab · tools</div>
+          </div>
+
+          <div class="cycle-row today">
+            <div class="cycle-date">
+              <div class="cycle-day">Wed</div>
+              <div class="cycle-num">04 · <em>22</em></div>
+              <span class="cycle-tag today">Today</span>
+            </div>
+            <div>
+              <ul class="cycle-list">
+                <li>Nudge Callidi Tas client — DOB / DOH on missing participants</li>
+                <li>Check whether Cutting Edge base file already went out for testing</li>
+                <li>Open the ISD "give us the file now" angle with team</li>
+              </ul>
+            </div>
+            <div>
+              <ul class="cycle-list">
+                <li>Scaffold Plan Ops Dashboard — list view + single-plan detail</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cycle-row">
+            <div class="cycle-date">
+              <div class="cycle-day">Thu</div>
+              <div class="cycle-num">04 · <em>23</em></div>
+            </div>
+            <div>
+              <ul class="cycle-list">
+                <li>Follow up with Damien — Haverhill participants-not-in-file list</li>
+                <li>Email new ADP rep re: Pella deferral report</li>
+                <li>If needed: build Cutting Edge base file + payroll template</li>
+              </ul>
+            </div>
+            <div>
+              <ul class="cycle-list">
+                <li class="muted">continue dashboard scaffold</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cycle-row handoff">
+            <div class="cycle-date">
+              <div class="cycle-day">Fri</div>
+              <div class="cycle-num">04 · <em>24</em></div>
+              <span class="cycle-tag handoff">Hand-off</span>
+            </div>
+            <div>
+              <ul class="cycle-list">
+                <li>Haverhill hand-off doc — base file, AQT config, Damien outstanding</li>
+                <li>Callidi Tas hand-off doc — loan status, pending client returns</li>
+                <li>Confirm coverage owner has access to both</li>
+              </ul>
+            </div>
+            <div>
+              <ul class="cycle-list">
+                <li>Ship Plan Ops Dashboard v0.1 — ugly-but-real</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cycle-row ooo">
+            <div class="cycle-date">
+              <div class="cycle-day">M–F</div>
+              <div class="cycle-num">04 · <em>27</em> → 05 · <em>01</em></div>
+              <span class="cycle-tag ooo">OOO</span>
+            </div>
+            <div>
+              <ul class="cycle-list">
+                <li class="muted">out of office · coverage owns Haverhill 5/1 asset load</li>
+              </ul>
+            </div>
+            <div>
+              <ul class="cycle-list">
+                <li class="muted">time permitting: Census Validation web wrapper — MVP</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cycle-row">
+            <div class="cycle-date">
+              <div class="cycle-day">Mon</div>
+              <div class="cycle-num">05 · <em>04</em></div>
+            </div>
+            <div>
+              <ul class="cycle-list">
+                <li>Reconcile what happened while out — Haverhill, Callidi Tas</li>
+                <li>Pella SC: deferral report should be in hand — start three-bucket split</li>
+              </ul>
+            </div>
+            <div>
+              <ul class="cycle-list">
+                <li class="muted">—</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cycle-row">
+            <div class="cycle-date">
+              <div class="cycle-day">Tue</div>
+              <div class="cycle-num">05 · <em>05</em></div>
+            </div>
+            <div>
+              <ul class="cycle-list">
+                <li>Pella: prep ambiguous-participant list for client notification</li>
+              </ul>
+            </div>
+            <div>
+              <ul class="cycle-list">
+                <li>Deferral Ambiguity Analyzer — extract Pella workaround into tool</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cycle-row">
+            <div class="cycle-date">
+              <div class="cycle-day">Wed</div>
+              <div class="cycle-num">05 · <em>06</em></div>
+              <span class="cycle-tag cycle-end">Cycle end</span>
+            </div>
+            <div>
+              <ul class="cycle-list">
+                <li>ISD: finalize deferral-timing position; push "give us the file now"</li>
+                <li>Write next-cycle brief · roll open items forward</li>
+              </ul>
+            </div>
+            <div>
+              <ul class="cycle-list">
+                <li>One-Pager Portfolio Site — stand up shell, slot in what exists</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="slide-foot">
+          <span class="src">Source: <b>Cycle 026 plan file</b> · operator calendar · lab registry</span>
+          <span class="folio">Page<b> 10</b> of 11</span>
+        </div>
+      </section>
+
+      <!-- ==================================================
+           SLIDE 11 — CHECKLIST
+           ================================================== -->
+      <section class="slide" data-label="11 · Checklist">
+        <div class="title-block">
+          <div class="eyebrow">Section 11<span class="sep">/</span>Live execution checklist</div>
+          <h1 class="action-title">
+            Twenty-five discrete items define Cycle 026; <em>urgent items cluster before Friday hand-off</em>
+          </h1>
+          <p class="subtitle">
+            State persists locally. Click to tick. Filter by plan or urgency. <b>Reset at cycle end.</b>
+          </p>
+        </div>
+
+        <div class="slide-body">
+          <div class="check-meta">
+            <div class="filter-bar" id="filter-bar">
+              <button class="filter-chip active" data-filter="all">All <span class="count" data-count="all">0</span></button>
+              <button class="filter-chip" data-filter="urgent">Urgent <span class="count" data-count="urgent">0</span></button>
+              <button class="filter-chip" data-filter="callidi">Callidi <span class="count" data-count="callidi">0</span></button>
+              <button class="filter-chip" data-filter="haverhill">Haverhill <span class="count" data-count="haverhill">0</span></button>
+              <button class="filter-chip" data-filter="pella">Pella <span class="count" data-count="pella">0</span></button>
+              <button class="filter-chip" data-filter="ces">Cutting Edge <span class="count" data-count="ces">0</span></button>
+              <button class="filter-chip" data-filter="isd">ISD <span class="count" data-count="isd">0</span></button>
+              <button class="filter-chip" data-filter="lab">Lab <span class="count" data-count="lab">0</span></button>
+            </div>
+
+            <div class="progress-block">
+              <div class="progress-num"><span class="done" id="done-count">0</span><span class="total"> / <span id="total-count">0</span></span></div>
+              <div class="progress-label">Ticked of total</div>
+              <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
+            </div>
+          </div>
+
+          <div class="check-section" data-section="work">
+            <div class="check-section-head">
+              <span class="label">Work · caseload</span>
+              <span class="count"><b id="work-done">0</b> / <span id="work-total">0</span></span>
+            </div>
+
+            <div class="check-item" data-id="cal-01" data-plan="callidi" data-urgent="true">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Callidi Tas — nudge client for DOB / DOH on missing participants</div>
+                <div class="check-meta"><span class="tag-plan">Callidi Tas</span><span class="tag-urgent">EOW</span></div>
+              </div>
+            </div>
+            <div class="check-item" data-id="cal-02" data-plan="callidi">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Callidi Tas — raise client data-completeness issue (balance file missing people)</div>
+                <div class="check-meta"><span class="tag-plan">Callidi Tas</span></div>
+              </div>
+            </div>
+            <div class="check-item" data-id="cal-03" data-plan="callidi">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Callidi Tas — investigate out-of-order loan; determine re-amort need</div>
+                <div class="check-meta"><span class="tag-plan">Callidi Tas</span></div>
+              </div>
+            </div>
+            <div class="check-item" data-id="cal-04" data-plan="callidi">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Callidi Tas — write hand-off doc (loan status, pending client returns)</div>
+                <div class="check-meta"><span class="tag-plan">Callidi Tas</span><span class="tag-handoff">Hand-off</span></div>
+              </div>
+            </div>
+
+            <div class="check-item" data-id="hav-01" data-plan="haverhill" data-urgent="true">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Haverhill — follow up with Damien on participants not in the file</div>
+                <div class="check-meta"><span class="tag-plan">Haverhill</span><span class="tag-urgent">EOW</span></div>
+              </div>
+            </div>
+            <div class="check-item" data-id="hav-02" data-plan="haverhill" data-urgent="true">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Haverhill — arrange coverage for 5/1 asset load (before OOO)</div>
+                <div class="check-meta"><span class="tag-plan">Haverhill</span><span class="tag-urgent">Before OOO</span></div>
+              </div>
+            </div>
+            <div class="check-item" data-id="hav-03" data-plan="haverhill">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Haverhill — write hand-off doc (base file, AQT config, outstanding)</div>
+                <div class="check-meta"><span class="tag-plan">Haverhill</span><span class="tag-handoff">Hand-off</span></div>
+              </div>
+            </div>
+
+            <div class="check-item" data-id="pel-01" data-plan="pella">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Pella SC — email new ADP rep; request deferral report</div>
+                <div class="check-meta"><span class="tag-plan">Pella SC</span></div>
+              </div>
+            </div>
+            <div class="check-item" data-id="pel-02" data-plan="pella">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Pella SC — confirm whether base file is needed this cycle</div>
+                <div class="check-meta"><span class="tag-plan">Pella SC</span></div>
+              </div>
+            </div>
+            <div class="check-item" data-id="pel-03" data-plan="pella">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Pella SC — start three-bucket split once deferral report lands</div>
+                <div class="check-meta"><span class="tag-plan">Pella SC</span></div>
+              </div>
+            </div>
+            <div class="check-item" data-id="pel-04" data-plan="pella">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Pella SC — prep ambiguous-participant list for client notification</div>
+                <div class="check-meta"><span class="tag-plan">Pella SC</span></div>
+              </div>
+            </div>
+
+            <div class="check-item" data-id="ces-01" data-plan="ces">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Cutting Edge — check if base file already went out for testing</div>
+                <div class="check-meta"><span class="tag-plan">Cutting Edge</span></div>
+              </div>
+            </div>
+            <div class="check-item" data-id="ces-02" data-plan="ces">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Cutting Edge — if not sent, build base file + payroll template and send</div>
+                <div class="check-meta"><span class="tag-plan">Cutting Edge</span></div>
+              </div>
+            </div>
+
+            <div class="check-item" data-id="isd-01" data-plan="isd">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">ISD — raise the "client has deferral file now, why wait" question</div>
+                <div class="check-meta"><span class="tag-plan">ISD</span></div>
+              </div>
+            </div>
+            <div class="check-item" data-id="isd-02" data-plan="isd">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">ISD — prepare deferral analysis package for client contact</div>
+                <div class="check-meta"><span class="tag-plan">ISD</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="check-section" data-section="lab">
+            <div class="check-section-head">
+              <span class="label">The lab</span>
+              <span class="count"><b id="lab-done">0</b> / <span id="lab-total">0</span></span>
+            </div>
+
+            <div class="check-item" data-id="lab-01" data-plan="lab">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Plan Ops Dashboard — scaffold list + single-plan detail view</div>
+                <div class="check-meta"><span class="tag-plan">№ 01 · in flight</span></div>
+              </div>
+            </div>
+            <div class="check-item" data-id="lab-02" data-plan="lab">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Plan Ops Dashboard — ship v0.1 (ugly-but-real)</div>
+                <div class="check-meta"><span class="tag-plan">№ 01 · in flight</span></div>
+              </div>
+            </div>
+            <div class="check-item" data-id="lab-03" data-plan="lab">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Census Validation Tool — minimum viable web wrapper</div>
+                <div class="check-meta"><span class="tag-plan">№ 02 · scaffold</span></div>
+              </div>
+            </div>
+            <div class="check-item" data-id="lab-04" data-plan="lab">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">Deferral Ambiguity Analyzer — extract Pella workaround into reusable tool</div>
+                <div class="check-meta"><span class="tag-plan">№ 03 · derived</span></div>
+              </div>
+            </div>
+            <div class="check-item" data-id="lab-05" data-plan="lab">
+              <div class="check-box"></div>
+              <div>
+                <div class="check-title">One-Pager Portfolio Site — stand up shell, slot in what exists</div>
+                <div class="check-meta"><span class="tag-plan">№ 08 · anchor</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="checklist-foot">
+            <span>Cycle 026 · Apr 22 → May 06, 2026 · state auto-saved locally</span>
+            <button id="checklist-reset">Reset cycle</button>
+          </div>
+
+        </div>
+
+        <div class="slide-foot">
+          <span class="src">Source: <b>Cycle 026 task register</b> · derived from plans 03 – 09 of this brief</span>
+          <span class="folio">Page<b> 11</b> of 11</span>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <button class="navbtn" id="prev-btn">← Prev</button>
+    <div class="dots" id="dots"></div>
+    <span class="kbd">← → to navigate · click bars to jump</span>
+    <button class="navbtn" id="next-btn">Next →</button>
+  </nav>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsContainer = document.getElementById('dots');
+  const slideLabel = document.getElementById('slide-label');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  let current = 0;
+
+  // build dots
+  slides.forEach((s, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+    dot.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(dot);
+  });
+
+  function goTo(i) {
+    if (i < 0 || i >= slides.length) return;
+    slides[current].classList.remove('active');
+    dotsContainer.children[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    dotsContainer.children[current].classList.add('active');
+    slideLabel.textContent = slides[current].dataset.label;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === slides.length - 1;
+    const body = slides[current].querySelector('.slide-body');
+    if (body) body.scrollTop = 0;
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); goTo(current + 1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'PageUp')   { e.preventDefault(); goTo(current - 1); }
+    if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    if (e.key === 'End')  { e.preventDefault(); goTo(slides.length - 1); }
+  });
+
+  prevBtn.disabled = true;
+
+  // LIVE CHECKLIST
+  const CHECKLIST_KEY = 'weekly-brief-checklist-026-mk';
+  const checkItems = document.querySelectorAll('.check-item');
+  const doneCount = document.getElementById('done-count');
+  const totalCount = document.getElementById('total-count');
+  const progressFill = document.getElementById('progress-fill');
+  const workDoneEl = document.getElementById('work-done');
+  const workTotalEl = document.getElementById('work-total');
+  const labDoneEl = document.getElementById('lab-done');
+  const labTotalEl = document.getElementById('lab-total');
+  const filterBar = document.getElementById('filter-bar');
+  const resetBtn = document.getElementById('checklist-reset');
+
+  totalCount.textContent = checkItems.length;
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(CHECKLIST_KEY);
+      if (!raw) return;
+      const done = JSON.parse(raw);
+      if (!Array.isArray(done)) return;
+      const set = new Set(done);
+      checkItems.forEach(item => { if (set.has(item.dataset.id)) item.classList.add('done'); });
+    } catch (e) {}
+  }
+  function saveState() {
+    const done = Array.from(checkItems)
+      .filter(i => i.classList.contains('done'))
+      .map(i => i.dataset.id);
+    try { localStorage.setItem(CHECKLIST_KEY, JSON.stringify(done)); } catch (e) {}
+  }
+  function updateCounts() {
+    const total = checkItems.length;
+    const done = document.querySelectorAll('.check-item.done').length;
+    doneCount.textContent = done;
+    progressFill.style.width = total ? ((done / total) * 100) + '%' : '0%';
+
+    const workItems = document.querySelectorAll('.check-section[data-section="work"] .check-item');
+    const workDone  = document.querySelectorAll('.check-section[data-section="work"] .check-item.done');
+    workDoneEl.textContent = workDone.length;
+    workTotalEl.textContent = workItems.length;
+
+    const labItems = document.querySelectorAll('.check-section[data-section="lab"] .check-item');
+    const labDone  = document.querySelectorAll('.check-section[data-section="lab"] .check-item.done');
+    labDoneEl.textContent = labDone.length;
+    labTotalEl.textContent = labItems.length;
+
+    const countFor = (predicate) => Array.from(checkItems).filter(predicate).length;
+    const counts = {
+      all: total,
+      urgent: countFor(i => i.dataset.urgent === 'true'),
+      callidi: countFor(i => i.dataset.plan === 'callidi'),
+      haverhill: countFor(i => i.dataset.plan === 'haverhill'),
+      pella: countFor(i => i.dataset.plan === 'pella'),
+      ces: countFor(i => i.dataset.plan === 'ces'),
+      isd: countFor(i => i.dataset.plan === 'isd'),
+      lab: countFor(i => i.dataset.plan === 'lab')
+    };
+    Object.keys(counts).forEach(k => {
+      const el = document.querySelector(`[data-count="${k}"]`);
+      if (el) el.textContent = counts[k];
+    });
+  }
+  function applyFilter(filter) {
+    checkItems.forEach(item => {
+      let show = false;
+      if (filter === 'all') show = true;
+      else if (filter === 'urgent') show = item.dataset.urgent === 'true';
+      else show = item.dataset.plan === filter;
+      item.classList.toggle('hidden', !show);
+    });
+    document.querySelectorAll('.check-section').forEach(sec => {
+      const visible = sec.querySelectorAll('.check-item:not(.hidden)').length;
+      sec.style.display = visible ? '' : 'none';
+    });
+  }
+  checkItems.forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.toggle('done');
+      updateCounts();
+      saveState();
+    });
+  });
+  filterBar.addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-chip');
+    if (!btn) return;
+    filterBar.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilter(btn.dataset.filter);
+  });
+  resetBtn.addEventListener('click', () => {
+    if (!confirm('Reset all ticks for this cycle?')) return;
+    checkItems.forEach(i => i.classList.remove('done'));
+    try { localStorage.removeItem(CHECKLIST_KEY); } catch (e) {}
+    updateCounts();
+  });
+
+  loadState();
+  updateCounts();
+</script>
+
+</body>
+</html>

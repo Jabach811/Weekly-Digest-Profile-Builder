@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Weekly Brief · Cycle 029 · Notion Mock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Notion palette */
+    --white:          #ffffff;
+    --warm-white:     #f6f5f4;
+    --warm-dark:      #31302e;
+    --warm-500:       #615d59;
+    --warm-300:       #a39e98;
+
+    --ink:            rgba(0,0,0,0.95);
+    --ink-2:          rgba(0,0,0,0.75);
+
+    --blue:           #0075de;
+    --blue-active:    #005bab;
+    --focus:          #097fe8;
+    --badge-bg:       #f2f9ff;
+    --badge-text:     #097fe8;
+
+    --navy:           #213183;
+    --teal:           #2a9d99;
+    --green:          #1aae39;
+    --orange:         #dd5b00;
+
+    --border:         1px solid rgba(0,0,0,0.1);
+    --border-color:   rgba(0,0,0,0.1);
+
+    --shadow-card:
+      rgba(0,0,0,0.04) 0px 4px 18px,
+      rgba(0,0,0,0.027) 0px 2.025px 7.84688px,
+      rgba(0,0,0,0.02) 0px 0.8px 2.925px,
+      rgba(0,0,0,0.01) 0px 0.175px 1.04062px;
+    --shadow-deep:
+      rgba(0,0,0,0.01) 0px 1px 3px,
+      rgba(0,0,0,0.02) 0px 3px 7px,
+      rgba(0,0,0,0.02) 0px 7px 15px,
+      rgba(0,0,0,0.04) 0px 14px 28px,
+      rgba(0,0,0,0.05) 0px 23px 52px;
+
+    --sans:  'Inter', -apple-system, system-ui, 'Segoe UI', Helvetica, Arial, sans-serif;
+    --serif: 'Source Serif 4', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--white);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-feature-settings: "lnum", "locl";
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    height: 100vh;
+  }
+
+  .slide {
+    min-height: 100vh;
+    scroll-snap-align: start;
+    padding: 56px 80px 64px;
+    display: flex;
+    flex-direction: column;
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .slide.alt {
+    background: var(--warm-white);
+    max-width: none;
+    padding: 56px 80px 64px;
+  }
+  .slide.alt .slide-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─────────── masthead ─────────── */
+
+  .masthead {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 20px;
+    border-bottom: var(--border);
+    margin-bottom: 56px;
+  }
+  .mark {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.1px;
+  }
+  .mark-badge {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    background: var(--ink);
+    color: var(--white);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1;
+  }
+  .masthead .meta {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--warm-500);
+    letter-spacing: 0.1px;
+  }
+  .masthead .meta span + span::before {
+    content: "·";
+    color: var(--warm-300);
+    margin: 0 10px;
+  }
+
+  /* ─────────── type ─────────── */
+
+  .eyebrow {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.33;
+    letter-spacing: 0.125px;
+    color: var(--badge-text);
+    background: var(--badge-bg);
+    padding: 4px 10px;
+    border-radius: 9999px;
+    text-transform: none;
+  }
+
+  h1.display {
+    font-family: var(--serif);
+    font-size: clamp(56px, 7vw, 88px);
+    font-weight: 700;
+    line-height: 1.00;
+    letter-spacing: -2.125px;
+    color: var(--ink);
+    margin-top: 20px;
+    font-feature-settings: "lnum", "locl";
+  }
+  h1.display .accent {
+    color: var(--blue);
+    font-style: italic;
+  }
+
+  h2.section-h {
+    font-family: var(--serif);
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.00;
+    letter-spacing: -1.5px;
+    color: var(--ink);
+  }
+
+  h3.card-h {
+    font-family: var(--sans);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.27;
+    letter-spacing: -0.25px;
+    color: var(--ink);
+  }
+
+  h4.sub-h {
+    font-family: var(--sans);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.40;
+    letter-spacing: -0.125px;
+    color: var(--ink);
+  }
+
+  p.lede {
+    font-family: var(--sans);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.50;
+    letter-spacing: -0.125px;
+    color: var(--warm-500);
+    max-width: 64ch;
+    margin-top: 24px;
+  }
+  p.lede b { color: var(--ink); font-weight: 600; }
+
+  p.body {
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--warm-500);
+  }
+  p.body b { color: var(--ink); font-weight: 600; }
+
+  .caption {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.43;
+    color: var(--warm-500);
+  }
+  .caption-light {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.43;
+    color: var(--warm-500);
+  }
+  .micro {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.33;
+    letter-spacing: 0.125px;
+    color: var(--warm-300);
+  }
+
+  /* ─────────── buttons & badges ─────────── */
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px;
+    background: var(--blue);
+    color: var(--white);
+    border-radius: 4px;
+    border: 1px solid transparent;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 120ms;
+  }
+  .btn-primary:hover { background: var(--blue-active); }
+
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px;
+    background: rgba(0,0,0,0.05);
+    color: var(--ink);
+    border-radius: 4px;
+    border: 1px solid transparent;
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.125px;
+    line-height: 1.33;
+  }
+  .badge.neutral {
+    background: rgba(0,0,0,0.05);
+    color: var(--ink);
+  }
+  .badge.teal   { background: rgba(42,157,153,0.10); color: var(--teal); }
+  .badge.green  { background: rgba(26,174,57,0.10);  color: var(--green); }
+  .badge.orange { background: rgba(221,91,0,0.10);   color: var(--orange); }
+
+  .badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor;
+    display: inline-block;
+  }
+
+  /* ─────────── nav dots ─────────── */
+
+  .nav-dots {
+    position: fixed;
+    right: 28px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 12px;
+    z-index: 20;
+  }
+  .nav-dots a {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(0,0,0,0.15);
+    display: block;
+    transition: background 150ms, transform 150ms;
+  }
+  .nav-dots a:hover { background: var(--blue); transform: scale(1.3); }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 1: COVER
+     ═══════════════════════════════════════════════════ */
+
+  .cover-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1.2fr 0.9fr;
+    gap: 72px;
+    align-content: center;
+    padding-top: 24px;
+  }
+
+  .gauges {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .gauge {
+    background: var(--white);
+    border: var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow-card);
+  }
+  .gauge .label {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--warm-500);
+    margin-bottom: 12px;
+  }
+  .gauge .num {
+    font-family: var(--serif);
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -1.5px;
+    color: var(--ink);
+  }
+  .gauge .sub {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--warm-500);
+    margin-top: 10px;
+    line-height: 1.43;
+  }
+
+  .cover-strip {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: var(--border);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .cover-strip .cell {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--warm-300);
+    letter-spacing: 0.125px;
+  }
+  .cover-strip .cell b {
+    display: block;
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: normal;
+    margin-top: 4px;
+  }
+
+  .cta-row {
+    display: flex; gap: 12px; margin-top: 36px;
+  }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 2: TRIAGE
+     ═══════════════════════════════════════════════════ */
+
+  .section-intro {
+    margin-bottom: 32px;
+  }
+
+  .beacons {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 20px;
+    margin-top: 8px;
+  }
+  .beacon {
+    background: var(--white);
+    border: var(--border);
+    border-radius: 16px;
+    padding: 28px 30px;
+    box-shadow: var(--shadow-card);
+  }
+  .beacon .row-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px;
+  }
+  .beacon-divider {
+    border: none;
+    border-top: var(--border);
+    margin: 22px 0;
+  }
+  .beacon h3.card-h { margin-bottom: 4px; }
+  .beacon .due-line {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--blue);
+    letter-spacing: 0.1px;
+    margin-bottom: 12px;
+  }
+  .beacon.post .due-line { color: var(--green); }
+
+  /* ledger */
+  .ledger-card {
+    margin-top: 32px;
+    background: var(--white);
+    border: var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+  }
+  .ledger-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 24px;
+    border-bottom: var(--border);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--warm-500);
+  }
+  .ledger-head b { color: var(--ink); font-weight: 600; }
+  table.ledger {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+  }
+  table.ledger th {
+    text-align: left;
+    padding: 14px 24px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.125px;
+    color: var(--warm-500);
+    border-bottom: var(--border);
+    background: var(--warm-white);
+  }
+  table.ledger td {
+    padding: 16px 24px;
+    border-bottom: var(--border);
+    color: var(--warm-500);
+    font-variant-numeric: tabular-nums;
+    vertical-align: middle;
+  }
+  table.ledger tr:last-child td { border-bottom: none; }
+  table.ledger td.num {
+    color: var(--warm-300);
+    font-weight: 500;
+    font-size: 14px;
+  }
+  table.ledger td.plan-name {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  table.ledger td.due-cell {
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 14px;
+  }
+  table.ledger td.next-step {
+    color: var(--warm-500);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .monitor { margin-top: 32px; }
+  .monitor-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--warm-500);
+    margin-bottom: 14px;
+  }
+  .monitor-label b { color: var(--ink); font-weight: 600; }
+
+  .chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 14px;
+    border: var(--border);
+    border-radius: 9999px;
+    background: var(--white);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .chip .date {
+    color: var(--warm-500);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.125px;
+  }
+  .chip .note {
+    color: var(--warm-300);
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .closed {
+    margin-top: 20px;
+    padding: 14px 18px;
+    background: var(--white);
+    border: var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--warm-500);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .closed .check {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--green);
+    color: var(--white);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .closed b { color: var(--ink); font-weight: 600; }
+
+  /* ═══════════════════════════════════════════════════
+     SLIDE 3: PLAN DETAIL
+     ═══════════════════════════════════════════════════ */
+
+  .plan-head { margin-bottom: 40px; }
+  .plan-chips {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-top: 24px;
+  }
+
+  .plan-body {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 64px;
+    flex: 1;
+  }
+
+  .plan-col h4.sub-h {
+    margin-top: 28px;
+    margin-bottom: 12px;
+  }
+  .plan-col h4.sub-h:first-child { margin-top: 0; }
+  .plan-col p.body + p.body { margin-top: 14px; }
+
+  .fact-card {
+    background: var(--white);
+    border: var(--border);
+    border-radius: 12px;
+    padding: 8px 24px;
+    box-shadow: var(--shadow-card);
+  }
+  .fact {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: var(--border);
+    align-items: baseline;
+  }
+  .fact:last-child { border-bottom: none; }
+  .fact .k {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--warm-500);
+  }
+  .fact .v {
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .fact .v.soft { color: var(--warm-500); font-weight: 400; }
+
+  .open-items {
+    margin-top: 24px;
+    background: var(--warm-white);
+    border: var(--border);
+    border-radius: 12px;
+    padding: 22px 24px;
+  }
+  .open-items h5 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+  .open-items ul { list-style: none; }
+  .open-items li {
+    padding: 10px 0;
+    font-size: 15px;
+    color: var(--warm-500);
+    line-height: 1.45;
+    display: flex; gap: 12px;
+    border-bottom: var(--border);
+  }
+  .open-items li:last-child { border-bottom: none; }
+  .open-items li::before {
+    content: "";
+    width: 16px; height: 16px;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    background: var(--white);
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav-dots" aria-label="Slide nav">
+  <a href="#s1" title="Cover"></a>
+  <a href="#s2" title="Triage"></a>
+  <a href="#s3" title="Pella"></a>
+</nav>
+
+<!-- ──────────────────────────── SLIDE 1: COVER ──────────────────────────── -->
+<section class="slide" id="s1">
+  <div class="masthead">
+    <div class="mark">
+      <span class="mark-badge">N</span>
+      <span>nbi &nbsp;/&nbsp; weekly brief</span>
+    </div>
+    <div class="meta">
+      <span>WB.029</span><span>rev 2026-04-23</span><span>01 / 10</span>
+    </div>
+  </div>
+
+  <div class="cover-grid">
+    <div>
+      <span class="eyebrow">transmission 029 · fiscal 2026 · wk 17–18</span>
+      <h1 class="display">coverage <span class="accent">cycle.</span></h1>
+      <p class="lede">
+        Two weeks, <b>one OOO in the middle</b>, and <b>two wires landing during it</b>. Pella and Haverhill both hit 5/1 — the Monday I'm back. The work this cycle is hand-off quality: get the coverage pack right, stage the post-wire cleanup, hold projects in their lane.
+      </p>
+      <div class="cta-row">
+        <a href="#s2" class="btn-primary">Open triage</a>
+        <a href="#s3" class="btn-ghost">Plan detail</a>
+      </div>
+    </div>
+
+    <aside class="gauges">
+      <div class="gauge">
+        <div class="label">Active plans</div>
+        <div class="num">04</div>
+        <div class="sub">Move this cycle</div>
+      </div>
+      <div class="gauge">
+        <div class="label">Monitor</div>
+        <div class="num">06</div>
+        <div class="sub">Off the burner</div>
+      </div>
+      <div class="gauge">
+        <div class="label">OOO</div>
+        <div class="num">05</div>
+        <div class="sub">Apr 27 → May 01</div>
+      </div>
+      <div class="gauge">
+        <div class="label">Window</div>
+        <div class="num">14</div>
+        <div class="sub">Apr 22 → May 06</div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="cover-strip">
+    <div class="cell">Operator <b>Joel</b></div>
+    <div class="cell">Role <b>Senior Data Consultant</b></div>
+    <div class="cell">Window <b>Apr 22 → May 06</b></div>
+    <div class="cell">Nav <b>scroll · dots right</b></div>
+  </div>
+</section>
+
+<!-- ──────────────────────────── SLIDE 2: TRIAGE ──────────────────────────── -->
+<section class="slide alt" id="s2">
+  <div class="slide-inner">
+    <div class="masthead">
+      <div class="mark">
+        <span class="mark-badge">N</span>
+        <span>nbi &nbsp;/&nbsp; weekly brief</span>
+      </div>
+      <div class="meta">
+        <span>WB.029</span><span>§ 02 · triage board</span><span>02 / 10</span>
+      </div>
+    </div>
+
+    <div class="section-intro">
+      <span class="eyebrow">§02 · transmission 029 · triage ledger</span>
+      <h1 class="display">the <span class="accent">board.</span></h1>
+      <p class="lede">
+        <b>Four</b> plans need hands this cycle. <b>Two wires</b> land on <b>5/1</b> — mid-OOO. One wrapping up, one still in intake. <b>Six</b> more on monitor. Coverage pack is the through-line.
+      </p>
+    </div>
+
+    <div class="beacons">
+      <div class="beacon">
+        <div class="row-meta">
+          <span class="badge"><span class="dot"></span>Pre-wire · going live · 02</span>
+        </div>
+        <h3 class="card-h">Pella SC</h3>
+        <div class="due-line">Wire 5 / 01</div>
+        <p class="body">Wire hits Friday, <b>mid-OOO</b>. Records side should be easy — population already in our system. <b>Open thread:</b> get the deferral report from the new ADP rep before the 27th so coverage isn't chasing it.</p>
+
+        <hr class="beacon-divider">
+
+        <h3 class="card-h">Haverhill (Havern)</h3>
+        <div class="due-line">Wire 5 / 01</div>
+        <p class="body">Assets inbound 5/1, same day as Pella, <b>during OOO</b>. Base file loaded, AQT flags placed. <b>Open thread:</b> Damien's missing participants still need a final sweep before the wire lands. Hand-off doc is the lever.</p>
+      </div>
+
+      <div class="beacon post">
+        <div class="row-meta">
+          <span class="badge green"><span class="dot"></span>Post-wire · cleanup · 01</span>
+        </div>
+        <h3 class="card-h">Callidi Tas</h3>
+        <div class="due-line">Close target 5 / 06</div>
+        <p class="body">Asset transfer done 4/10. Still blocked on client data (DOB + DOH for the missing-people group) and the one out-of-order loan. Close target: end of this cycle.</p>
+      </div>
+    </div>
+
+    <div class="ledger-card">
+      <div class="ledger-head">
+        <div>ch.02 · active ledger</div>
+        <div>records <b>04</b></div>
+      </div>
+      <table class="ledger">
+        <thead>
+          <tr>
+            <th>№</th><th>Plan</th><th>Stage</th><th>Ball with</th><th>Due</th><th>Next step</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num">01</td>
+            <td class="plan-name">Pella SC</td>
+            <td><span class="badge"><span class="dot"></span>Preparation</span></td>
+            <td>ADP rep</td>
+            <td class="due-cell">May 01</td>
+            <td class="next-step">Get deferral report pre-OOO; confirm base-file need</td>
+          </tr>
+          <tr>
+            <td class="num">02</td>
+            <td class="plan-name">Haverhill (Havern)</td>
+            <td><span class="badge"><span class="dot"></span>Preparation</span></td>
+            <td>Damien</td>
+            <td class="due-cell">May 01</td>
+            <td class="next-step">Close Damien list pre-OOO; prep coverage pack</td>
+          </tr>
+          <tr>
+            <td class="num">03</td>
+            <td class="plan-name">Callidi Tas</td>
+            <td><span class="badge green"><span class="dot"></span>Wrapping up</span></td>
+            <td>Client · Me</td>
+            <td class="due-cell">May 06</td>
+            <td class="next-step">Nudge DOB/DOH; decide loan re-amort; archive</td>
+          </tr>
+          <tr>
+            <td class="num">04</td>
+            <td class="plan-name">Int'l School of Denver</td>
+            <td><span class="badge orange"><span class="dot"></span>Intake</span></td>
+            <td>Client · Team</td>
+            <td class="due-cell">Jul 01</td>
+            <td class="next-step">Ask for deferral file now; write policy framing</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="monitor">
+      <div class="monitor-label">Monitor · off the burner · <b>06 records</b></div>
+      <div class="chip-row">
+        <span class="chip">Stoutco <span class="date">7/01</span><span class="note">client mtg next wk</span></span>
+        <span class="chip">Bonnier <span class="date">7/01</span><span class="note">quiet</span></span>
+        <span class="chip">Leiby's Dairy <span class="date">8/01</span></span>
+        <span class="chip">Prime Healthcare <span class="date">8/01</span><span class="note">on hold</span></span>
+        <span class="chip">Canam Bridges <span class="date">10/01</span></span>
+        <span class="chip">Canam Buildings <span class="date">10/01</span></span>
+      </div>
+    </div>
+
+    <div class="closed">
+      <span class="check">✓</span>
+      Closed last cycle · <b>mapping-validator folded into data-parser</b> · decision logged
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────── SLIDE 3: PLAN — PELLA ──────────────────────────── -->
+<section class="slide" id="s3">
+  <div class="masthead">
+    <div class="mark">
+      <span class="mark-badge">N</span>
+      <span>nbi &nbsp;/&nbsp; weekly brief</span>
+    </div>
+    <div class="meta">
+      <span>WB.029</span><span>§ 03 · plan detail</span><span>03 / 10</span>
+    </div>
+  </div>
+
+  <div class="plan-head">
+    <span class="eyebrow">§03 · active plan · transmission 029</span>
+    <h1 class="display">pella <span class="accent">sc.</span></h1>
+    <div class="plan-chips">
+      <span class="badge"><span class="dot"></span>Preparation</span>
+      <span class="badge neutral">Records · Me</span>
+      <span class="badge neutral">Blocked on · ADP rep</span>
+      <span class="badge"><span class="dot"></span>Wire 5 / 01</span>
+    </div>
+  </div>
+
+  <div class="plan-body">
+    <div class="plan-col">
+      <h4 class="sub-h">What's the move</h4>
+      <p class="body">Wire hits Friday May 1 — <b>mid-OOO</b>. Records side is straightforward since the population is already in our system. The one live thread is the <b>deferral report</b> from the new ADP rep. Get it pre-OOO so coverage isn't chasing it when assets land.</p>
+      <p class="body">Base file is loaded, AQT flags are placed. Coverage pack should flag this as <b>receive-only</b> during the window — acknowledge wire, route to the staging folder, wait for my return.</p>
+
+      <h4 class="sub-h">Off-ramp</h4>
+      <p class="body">Off my plate when the post-wire cleanup ships and the plan tips into monitor status. Target mid-May.</p>
+
+      <h4 class="sub-h">Transmission-worthy</h4>
+      <p class="body">The new ADP rep is still learning our cadence; expect a few back-and-forths on format. Worth noting to the covering person so they don't improvise.</p>
+    </div>
+
+    <aside class="plan-col">
+      <div class="fact-card">
+        <div class="fact"><span class="k">Plan key</span><span class="v">pella-sc</span></div>
+        <div class="fact"><span class="k">Effective</span><span class="v">5 / 01</span></div>
+        <div class="fact"><span class="k">Wire date</span><span class="v">5 / 01</span></div>
+        <div class="fact"><span class="k">Ball with</span><span class="v soft">ADP rep</span></div>
+        <div class="fact"><span class="k">Records lead</span><span class="v">Joel</span></div>
+        <div class="fact"><span class="k">Coverage</span><span class="v soft">receive-only</span></div>
+        <div class="fact"><span class="k">Last touch</span><span class="v soft">2026-04-22</span></div>
+      </div>
+
+      <div class="open-items">
+        <h5>Open items</h5>
+        <ul>
+          <li>Request deferral report from new ADP rep (pre-4/27)</li>
+          <li>Confirm whether we need a fresh base file pull</li>
+          <li>Stage coverage note: receive wire, don't reconcile yet</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</section>
+
+</body>
+</html>

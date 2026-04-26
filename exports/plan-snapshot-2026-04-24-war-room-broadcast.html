@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plan Snapshot · 2026-04-24 · War Room Broadcast</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07131f;
+      --bg-2: #0d1d2e;
+      --panel: rgba(13, 29, 46, 0.88);
+      --panel-2: rgba(18, 37, 58, 0.92);
+      --ink: #f4f7fb;
+      --muted: #b2c0d2;
+      --line: rgba(244, 247, 251, 0.12);
+      --line-strong: rgba(244, 247, 251, 0.24);
+      --red: #ff4f43;
+      --amber: #ffbf4d;
+      --green: #59d184;
+      --blue: #57a9ff;
+      --title-size: clamp(2rem, 6vw, 5.1rem);
+      --h2-size: clamp(1.2rem, 2.7vw, 2.15rem);
+      --h3-size: clamp(0.95rem, 1.55vw, 1.2rem);
+      --body-size: clamp(0.78rem, 1.02vw, 0.98rem);
+      --small-size: clamp(0.64rem, 0.82vw, 0.79rem);
+      --pad: clamp(1rem, 3vw, 2.5rem);
+      --gap: clamp(0.65rem, 1.3vw, 1rem);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top right, rgba(255,79,67,0.18), transparent 20%),
+        radial-gradient(circle at bottom left, rgba(87,169,255,0.15), transparent 25%),
+        linear-gradient(180deg, #03101a 0%, var(--bg) 100%);
+      color: var(--ink);
+      font-family: Inter, sans-serif;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+    .progress-bar {
+      position: fixed; top: 0; left: 0; height: 4px; width: 0;
+      background: linear-gradient(90deg, var(--red), var(--amber), var(--blue));
+      z-index: 1000; transition: width 220ms ease;
+    }
+    .nav-dots {
+      position: fixed; right: 0.8rem; top: 50%; transform: translateY(-50%);
+      z-index: 1000; display: flex; flex-direction: column; gap: 0.45rem;
+    }
+    .nav-dots button {
+      width: 0.78rem; height: 0.78rem; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.28); background: rgba(255,255,255,0.08); cursor: pointer;
+    }
+    .nav-dots button.active { background: var(--red); border-color: var(--red); transform: scale(1.12); }
+    .slide {
+      width: 100vw; height: 100vh; height: 100dvh; overflow: hidden;
+      scroll-snap-align: start; position: relative; display: flex; flex-direction: column;
+    }
+    .slide::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.45;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 100% 2rem, 2rem 100%;
+    }
+    .slide-content {
+      flex: 1; max-height: 100%; overflow: hidden; position: relative; z-index: 1;
+      padding: var(--pad); display: flex; flex-direction: column; gap: var(--gap);
+    }
+    .masthead, .footerline {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: "IBM Plex Mono", monospace; font-size: var(--small-size);
+      text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+    }
+    .masthead { padding-bottom: 0.7rem; border-bottom: 1px solid var(--line-strong); }
+    .brand {
+      display: inline-flex; align-items: center; gap: 0.6rem; color: var(--ink); font-weight: 600;
+    }
+    .brand::before {
+      content: "live"; display: inline-flex; align-items: center; justify-content: center;
+      height: 1.25rem; padding: 0 0.4rem; border-radius: 999px; background: var(--red);
+      color: white; font-size: 0.68rem; font-weight: 700;
+    }
+    h1, h2, h3 { margin: 0; }
+    h1, h2 { font-family: "Archivo Expanded", sans-serif; text-transform: uppercase; letter-spacing: -0.04em; }
+    h1 { font-size: var(--title-size); line-height: 0.9; max-width: 10ch; }
+    h1 .accent { color: var(--amber); }
+    h2 { font-size: var(--h2-size); line-height: 0.95; }
+    h3 { font-size: var(--h3-size); line-height: 1.1; font-weight: 800; text-transform: uppercase; }
+    p, li { margin: 0; font-size: var(--body-size); line-height: 1.42; }
+    .lede { max-width: 66ch; color: #d9e2ef; font-size: clamp(0.95rem, 1.2vw, 1.08rem); line-height: 1.52; }
+    .hero-grid, .two-grid, .metric-grid, .bullet-grid, .roster-grid, .window-grid, .check-grid {
+      display: grid; gap: 0.8rem; min-height: 0;
+    }
+    .hero-grid { grid-template-columns: 1.1fr 0.9fr; flex: 1; }
+    .two-grid, .roster-grid, .check-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .metric-grid, .window-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent 32%), var(--panel);
+      border: 1px solid var(--line); box-shadow: 0 24px 80px rgba(0,0,0,0.24); min-height: 0;
+      display: flex; flex-direction: column;
+    }
+    .panel-header {
+      padding: 0.72rem 0.9rem; border-bottom: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center; gap: 0.45rem;
+    }
+    .panel-body { padding: 0.9rem; display: grid; gap: 0.7rem; min-height: 0; }
+    .metric {
+      background: var(--panel-2); border: 1px solid var(--line); padding: 0.75rem; display: grid; gap: 0.3rem;
+    }
+    .metric .k, .mini, .tag {
+      font-family: "IBM Plex Mono", monospace; font-size: var(--small-size); text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted);
+    }
+    .metric .n {
+      font-family: "Archivo Expanded", sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.9rem); line-height: 0.9;
+      letter-spacing: -0.04em;
+    }
+    .tagline {
+      display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.45rem;
+      border: 1px solid currentColor; font-family: "IBM Plex Mono", monospace; font-size: var(--small-size);
+      text-transform: uppercase; letter-spacing: 0.08em; color: currentColor;
+    }
+    .is-red { color: var(--red); } .is-amber { color: var(--amber); } .is-green { color: var(--green); } .is-blue { color: var(--blue); }
+    .story {
+      display: grid; gap: 0.28rem; padding-left: 0.85rem; border-left: 0.22rem solid rgba(255,255,255,0.14);
+    }
+    .story p { color: #d4ddeb; }
+    .list { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.48rem; }
+    .list li { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem; }
+    .dot { width: 0.55rem; height: 0.55rem; border-radius: 999px; margin-top: 0.34rem; background: var(--red); }
+    .roster-row {
+      display: grid; grid-template-columns: 1.2fr 0.7fr 0.9fr; gap: 0.65rem; padding: 0.65rem 0; border-bottom: 1px solid var(--line);
+    }
+    .roster-row:last-child { border-bottom: none; }
+    .roster-row p { color: #d5deea; }
+    .window {
+      background: var(--panel-2); border: 1px solid var(--line); padding: 0.8rem; display: grid; gap: 0.36rem;
+    }
+    .window .date { font-family: "IBM Plex Mono", monospace; font-size: var(--small-size); color: var(--amber); text-transform: uppercase; letter-spacing: 0.08em; }
+    .checklist { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+    .checklist li { display: grid; grid-template-columns: auto 1fr; gap: 0.52rem; padding-bottom: 0.45rem; border-bottom: 1px dashed var(--line); }
+    .box { width: 1rem; height: 1rem; border: 1px solid var(--line-strong); margin-top: 0.18rem; }
+    @media (max-width: 980px) {
+      .hero-grid, .two-grid, .metric-grid, .bullet-grid, .roster-grid, .window-grid, .check-grid { grid-template-columns: 1fr; }
+      .roster-row { grid-template-columns: 1fr; }
+    }
+    @media (max-height: 700px) {
+      :root { --pad: clamp(0.8rem, 2.8vw, 1.8rem); --gap: clamp(0.45rem, 0.95vw, 0.8rem); --title-size: clamp(1.7rem, 4.2vw, 3.5rem); --body-size: clamp(0.7rem, 0.94vw, 0.9rem); }
+    }
+    @media (max-height: 600px) { .nav-dots { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="progress-bar"></div>
+  <nav class="nav-dots" aria-label="Slide navigation"></nav>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">War Room Broadcast</span><span>snapshot 2026-04-24 · live cut</span></div>
+    <div class="hero-grid">
+      <article class="panel">
+        <div class="panel-body">
+          <div class="mini">opening bulletin</div>
+          <h1>the book got <span class="accent">sharper</span>.</h1>
+          <p class="lede">Horizon plans are now date-anchored. Live plans carry clearer clocks. What is still fuzzy is no longer hidden in soft language; it is mostly sitting in contradictions, missing identifiers, or real blockers.</p>
+          <div class="metric-grid">
+            <div class="metric"><span class="k">total plans</span><span class="n">13</span></div>
+            <div class="metric"><span class="k">active now</span><span class="n">7</span></div>
+            <div class="metric"><span class="k">hard fuzz</span><span class="n">5</span></div>
+            <div class="metric"><span class="k">near windows</span><span class="n">6</span></div>
+          </div>
+        </div>
+      </article>
+      <article class="panel">
+        <div class="panel-header"><h3>Broadcast read</h3><span class="tagline is-red">on air</span></div>
+        <div class="panel-body">
+          <div class="story"><strong>Good news</strong><p>Callidi, Haverhill, and TMG each cleared something material.</p></div>
+          <div class="story"><strong>Live pressure</strong><p>COCC routing, Callidi loan routing, Pella report chase, and Banyan identifiers still want hands.</p></div>
+          <div class="story"><strong>Timing pressure</strong><p>4/24 or 4/27, 5/1, 5/14-5/27, 5/28, and 6/1 are the dates that actually shape this next stretch.</p></div>
+        </div>
+      </article>
+    </div>
+    <div class="footerline"><span>slides 01 / 08</span><span>war room broadcast</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Top Story</span><span>completed or materially de-risked</span></div>
+    <h2>What actually landed</h2>
+    <div class="two-grid">
+      <article class="panel"><div class="panel-header"><h3>Callidi</h3><span class="tagline is-green">landed</span></div><div class="panel-body"><p>Informatica resolved. Balances loaded. Dummy reversal complete. <strong>$11M restored and 29 ref numbers reversed</strong>.</p><p>The plan is not done, but the external-system choke point is behind it.</p></div></article>
+      <article class="panel"><div class="panel-header"><h3>Haverhill</h3><span class="tagline is-green">staged</span></div><div class="panel-body"><p>Base file loaded, AQT fix explained, flags placed. The plan is now mostly a communication and coverage problem before 5/1.</p></div></article>
+      <article class="panel"><div class="panel-header"><h3>TMG</h3><span class="tagline is-green">breakthrough</span></div><div class="panel-body"><p>Self-calculated YOS matched vendor records. Exposure shrank toward a one-case client conversation instead of a wide apology.</p></div></article>
+      <article class="panel"><div class="panel-header"><h3>Read this right</h3><span class="tagline is-amber">not closed</span></div><div class="panel-body"><p>These are cleaner packets, not silent closures. The remaining work is still real and still on the board.</p></div></article>
+    </div>
+    <div class="footerline"><span>slides 02 / 08</span><span>good packets, not fake closure</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Live Desk</span><span>active lines</span></div>
+    <h2>What is moving right now</h2>
+    <div class="two-grid">
+      <article class="panel"><div class="panel-header"><h3>Must move</h3><span class="tagline is-red">hot</span></div><div class="panel-body">
+        <div class="story"><strong>COCC</strong><p>Routing defect and payroll cleanup active; residual dividends expected week of 4/27.</p></div>
+        <div class="story"><strong>Callidi</strong><p>XKB/XKC loan refs still not landing in Transact Detail; elections sit behind that fix.</p></div>
+        <div class="story"><strong>Pella</strong><p>5/1 liquidation is 7 days out from 4/24; ADP deferral report is still missing.</p></div>
+        <div class="story"><strong>TMG</strong><p>~300 participants need the vesting flip; Monday YOS load is the active move.</p></div>
+      </div></article>
+      <article class="panel"><div class="panel-header"><h3>Moving, but steadier</h3><span class="tagline is-blue">watch live</span></div><div class="panel-body">
+        <div class="story"><strong>Banyan</strong><p>Limited-access setup sits in front of 5/14-5/27 and the 6/1 wire.</p></div>
+        <div class="story"><strong>Haverhill</strong><p>5/1 asset day during OOO; NBI email and handoff remain.</p></div>
+        <div class="story"><strong>ISD</strong><p>Partial-scope plan with startup-vs-merger deferral policy still unsettled.</p></div>
+      </div></article>
+    </div>
+    <div class="footerline"><span>slides 03 / 08</span><span>live desk split</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Alert Bar</span><span>contradictions and missing facts</span></div>
+    <h2>What still does not reconcile cleanly</h2>
+    <article class="panel"><div class="panel-header"><h3>Current alerts</h3><span class="tagline is-amber">verify</span></div><div class="panel-body">
+      <ul class="list">
+        <li><span class="dot"></span><span><strong>Banyan</strong> case number claim collides with Canam Bridges.</span></li>
+        <li><span class="dot"></span><span><strong>Banyan</strong> display naming still needs confirmation.</span></li>
+        <li><span class="dot"></span><span><strong>Callidi</strong> older loan issue may or may not be the same fault as XKB/XKC.</span></li>
+        <li><span class="dot"></span><span><strong>Callidi</strong> DOB/DOH closure still was never stated explicitly.</span></li>
+        <li><span class="dot"></span><span><strong>COCC</strong> and <strong>TMG</strong> still have case numbers missing from the record.</span></li>
+      </ul>
+    </div></article>
+    <div class="footerline"><span>slides 04 / 08</span><span>alert layer</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Calendar Wall</span><span>dated windows</span></div>
+    <h2>The next dates that matter</h2>
+    <div class="window-grid">
+      <article class="window"><span class="date">4/24 or 4/27</span><h3>COCC + Pella</h3><p>COCC routing fix target and Pella escalation target.</p></article>
+      <article class="window"><span class="date">4/27-5/1</span><h3>Haverhill OOO</h3><p>Coverage window before the 5/1 asset day.</p></article>
+      <article class="window"><span class="date">5/1</span><h3>Pella + Haverhill</h3><p>Pella liquidation and Haverhill asset day both hit here.</p></article>
+      <article class="window"><span class="date">5/14-5/27</span><h3>Banyan</h3><p>Limited-access window.</p></article>
+      <article class="window"><span class="date">5/28</span><h3>Banyan</h3><p>Blackout lifts.</p></article>
+      <article class="window"><span class="date">6/1</span><h3>Banyan</h3><p>Wire / asset transfer.</p></article>
+      <article class="window"><span class="date">7/1</span><h3>ISD / Stoutco / Bonnier</h3><p>The July horizon starts.</p></article>
+      <article class="window"><span class="date">8/1 + 10/1</span><h3>Prime / Leibys / Canam</h3><p>August and October lines stay parked unless the dates move.</p></article>
+    </div>
+    <div class="footerline"><span>slides 05 / 08</span><span>calendar wall</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Roster Sweep</span><span>all plans</span></div>
+    <h2>The full board in one pass</h2>
+    <div class="roster-grid">
+      <article class="panel"><div class="panel-header"><h3>Live book</h3><span class="tagline is-blue">7 plans</span></div><div class="panel-body">
+        <div class="roster-row"><div><strong>Callidi</strong><p>Balances loaded, loans blocked, elections pending.</p></div><div><span class="tagline is-red">ramping</span></div><div><span class="mini">4/1 effective</span></div></div>
+        <div class="roster-row"><div><strong>COCC</strong><p>Routing repair + payroll cleanup.</p></div><div><span class="tagline is-red">active</span></div><div><span class="mini">dates TBD</span></div></div>
+        <div class="roster-row"><div><strong>Pella</strong><p>Deferral report chase before 5/1.</p></div><div><span class="tagline is-red">active</span></div><div><span class="mini">5/1</span></div></div>
+        <div class="roster-row"><div><strong>Haverhill</strong><p>Staged; email and handoff remain.</p></div><div><span class="tagline is-green">active</span></div><div><span class="mini">5/1</span></div></div>
+        <div class="roster-row"><div><strong>Banyan</strong><p>Prep route active, identifiers not settled.</p></div><div><span class="tagline is-blue">active</span></div><div><span class="mini">5/28 · 6/1</span></div></div>
+        <div class="roster-row"><div><strong>TMG</strong><p>YOS load remains the live move.</p></div><div><span class="tagline is-green">active</span></div><div><span class="mini">~300 flips</span></div></div>
+        <div class="roster-row"><div><strong>ISD</strong><p>Policy call still open.</p></div><div><span class="tagline is-blue">active</span></div><div><span class="mini">7/1</span></div></div>
+      </div></article>
+      <article class="panel"><div class="panel-header"><h3>Horizon book</h3><span class="tagline is-amber">6 plans</span></div><div class="panel-body">
+        <div class="roster-row"><div><strong>Prime</strong><p>No active work on file between 4/22 and 8/1 unless schedule moves.</p></div><div><span class="tagline is-amber">hold</span></div><div><span class="mini">8/1</span></div></div>
+        <div class="roster-row"><div><strong>Bonnier</strong><p>7/1 window. 0 open items on file as of 4/22.</p></div><div><span class="tagline is-amber">future</span></div><div><span class="mini">7/1</span></div></div>
+        <div class="roster-row"><div><strong>Stoutco</strong><p>7/1 window. No kickoff meeting yet; 0 open items on file.</p></div><div><span class="tagline is-amber">future</span></div><div><span class="mini">7/1</span></div></div>
+        <div class="roster-row"><div><strong>Leibys</strong><p>8/1 window. Meeting canceled 4/22; no active work before August unless schedule moves.</p></div><div><span class="tagline is-amber">future</span></div><div><span class="mini">8/1</span></div></div>
+        <div class="roster-row"><div><strong>Canam Bridges</strong><p>10/1 window. Monitor only for schedule movement.</p></div><div><span class="tagline is-amber">future</span></div><div><span class="mini">10/1</span></div></div>
+        <div class="roster-row"><div><strong>Canam Bldgs</strong><p>10/1 window. Open items on file: 0 as of 4/22.</p></div><div><span class="tagline is-amber">future</span></div><div><span class="mini">10/1</span></div></div>
+      </div></article>
+    </div>
+    <div class="footerline"><span>slides 06 / 08</span><span>roster sweep</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Action Crawl</span><span>carry list</span></div>
+    <h2>What this broadcast says to do next</h2>
+    <div class="check-grid">
+      <article class="panel"><div class="panel-header"><h3>Do next</h3><span class="tagline is-red">action</span></div><div class="panel-body">
+        <ul class="checklist">
+          <li><span class="box"></span><span>Fix <strong>COCC</strong> routing and verify payroll cleanup.</span></li>
+          <li><span class="box"></span><span>Resolve <strong>Callidi</strong> XKB/XKC and run loans.</span></li>
+          <li><span class="box"></span><span>Pull <strong>Pella</strong> deferral report via Sally / specific contact.</span></li>
+          <li><span class="box"></span><span>Send <strong>Haverhill</strong> NBI email and finish OOO handoff.</span></li>
+          <li><span class="box"></span><span>Load <strong>TMG</strong> YOS and verify flips for ~300 participants.</span></li>
+          <li><span class="box"></span><span>Confirm <strong>Banyan</strong> case number and naming.</span></li>
+        </ul>
+      </div></article>
+      <article class="panel"><div class="panel-header"><h3>One-line read</h3><span class="tagline is-green">summary</span></div><div class="panel-body">
+        <p>The book is cleaner, more measurable, and more trustworthy than it was before, but the routes that still matter are concentrated in a small set of real blockers rather than broad drift.</p>
+      </div></article>
+    </div>
+    <div class="footerline"><span>slides 07 / 08</span><span>action crawl</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Sign-off</span><span>theme note</span></div>
+    <article class="panel"><div class="panel-body">
+      <h2>War room broadcast works when the week feels live.</h2>
+      <p class="lede">This cut is best when you want urgency, movement, and instant readability without losing the numbers that matter.</p>
+    </div></article>
+    <div class="footerline"><span>slides 08 / 08</span><span>broadcast complete</span></div>
+  </div></section>
+
+  <script>
+    class SlidePresentation {
+      constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.progressBar = document.querySelector('.progress-bar');
+        this.navDotsContainer = document.querySelector('.nav-dots');
+        this.currentSlide = 0;
+        this.setupNavDots(); this.setupObservers(); this.setupEvents(); this.updateUI(0);
+      }
+      setupNavDots() {
+        this.navDotsContainer.innerHTML = '';
+        this.slides.forEach((_, i) => {
+          const dot = document.createElement('button');
+          dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+          dot.addEventListener('click', () => this.goToSlide(i));
+          this.navDotsContainer.appendChild(dot);
+        });
+      }
+      setupObservers() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => { if (entry.isIntersecting) this.updateUI(this.slides.indexOf(entry.target)); });
+        }, { threshold: 0.55 });
+        this.slides.forEach((slide) => observer.observe(slide));
+      }
+      setupEvents() {
+        document.addEventListener('keydown', (event) => {
+          if (['ArrowDown','ArrowRight',' ','PageDown'].includes(event.key)) { event.preventDefault(); this.goToSlide(Math.min(this.currentSlide + 1, this.slides.length - 1)); }
+          if (['ArrowUp','ArrowLeft','PageUp'].includes(event.key)) { event.preventDefault(); this.goToSlide(Math.max(this.currentSlide - 1, 0)); }
+        });
+      }
+      goToSlide(index) { this.slides[index].scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }
+      updateUI(index) {
+        this.currentSlide = index;
+        this.progressBar.style.width = `${((index + 1) / this.slides.length) * 100}%`;
+        Array.from(this.navDotsContainer.children).forEach((dot, i) => dot.classList.toggle('active', i === index));
+      }
+    }
+    new SlidePresentation();
+  </script>
+</body>
+</html>

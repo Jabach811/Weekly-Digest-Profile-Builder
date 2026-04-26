@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plan Snapshot · 2026-04-24 · Black File Evidence Board</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=IBM+Plex+Mono:wght@400;500;600&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f6f1e8;
+      --paper-2: #ece4d6;
+      --ink: #15120f;
+      --muted: #6f655d;
+      --line: rgba(21,18,15,0.14);
+      --line-strong: rgba(21,18,15,0.28);
+      --red: #ad261b;
+      --amber: #9f7630;
+      --green: #2f6f52;
+      --black: #0f0f10;
+      --title-size: clamp(2rem, 6vw, 5.3rem);
+      --h2-size: clamp(1.25rem, 2.8vw, 2.2rem);
+      --h3-size: clamp(0.95rem, 1.6vw, 1.2rem);
+      --body-size: clamp(0.78rem, 1.04vw, 0.98rem);
+      --small-size: clamp(0.64rem, 0.84vw, 0.8rem);
+      --pad: clamp(1rem, 3vw, 2.6rem);
+      --gap: clamp(0.7rem, 1.35vw, 1rem);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%; margin: 0; overflow-x: hidden;
+      background:
+        radial-gradient(circle at top left, rgba(173,38,27,0.08), transparent 22%),
+        linear-gradient(180deg, #fbf8f1 0%, var(--paper) 100%);
+      color: var(--ink); font-family: "Public Sans", sans-serif; scroll-snap-type: y mandatory; scroll-behavior: smooth;
+    }
+    .progress-bar { position: fixed; top: 0; left: 0; height: 4px; width: 0; background: linear-gradient(90deg, var(--red), #d5655c); z-index: 1000; transition: width 220ms ease; }
+    .nav-dots { position: fixed; right: 0.8rem; top: 50%; transform: translateY(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 0.45rem; }
+    .nav-dots button { width: 0.76rem; height: 0.76rem; border-radius: 999px; border: 1px solid rgba(21,18,15,0.26); background: rgba(255,255,255,0.7); cursor: pointer; }
+    .nav-dots button.active { background: var(--red); border-color: var(--red); transform: scale(1.1); }
+    .slide { width: 100vw; height: 100vh; height: 100dvh; overflow: hidden; scroll-snap-align: start; position: relative; display: flex; flex-direction: column; }
+    .slide::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.5; background-image: linear-gradient(rgba(21,18,15,0.022) 1px, transparent 1px), linear-gradient(90deg, rgba(21,18,15,0.018) 1px, transparent 1px); background-size: 100% 2rem, 2rem 100%; }
+    .slide-content { flex: 1; max-height: 100%; overflow: hidden; position: relative; z-index: 1; padding: var(--pad); display: flex; flex-direction: column; gap: var(--gap); }
+    .masthead, .footerline { display: flex; justify-content: space-between; align-items: center; font-family: "IBM Plex Mono", monospace; font-size: var(--small-size); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .masthead { padding-bottom: 0.7rem; border-bottom: 1px solid var(--line-strong); }
+    .brand { display: inline-flex; align-items: center; gap: 0.6rem; font-weight: 600; color: var(--ink); }
+    .brand::before { content: "evidence"; padding: 0.14rem 0.4rem; border: 1px solid var(--red); color: var(--red); font-size: 0.66rem; }
+    h1, h2, h3 { margin: 0; }
+    h1 { font-family: "Fraunces", serif; font-size: var(--title-size); line-height: 0.94; letter-spacing: -0.04em; font-weight: 900; max-width: 11ch; }
+    h1 .accent { color: var(--red); }
+    h2 { font-family: "Fraunces", serif; font-size: var(--h2-size); line-height: 1; letter-spacing: -0.03em; font-weight: 700; }
+    h3 { font-size: var(--h3-size); line-height: 1.1; font-weight: 800; text-transform: uppercase; }
+    p, li { margin: 0; font-size: var(--body-size); line-height: 1.42; }
+    .lede { max-width: 64ch; color: var(--muted); font-size: clamp(0.95rem, 1.2vw, 1.08rem); line-height: 1.54; }
+    .hero-grid, .two-grid, .metric-grid, .card-grid, .timeline-grid, .check-grid { display: grid; gap: 0.8rem; min-height: 0; }
+    .hero-grid { grid-template-columns: 1.05fr 0.95fr; flex: 1; }
+    .two-grid, .check-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .metric-grid, .timeline-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .panel { background: rgba(255,255,255,0.72); border: 1px solid var(--line); box-shadow: 0 24px 80px rgba(40,24,12,0.12); min-height: 0; display: flex; flex-direction: column; }
+    .panel-header { padding: 0.72rem 0.9rem; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; gap: 0.45rem; }
+    .panel-body { padding: 0.9rem; display: grid; gap: 0.7rem; min-height: 0; }
+    .metric { background: rgba(255,255,255,0.88); border: 1px solid var(--line); padding: 0.75rem; display: grid; gap: 0.3rem; }
+    .metric .k, .mini, .tag { font-family: "IBM Plex Mono", monospace; font-size: var(--small-size); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+    .metric .n { font-family: "Fraunces", serif; font-size: clamp(1.9rem, 3.8vw, 3rem); line-height: 0.9; font-weight: 900; }
+    .tagline { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.44rem; border: 1px solid currentColor; font-family: "IBM Plex Mono", monospace; font-size: var(--small-size); text-transform: uppercase; letter-spacing: 0.08em; color: currentColor; }
+    .is-red { color: var(--red); } .is-amber { color: var(--amber); } .is-green { color: var(--green); }
+    .evidence { display: grid; gap: 0.35rem; padding-left: 0.95rem; border-left: 0.25rem solid rgba(173,38,27,0.18); }
+    .evidence p { color: var(--muted); }
+    .list { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.48rem; }
+    .list li { display: grid; grid-template-columns: auto 1fr; gap: 0.5rem; }
+    .dot { width: 0.55rem; height: 0.55rem; border-radius: 999px; margin-top: 0.34rem; background: var(--red); }
+    .fact-card { background: var(--black); color: white; padding: 0.85rem; display: grid; gap: 0.35rem; }
+    .fact-card .mini { color: #b8b8bc; }
+    .timeline { background: rgba(255,255,255,0.85); border: 1px solid var(--line); padding: 0.8rem; display: grid; gap: 0.35rem; }
+    .timeline .date { font-family: "IBM Plex Mono", monospace; font-size: var(--small-size); color: var(--red); text-transform: uppercase; letter-spacing: 0.08em; }
+    .checklist { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; }
+    .checklist li { display: grid; grid-template-columns: auto 1fr; gap: 0.52rem; padding-bottom: 0.45rem; border-bottom: 1px dashed var(--line); }
+    .box { width: 1rem; height: 1rem; border: 1px solid var(--line-strong); margin-top: 0.18rem; }
+    @media (max-width: 980px) {
+      .hero-grid, .two-grid, .metric-grid, .card-grid, .timeline-grid, .check-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-height: 700px) {
+      :root { --pad: clamp(0.8rem, 2.8vw, 1.9rem); --gap: clamp(0.45rem, 0.95vw, 0.8rem); --title-size: clamp(1.7rem, 4.2vw, 3.6rem); --body-size: clamp(0.7rem, 0.94vw, 0.9rem); }
+    }
+    @media (max-height: 600px) { .nav-dots { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="progress-bar"></div>
+  <nav class="nav-dots" aria-label="Slide navigation"></nav>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Black File / Evidence Board</span><span>snapshot 2026-04-24</span></div>
+    <div class="hero-grid">
+      <article class="panel"><div class="panel-body">
+        <div class="mini">case summary</div>
+        <h1>the file is <span class="accent">cleaner</span>, not quieter.</h1>
+        <p class="lede">This board treats the plan state like a case file: resolved facts, live evidence, open contradictions, and upcoming dates. The improvement is real. The remaining risk is concentrated and named.</p>
+        <div class="metric-grid">
+          <div class="metric"><span class="k">resolved packets</span><span class="n">3</span></div>
+          <div class="metric"><span class="k">active lines</span><span class="n">7</span></div>
+          <div class="metric"><span class="k">open contradictions</span><span class="n">5</span></div>
+          <div class="metric"><span class="k">dated windows</span><span class="n">9</span></div>
+        </div>
+      </div></article>
+      <article class="panel"><div class="panel-header"><h3>Board thesis</h3><span class="tagline is-red">evidence</span></div><div class="panel-body">
+        <div class="evidence"><strong>Improvement</strong><p>The plan set now uses dates and counts where it previously used vague distance words.</p></div>
+        <div class="evidence"><strong>Risk</strong><p>What remains uncertain is mostly contradiction-level uncertainty, not language-level vagueness.</p></div>
+        <div class="evidence"><strong>Conclusion</strong><p>This is easier to operate because the uncertainty has been pushed into named buckets.</p></div>
+      </div></article>
+    </div>
+    <div class="footerline"><span>slides 01 / 08</span><span>evidence board</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Exhibit A</span><span>completed or de-risked</span></div>
+    <h2>Resolved facts</h2>
+    <div class="card-grid">
+      <article class="fact-card"><span class="mini">Callidi</span><h3>Informatica resolved, balances loaded, dummy reversal complete.</h3><p>$11M restored. 29 ref numbers reversed.</p></article>
+      <article class="fact-card"><span class="mini">Haverhill</span><h3>Base file loaded, AQT fix explained, flags placed.</h3><p>Remaining work is communication and OOO coverage, not unknown prep.</p></article>
+      <article class="fact-card"><span class="mini">TMG</span><h3>Self-calculated YOS matched vendor records.</h3><p>Exposure reduced toward a one-case client conversation.</p></article>
+      <article class="fact-card"><span class="mini">Caution</span><h3>These are not closures.</h3><p>They are proof that specific risk pockets got smaller.</p></article>
+    </div>
+    <div class="footerline"><span>slides 02 / 08</span><span>exhibit a</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Exhibit B</span><span>active work</span></div>
+    <h2>Live evidence</h2>
+    <div class="two-grid">
+      <article class="panel"><div class="panel-header"><h3>Immediate work</h3><span class="tagline is-red">active</span></div><div class="panel-body">
+        <div class="evidence"><strong>Callidi</strong><p>XKB/XKC still not landing in Transact Detail; elections sit behind the fix.</p></div>
+        <div class="evidence"><strong>COCC</strong><p>Routing defect and payroll cleanup are active; residual dividends expected week of 4/27.</p></div>
+        <div class="evidence"><strong>Pella</strong><p>5/1 liquidation is 7 days out from 4/24 and the ADP deferral report is still missing.</p></div>
+        <div class="evidence"><strong>TMG</strong><p>~300 participants need the vesting flip; Monday YOS load is the live step.</p></div>
+      </div></article>
+      <article class="panel"><div class="panel-header"><h3>Current, but steadier</h3><span class="tagline is-green">active</span></div><div class="panel-body">
+        <div class="evidence"><strong>Banyan</strong><p>Setup work continues in front of 5/14-5/27 and 6/1.</p></div>
+        <div class="evidence"><strong>Haverhill</strong><p>5/1 asset day during OOO; NBI email and handoff remain on file.</p></div>
+        <div class="evidence"><strong>ISD</strong><p>Partial-scope plan still carries the startup-vs-merger deferral policy debate.</p></div>
+      </div></article>
+    </div>
+    <div class="footerline"><span>slides 03 / 08</span><span>exhibit b</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Exhibit C</span><span>contradictions</span></div>
+    <h2>Open contradictions and missing identifiers</h2>
+    <article class="panel"><div class="panel-header"><h3>Open contradiction chain</h3><span class="tagline is-amber">pending confirmation</span></div><div class="panel-body">
+      <ul class="list">
+        <li><span class="dot"></span><span><strong>Banyan</strong> claimed case number collides with Canam Bridges.</span></li>
+        <li><span class="dot"></span><span><strong>Banyan</strong> display naming remains unresolved.</span></li>
+        <li><span class="dot"></span><span><strong>Callidi</strong> older loan issue may be separate from XKB/XKC or may be the same fault wearing a new name.</span></li>
+        <li><span class="dot"></span><span><strong>Callidi</strong> DOB/DOH closure still is not explicitly stated even though downstream work implies resolution.</span></li>
+        <li><span class="dot"></span><span><strong>COCC</strong> and <strong>TMG</strong> still lack case numbers in file state.</span></li>
+      </ul>
+    </div></article>
+    <div class="footerline"><span>slides 04 / 08</span><span>exhibit c</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Exhibit D</span><span>dated windows</span></div>
+    <h2>Date chain</h2>
+    <div class="timeline-grid">
+      <article class="timeline"><span class="date">4/24 or 4/27</span><h3>COCC + Pella</h3><p>Routing fix target and escalation target.</p></article>
+      <article class="timeline"><span class="date">4/27-5/1</span><h3>Haverhill OOO</h3><p>Coverage interval before the asset day.</p></article>
+      <article class="timeline"><span class="date">5/1</span><h3>Pella + Haverhill</h3><p>Liquidation and asset day hit together.</p></article>
+      <article class="timeline"><span class="date">5/14-5/27</span><h3>Banyan</h3><p>Limited-access window.</p></article>
+      <article class="timeline"><span class="date">5/28</span><h3>Banyan</h3><p>Blackout lifts.</p></article>
+      <article class="timeline"><span class="date">6/1</span><h3>Banyan</h3><p>Wire / asset transfer.</p></article>
+      <article class="timeline"><span class="date">7/1</span><h3>ISD / Stoutco / Bonnier</h3><p>July windows.</p></article>
+      <article class="timeline"><span class="date">8/1 + 10/1</span><h3>Prime / Leibys / Canam</h3><p>Later horizons remain parked unless schedule movement occurs.</p></article>
+    </div>
+    <div class="footerline"><span>slides 05 / 08</span><span>exhibit d</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Exhibit E</span><span>horizon read</span></div>
+    <h2>What is quiet by evidence, not by guess</h2>
+    <div class="two-grid">
+      <article class="panel"><div class="panel-header"><h3>August and October quiet</h3><span class="tagline is-green">anchored</span></div><div class="panel-body">
+        <div class="evidence"><strong>Prime</strong><p>No active work on file between 4/22 and 8/1 unless the schedule moves.</p></div>
+        <div class="evidence"><strong>Leibys</strong><p>8/1 window; meeting canceled 4/22; 0 open items on file.</p></div>
+        <div class="evidence"><strong>Canam plans</strong><p>10/1 windows; monitor only for movement.</p></div>
+      </div></article>
+      <article class="panel"><div class="panel-header"><h3>July quiet</h3><span class="tagline is-green">anchored</span></div><div class="panel-body">
+        <div class="evidence"><strong>Bonnier</strong><p>7/1 window; 0 open items on file as of 4/22.</p></div>
+        <div class="evidence"><strong>Stoutco</strong><p>7/1 window; no kickoff meeting yet; 0 open items on file.</p></div>
+      </div></article>
+    </div>
+    <div class="footerline"><span>slides 06 / 08</span><span>exhibit e</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Exhibit F</span><span>carry list</span></div>
+    <h2>Recommended next actions</h2>
+    <div class="check-grid">
+      <article class="panel"><div class="panel-header"><h3>Action list</h3><span class="tagline is-red">act</span></div><div class="panel-body">
+        <ul class="checklist">
+          <li><span class="box"></span><span>Fix <strong>COCC</strong> routing and verify payroll cleanup.</span></li>
+          <li><span class="box"></span><span>Resolve <strong>Callidi</strong> XKB/XKC and run loans.</span></li>
+          <li><span class="box"></span><span>Pull <strong>Pella</strong> deferral report through Sally / the right contact.</span></li>
+          <li><span class="box"></span><span>Send <strong>Haverhill</strong> NBI email and finish OOO handoff.</span></li>
+          <li><span class="box"></span><span>Load <strong>TMG</strong> YOS and verify flips for ~300 participants.</span></li>
+          <li><span class="box"></span><span>Confirm <strong>Banyan</strong> case number and naming.</span></li>
+        </ul>
+      </div></article>
+      <article class="panel"><div class="panel-header"><h3>Closing note</h3><span class="tagline is-amber">summary</span></div><div class="panel-body">
+        <p>The file reads better because the quiet is now evidenced by dates and open-item counts, while the uncertainty is isolated into named contradiction threads.</p>
+      </div></article>
+    </div>
+    <div class="footerline"><span>slides 07 / 08</span><span>exhibit f</span></div>
+  </div></section>
+
+  <section class="slide"><div class="slide-content">
+    <div class="masthead"><span class="brand">Board Note</span><span>theme note</span></div>
+    <article class="panel"><div class="panel-body">
+      <h2>Black file is best when the exact language matters.</h2>
+      <p class="lede">This cut is strongest when the value is precision, contradiction visibility, and evidence-backed quiet rather than dramatic motion.</p>
+    </div></article>
+    <div class="footerline"><span>slides 08 / 08</span><span>evidence board complete</span></div>
+  </div></section>
+
+  <script>
+    class SlidePresentation {
+      constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.progressBar = document.querySelector('.progress-bar');
+        this.navDotsContainer = document.querySelector('.nav-dots');
+        this.currentSlide = 0;
+        this.setupNavDots(); this.setupObservers(); this.setupEvents(); this.updateUI(0);
+      }
+      setupNavDots() {
+        this.navDotsContainer.innerHTML = '';
+        this.slides.forEach((_, i) => {
+          const dot = document.createElement('button');
+          dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+          dot.addEventListener('click', () => this.goToSlide(i));
+          this.navDotsContainer.appendChild(dot);
+        });
+      }
+      setupObservers() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => { if (entry.isIntersecting) this.updateUI(this.slides.indexOf(entry.target)); });
+        }, { threshold: 0.55 });
+        this.slides.forEach((slide) => observer.observe(slide));
+      }
+      setupEvents() {
+        document.addEventListener('keydown', (event) => {
+          if (['ArrowDown','ArrowRight',' ','PageDown'].includes(event.key)) { event.preventDefault(); this.goToSlide(Math.min(this.currentSlide + 1, this.slides.length - 1)); }
+          if (['ArrowUp','ArrowLeft','PageUp'].includes(event.key)) { event.preventDefault(); this.goToSlide(Math.max(this.currentSlide - 1, 0)); }
+        });
+      }
+      goToSlide(index) { this.slides[index].scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }
+      updateUI(index) {
+        this.currentSlide = index;
+        this.progressBar.style.width = `${((index + 1) / this.slides.length) * 100}%`;
+        Array.from(this.navDotsContainer.children).forEach((dot, i) => dot.classList.toggle('active', i === index));
+      }
+    }
+    new SlidePresentation();
+  </script>
+</body>
+</html>

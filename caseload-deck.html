@@ -1,0 +1,2951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Caseload Brief — Two-Week Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;700&family=Major+Mono+Display&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Retro-future warm console palette */
+    --bg:           #ede6d3;
+    --bg-panel:     #e3dac3;
+    --bg-panel-2:   #d9cfb4;
+    --ink:          #1a1f1d;
+    --ink-soft:     #3c4541;
+    --ink-mute:     #6a6f69;
+    --rust:         #c65a2e;
+    --rust-deep:    #a04620;
+    --teal:         #2d8e8a;
+    --teal-deep:    #1f6562;
+    --butter:       #b8882e;
+    --butter-soft:  #d4a854;
+    --rule:         rgba(26,31,29,.18);
+    --rule-strong:  rgba(26,31,29,.32);
+    --rule-faint:   rgba(26,31,29,.08);
+    --field-bg:     #f5efde;
+
+    --scanline-color:   rgba(26,31,29,.35);
+    --scanline-opacity: .035;
+
+    --mono:    "Space Mono", "JetBrains Mono", ui-monospace, monospace;
+    --sans:    "DM Sans", system-ui, -apple-system, sans-serif;
+    --display: "Major Mono Display", "Space Mono", monospace;
+
+    /* Legacy aliases (kept so slides 2–10 keep rendering until redesigned) */
+    --paper:       var(--bg);
+    --paper-deep:  var(--bg-panel);
+    --accent:      var(--rust);
+    --accent-deep: var(--rust-deep);
+    --muted:       var(--ink-mute);
+    --ok:          var(--teal-deep);
+    --warn:        var(--butter);
+    --danger:      var(--rust);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow: hidden;
+  }
+
+  /* CRT scanline overlay */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      var(--scanline-color) 0px,
+      var(--scanline-color) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    opacity: var(--scanline-opacity);
+    pointer-events: none;
+    z-index: 100;
+    mix-blend-mode: multiply;
+  }
+
+  .app { position: relative; z-index: 2; height: 100vh; display: flex; flex-direction: column; }
+
+  /* HEADER */
+  header {
+    padding: 12px 28px;
+    border-bottom: 2px solid var(--rust);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono);
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.22em;
+    background: var(--bg-panel);
+  }
+  header .brand { font-weight: 700; color: var(--ink); letter-spacing: 0.28em; }
+  header .brand::before { content: "▪ "; color: var(--rust); }
+  header .meta { color: var(--ink-mute); }
+  header .meta span + span::before { content: " / "; color: var(--rust); margin: 0 4px; font-weight: 700; }
+
+  /* STAGE */
+  .stage {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    padding: 40px 64px 80px;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .slide.active {
+    opacity: 1; pointer-events: auto; transform: translateY(0);
+  }
+
+  .slide::-webkit-scrollbar { width: 6px; }
+  .slide::-webkit-scrollbar-track { background: transparent; }
+  .slide::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+
+  /* NAV */
+  nav.footer {
+    border-top: 1px solid var(--rule);
+    padding: 10px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--paper);
+  }
+  nav.footer .dots { display: flex; gap: 6px; }
+  nav.footer .dot {
+    width: 8px; height: 8px; border: 1px solid var(--ink);
+    cursor: pointer; transition: background 0.15s;
+    background: transparent;
+  }
+  nav.footer .dot.active { background: var(--accent); border-color: var(--accent); }
+  nav.footer .dot:hover { background: var(--ink); }
+  nav.footer button {
+    background: transparent; border: 1px solid var(--ink); color: var(--ink);
+    font: inherit; padding: 6px 14px; cursor: pointer; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background 0.15s, color 0.15s;
+  }
+  nav.footer button:hover { background: var(--ink); color: var(--paper); }
+  nav.footer button:disabled { opacity: 0.3; cursor: not-allowed; }
+  nav.footer .kbd-hint { color: var(--muted); }
+
+  /* TYPOGRAPHY */
+  h1.display {
+    font-weight: 300;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  h1.display em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  h2 {
+    font-weight: 600;
+    font-size: clamp(28px, 3.5vw, 44px);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    margin-bottom: 24px;
+  }
+
+  h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  p, li { font-size: 16px; line-height: 1.55; max-width: 72ch; }
+  .lede { font-size: 20px; line-height: 1.45; color: var(--ink); font-weight: 300; font-style: italic; }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .rule { height: 1px; background: var(--rule); margin: 24px 0; width: 100%; }
+  .rule.accent { background: var(--accent); height: 2px; width: 80px; margin: 16px 0; }
+
+  /* ============================================================
+     COVER — Retro-Future Console
+     ============================================================ */
+  .cover {
+    padding: 0 !important;
+    overflow-y: auto;
+  }
+  .cover-inner {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+
+  /* Masthead */
+  .cover-mast {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 18px 40px;
+    background: var(--bg-panel);
+    position: relative;
+  }
+  .cover-mast::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 2px;
+    background: var(--rust);
+  }
+  .cover-mast-left {
+    display: flex; align-items: center; gap: 18px; min-width: 0;
+  }
+  .sigil {
+    width: 38px; height: 38px;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--display);
+    font-size: 17.5px;
+    color: var(--ink);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .sigil::after {
+    content: "";
+    position: absolute; inset: 3px;
+    border: 1px solid var(--rule);
+    border-radius: 50%;
+  }
+  .mast-title {
+    font-family: var(--display);
+    font-size: 19px;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    text-transform: lowercase;
+    white-space: nowrap;
+  }
+  .mast-stencil {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 4px 10px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .mast-stencil .sep { color: var(--rust); margin: 0 6px; font-weight: 700; }
+  .mast-folio {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .mast-folio b { color: var(--ink); font-weight: 700; }
+
+  /* Strapline + gauges band */
+  .cover-band {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) auto;
+    gap: 48px;
+    align-items: center;
+    padding: 56px 40px;
+  }
+  .strapline { min-width: 0; }
+  .strapline-eye {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .strapline-eye .tick {
+    display: inline-block;
+    width: 22px; height: 1px;
+    background: var(--rust);
+  }
+  .strapline h1.cover-h1 {
+    font-family: var(--display);
+    font-size: clamp(42px, 6.4vw, 88px);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    margin: 0 0 22px;
+    line-height: 1.05;
+    text-transform: lowercase;
+    font-weight: 400;
+  }
+  .strapline h1.cover-h1 em {
+    font-style: normal;
+    color: var(--rust);
+  }
+  .strapline .lede {
+    font-family: var(--sans);
+    font-style: normal;
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-size: 17px;
+    line-height: 1.55;
+    max-width: 56ch;
+  }
+  .strapline .lede b {
+    color: var(--ink);
+    font-weight: 600;
+    border-bottom: 1px dotted var(--rust);
+  }
+
+  /* Gauge stack */
+  .gauges {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(150px, 180px));
+    gap: 12px;
+  }
+  .gauge {
+    border: 1px solid var(--rule-strong);
+    background: var(--bg-panel);
+    padding: 12px 14px 14px;
+    display: flex; flex-direction: column; gap: 6px;
+    position: relative;
+    border-radius: 2px;
+  }
+  .gauge::before {
+    content: "";
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 10px; height: 10px;
+    border-top: 1.5px solid var(--rust);
+    border-left: 1.5px solid var(--rust);
+  }
+  .gauge::after {
+    content: "";
+    position: absolute;
+    bottom: -1px; right: -1px;
+    width: 10px; height: 10px;
+    border-bottom: 1.5px solid var(--rust);
+    border-right: 1.5px solid var(--rust);
+  }
+  .gauge-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .gauge-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 8px;
+  }
+  .gauge-value {
+    font-family: var(--mono);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .gauge-arc {
+    display: flex; gap: 2px;
+    align-items: flex-end;
+    height: 18px;
+  }
+  .gauge-arc i {
+    display: block;
+    width: 3px;
+    background: var(--rule-strong);
+    border-radius: 1px;
+  }
+  .gauge-arc i.on { background: var(--teal); }
+  .gauge-arc i:nth-child(1) { height: 30%; }
+  .gauge-arc i:nth-child(2) { height: 45%; }
+  .gauge-arc i:nth-child(3) { height: 60%; }
+  .gauge-arc i:nth-child(4) { height: 75%; }
+  .gauge-arc i:nth-child(5) { height: 90%; }
+  .gauge-arc i:nth-child(6) { height: 100%; }
+  .gauge-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  /* Operator strip — bottom of cover */
+  .cover-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    background: var(--bg);
+  }
+  .cover-strip .cell {
+    padding: 16px 24px;
+    border-right: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .cover-strip .cell:last-child { border-right: none; }
+  .cover-strip .cell b {
+    display: block;
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    margin-top: 4px;
+  }
+
+  /* ============================================================
+     REUSABLE — Retro-Future display + eye + lede
+     ============================================================ */
+  .eye {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .eye .tick {
+    display: inline-block;
+    width: 22px; height: 1px;
+    background: var(--rust);
+  }
+  .h-display {
+    font-family: var(--display);
+    font-size: clamp(36px, 5.2vw, 64px);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    margin: 0 0 18px;
+    line-height: 1.05;
+    text-transform: lowercase;
+    font-weight: 400;
+  }
+  .h-display em { font-style: normal; color: var(--rust); }
+  .lede-rf {
+    font-family: var(--sans);
+    font-style: normal;
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-size: 17px;
+    line-height: 1.5;
+    max-width: 64ch;
+    margin: 0;
+  }
+  .lede-rf b {
+    color: var(--ink);
+    font-weight: 600;
+    border-bottom: 1px dotted var(--rust);
+  }
+
+  /* ============================================================
+     TRIAGE BOARD (slide 2)
+     ============================================================ */
+  .tb {
+    margin-top: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Coverage Beacon */
+  .beacon {
+    position: relative;
+    border: 1px solid var(--rust);
+    background: var(--bg-panel);
+    padding: 18px 22px 18px 26px;
+    border-radius: 2px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 22px;
+    align-items: center;
+  }
+  .beacon::before {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 4px;
+    background: var(--rust);
+  }
+  .beacon-icon {
+    font-family: var(--display);
+    font-size: 22px;
+    color: var(--rust);
+    line-height: 1;
+  }
+  .beacon-body { min-width: 0; }
+  .beacon-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 4px;
+  }
+  .beacon-text {
+    font-family: var(--sans);
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .beacon-text b { color: var(--ink); font-weight: 600; }
+  .beacon-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-align: right;
+    line-height: 1.6;
+  }
+  .beacon-meta b { color: var(--ink); font-weight: 700; display: block; }
+
+  /* Ledger frame */
+  .ledger-frame {
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    background: var(--bg);
+  }
+  .ledger-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 16px;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--rule-strong);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .ledger-head .live-dot {
+    color: var(--rust);
+    margin-right: 6px;
+  }
+  .ledger-head .right { color: var(--ink-mute); }
+  .ledger-head .right b { color: var(--ink); font-weight: 700; }
+
+  table.ledger {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  table.ledger th {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule-strong);
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 500;
+    background: var(--bg);
+  }
+  table.ledger td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--rule-faint);
+    color: var(--ink);
+    vertical-align: middle;
+  }
+  table.ledger tbody tr:last-child td { border-bottom: none; }
+  table.ledger tbody tr:hover td { background: rgba(45,142,138,.06); }
+  table.ledger td.num {
+    color: var(--ink-mute);
+    width: 36px;
+  }
+  table.ledger td.plan {
+    font-family: var(--sans);
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  table.ledger td.blocked {
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  table.ledger td.eff {
+    color: var(--ink);
+    white-space: nowrap;
+    font-weight: 700;
+  }
+  table.ledger td.next {
+    font-family: var(--sans);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  /* State pills */
+  .state {
+    display: inline-block;
+    padding: 3px 9px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 2px;
+    border: 1px solid;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .state.coverage { background: var(--rust); color: #fff; border-color: var(--rust-deep); }
+  .state.waiting  { background: var(--butter); color: #fff; border-color: var(--butter); }
+  .state.ramping  { background: var(--teal); color: #fff; border-color: var(--teal-deep); }
+  .state.open     { background: transparent; color: var(--ink); border-color: var(--ink); }
+  .state.debate   { background: var(--butter-soft); color: var(--ink); border-color: var(--butter); }
+  /* Lab project states */
+  .state.flight   { background: var(--teal); color: #fff; border-color: var(--teal-deep); }
+  .state.scaffold { background: transparent; color: var(--butter); border-color: var(--butter); }
+  .state.idea     { background: transparent; color: var(--ink-mute); border-color: var(--ink-mute); }
+  .state.shipped  { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  /* Monitor strip */
+  .monitor-strip {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .monitor-strip-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .monitor-strip-label .tick {
+    display: inline-block;
+    width: 22px; height: 1px;
+    background: var(--ink-mute);
+  }
+  .chip-row {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .chip {
+    display: inline-flex; align-items: baseline; gap: 8px;
+    padding: 6px 12px;
+    border: 1px solid var(--rule-strong);
+    background: var(--bg-panel);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    border-radius: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .chip .chip-date {
+    color: var(--ink-mute);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .chip .chip-note {
+    color: var(--ink-mute);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  /* Closed line */
+  .closed-line {
+    display: flex; align-items: center; gap: 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding-top: 4px;
+  }
+  .closed-line .check {
+    display: inline-grid; place-items: center;
+    width: 18px; height: 18px;
+    background: var(--teal);
+    color: #fff;
+    font-weight: 700;
+    border-radius: 2px;
+  }
+  .closed-line b { color: var(--ink); font-weight: 700; }
+
+  /* ============================================================
+     PLAN DETAIL — Retro-Future Console (slides 3–7)
+     ============================================================ */
+  .slide.plan { padding: 44px 72px 80px; }
+
+  .plan-head { margin-bottom: 32px; }
+
+  .plan-display-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .plan-h1 {
+    font-family: var(--display);
+    font-size: clamp(40px, 5.4vw, 72px);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    line-height: 1;
+    text-transform: lowercase;
+    font-weight: 400;
+    margin: 0;
+  }
+  .plan-h1 em { font-style: normal; color: var(--rust); }
+
+  .plan-eff {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-align: right;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+  .plan-eff b {
+    display: block;
+    color: var(--ink);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .plan-meta-strip {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    flex-wrap: wrap;
+  }
+  .plan-meta-strip .meta-label { color: var(--ink-mute); }
+  .plan-meta-strip .meta-val { color: var(--ink); font-weight: 700; letter-spacing: 0.1em; margin-left: 4px; }
+  .plan-meta-strip .meta-sep { color: var(--rust); font-weight: 700; opacity: 0.7; }
+
+  .plan-lede {
+    font-family: var(--sans);
+    font-size: 19px;
+    line-height: 1.45;
+    color: var(--ink);
+    font-weight: 400;
+    font-style: normal;
+    max-width: 70ch;
+    margin: 0 0 36px;
+  }
+
+  /* TRANSMISSION — finding / note panel */
+  .transmission {
+    position: relative;
+    border: 1px solid var(--rust);
+    background: var(--bg-panel);
+    padding: 22px 26px 22px 30px;
+    border-radius: 2px;
+    margin-bottom: 36px;
+  }
+  .transmission::before {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 4px;
+    background: var(--rust);
+  }
+  .transmission-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .transmission-label::before {
+    content: "⚑";
+    font-family: var(--display);
+    font-size: 14px;
+  }
+  .transmission-body {
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .transmission-body b { font-weight: 600; }
+  .transmission-body em { color: var(--rust); font-style: italic; }
+  .transmission-body ol,
+  .transmission-body ul {
+    margin: 10px 0 0;
+    padding-left: 22px;
+    font-size: 14.5px;
+    line-height: 1.65;
+  }
+  .transmission-body ol li,
+  .transmission-body ul li { margin: 4px 0; max-width: none; }
+
+  /* PANEL — bracketed bordered card */
+  .panel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .panel {
+    position: relative;
+    border: 1px solid var(--rule-strong);
+    background: var(--bg);
+    padding: 22px 24px 24px;
+    border-radius: 2px;
+  }
+  .panel::before, .panel::after {
+    content: "";
+    position: absolute;
+    width: 10px; height: 10px;
+  }
+  .panel::before {
+    top: -1px; left: -1px;
+    border-top: 1.5px solid var(--rust);
+    border-left: 1.5px solid var(--rust);
+  }
+  .panel::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 1.5px solid var(--rust);
+    border-right: 1.5px solid var(--rust);
+  }
+  .panel-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* THREAD LIST */
+  .thread-list { list-style: none; padding: 0; margin: 0; }
+  .thread-list li {
+    padding: 12px 0;
+    border-bottom: 1px dotted var(--rule);
+  }
+  .thread-list li:first-child { padding-top: 0; }
+  .thread-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .thread-title {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    line-height: 1.35;
+  }
+  .thread-title::before {
+    content: "▸";
+    color: var(--rust);
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .thread-body {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    padding-left: 18px;
+    margin-top: 4px;
+    max-width: none;
+  }
+
+  /* TRIGGER SEQUENCE — numbered with arrows */
+  .trigger-seq {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: seq;
+  }
+  .trigger-seq li {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 14px;
+    align-items: baseline;
+    padding: 11px 0;
+    border-bottom: 1px dotted var(--rule);
+    counter-increment: seq;
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.4;
+    max-width: none;
+  }
+  .trigger-seq li:first-child { padding-top: 0; }
+  .trigger-seq li:last-child { border-bottom: none; padding-bottom: 0; }
+  .trigger-seq li::before {
+    content: counter(seq, decimal-leading-zero);
+    font-family: var(--mono);
+    color: var(--rust);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    font-variant-numeric: tabular-nums;
+  }
+  .trigger-seq li::after {
+    content: "→";
+    color: var(--ink-mute);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  /* OFF-PLATE strip — teal exit condition */
+  .off-plate {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+    align-items: center;
+    padding: 18px 22px;
+    background: var(--bg-panel);
+    border-left: 3px solid var(--teal);
+    border-radius: 2px;
+  }
+  .off-plate-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--teal-deep);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .off-plate-text {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .off-plate-text b { font-weight: 600; }
+
+  /* HAND-OFF strip — dark, urgent */
+  .handoff {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 24px;
+    align-items: center;
+    padding: 18px 22px;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 2px;
+  }
+  .handoff-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--rust);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .handoff-text {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--bg);
+    line-height: 1.5;
+  }
+  .handoff-text b { color: #fff; font-weight: 600; }
+  .handoff-deadline {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--bg-panel);
+    text-align: right;
+    line-height: 1.4;
+  }
+  .handoff-deadline b { color: #fff; font-weight: 700; display: block; font-size: 14px; margin-top: 2px; }
+
+  /* CHECKLIST */
+  .checklist-wrap {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  .checklist-meta {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .progress-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+  }
+  .progress-num .done { color: var(--accent); }
+  .progress-num .total { color: var(--muted); }
+
+  .check-section { margin-top: 28px; }
+  .check-section h3 {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    display: flex; justify-content: space-between;
+  }
+  .check-section h3 span { color: var(--accent); }
+
+  .check-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 10px 8px;
+    border-bottom: 1px dotted var(--paper-deep);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .check-item:hover { background: var(--paper-deep); }
+  .check-box {
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--ink);
+    margin-top: 3px;
+    position: relative;
+    transition: all 0.15s;
+  }
+  .check-item.done .check-box {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .check-item.done .check-box::after {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+  }
+  .check-body { flex: 1; }
+  .check-title { font-size: 15px; line-height: 1.4; }
+  .check-item.done .check-title {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+  .check-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+  .check-meta .tag-plan { color: var(--ink); }
+  .check-meta .tag-urgent { color: var(--accent); }
+
+  /* ============================================================
+     PERSONAL LAB (slide 9)
+     ============================================================ */
+  .lab-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-top: 28px;
+  }
+
+  .lab-card {
+    position: relative;
+    border: 1px solid var(--rule-strong);
+    background: var(--bg);
+    padding: 20px 22px 22px;
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+  }
+  .lab-card::before, .lab-card::after {
+    content: "";
+    position: absolute;
+    width: 10px; height: 10px;
+  }
+  .lab-card::before {
+    top: -1px; left: -1px;
+    border-top: 1.5px solid var(--rust);
+    border-left: 1.5px solid var(--rust);
+  }
+  .lab-card::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 1.5px solid var(--rust);
+    border-right: 1.5px solid var(--rust);
+  }
+
+  .lab-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .lab-card-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .lab-card-title {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 19px;
+    color: var(--ink);
+    line-height: 1.2;
+    margin: 0 0 8px;
+    letter-spacing: -0.005em;
+  }
+
+  .lab-card-pitch {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin: 0 0 14px;
+    max-width: none;
+  }
+
+  .lab-derived {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    line-height: 1.4;
+  }
+  .lab-derived::before {
+    content: "↳";
+    color: var(--rust);
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .lab-derived b {
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+  }
+
+  .lab-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px dotted var(--rule);
+  }
+  .lab-chip {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 3px 8px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: var(--bg-panel);
+  }
+
+  /* ============================================================
+     14-DAY CYCLE PLAN (slide 10)
+     ============================================================ */
+  .cycle-head {
+    display: grid;
+    grid-template-columns: 160px 1fr 1fr;
+    margin-top: 28px;
+    background: var(--bg-panel);
+    border-top: 1px solid var(--rule);
+    border-bottom: 2px solid var(--rust);
+  }
+  .cycle-head > div {
+    padding: 12px 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+  .cycle-head .ch-date { border-right: 1px solid var(--rule); color: var(--ink); }
+  .cycle-head .ch-work { border-right: 1px solid var(--rule); }
+  .cycle-head .ch-tick {
+    display: inline-block;
+    width: 16px; height: 1px;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  .cycle-head .ch-tick.work { background: var(--ink); }
+  .cycle-head .ch-tick.lab { background: var(--rust); }
+
+  .cycle-grid {
+    display: grid;
+    grid-template-columns: 160px 1fr 1fr;
+  }
+  .cycle-row { display: contents; }
+
+  .cycle-date,
+  .cycle-work,
+  .cycle-lab {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .cycle-date {
+    border-right: 1px solid var(--rule);
+    background: var(--bg);
+    font-family: var(--mono);
+  }
+  .cycle-work { border-right: 1px solid var(--rule); }
+  .cycle-lab  { background: rgba(45,142,138,.04); }
+
+  .cycle-day {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .cycle-num {
+    font-family: var(--display);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+    line-height: 1;
+    margin: 8px 0 12px;
+    font-variant-numeric: tabular-nums;
+    text-transform: lowercase;
+  }
+  .cycle-num em { color: var(--rust); font-style: normal; }
+  .cycle-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 2px;
+    border: 1px solid;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .cycle-tag.today      { background: var(--rust); color: #fff; border-color: var(--rust-deep); }
+  .cycle-tag.handoff    { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .cycle-tag.ooo        { background: var(--butter); color: #fff; border-color: var(--butter); }
+  .cycle-tag.cycle-end  { background: var(--teal); color: #fff; border-color: var(--teal-deep); }
+
+  .cycle-list { list-style: none; padding: 0; margin: 0; }
+  .cycle-list li {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.45;
+    padding: 5px 0 5px 18px;
+    position: relative;
+    max-width: none;
+  }
+  .cycle-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    top: 5px;
+    color: var(--rust);
+    font-weight: 700;
+  }
+  .cycle-list li.muted {
+    color: var(--ink-mute);
+    font-style: italic;
+  }
+  .cycle-empty {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    opacity: 0.5;
+  }
+
+  /* TODAY row emphasis */
+  .cycle-row.today > .cycle-date {
+    background: var(--bg-panel);
+    box-shadow: inset 4px 0 0 var(--rust);
+  }
+  .cycle-row.today > .cycle-work,
+  .cycle-row.today > .cycle-lab {
+    background: rgba(198,90,46,.04);
+  }
+
+  /* OOO row emphasis */
+  .cycle-row.ooo-row > .cycle-date,
+  .cycle-row.ooo-row > .cycle-work,
+  .cycle-row.ooo-row > .cycle-lab {
+    background: rgba(184,136,46,.07);
+  }
+  .cycle-row.ooo-row > .cycle-date {
+    box-shadow: inset 4px 0 0 var(--butter);
+  }
+
+  /* ============================================================
+     LIVE CHECKLIST (slide 11)
+     ============================================================ */
+  .checklist-wrap {
+    max-width: 940px;
+    margin: 0 auto;
+  }
+  .checklist-meta {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: end;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--rust);
+  }
+  .checklist-meta-left .h-display { margin-bottom: 14px; }
+  .checklist-meta-left .lede-rf { margin: 0; max-width: 56ch; }
+
+  .progress-block {
+    text-align: right;
+    min-width: 220px;
+  }
+  .progress-num {
+    font-family: var(--mono);
+    font-size: 42px;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .progress-num .done { color: var(--rust); }
+  .progress-num .total { color: var(--ink-mute); font-weight: 400; }
+  .progress-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-top: 6px;
+  }
+  .progress-bar {
+    width: 220px;
+    height: 4px;
+    background: var(--rule-strong);
+    margin-top: 12px;
+    margin-left: auto;
+    position: relative;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    background: var(--rust);
+    transition: width 0.25s ease;
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+  .filter-chip {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    background: var(--bg);
+    border: 1px solid var(--rule-strong);
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+  .filter-chip:hover { background: var(--bg-panel); color: var(--ink); }
+  .filter-chip.active {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .filter-chip .count {
+    color: var(--ink-mute);
+    margin-left: 6px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .filter-chip.active .count { color: var(--bg-panel); }
+
+  .check-section { margin-top: 32px; }
+  .check-section:first-of-type { margin-top: 0; }
+
+  .check-section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule-strong);
+    margin-bottom: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+  .check-section-head .label { color: var(--ink); font-weight: 700; }
+  .check-section-head .label::before {
+    content: "";
+    display: inline-block;
+    width: 16px; height: 1px;
+    background: var(--rust);
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  .check-section-head .count {
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+  }
+  .check-section-head .count b { color: var(--rust); font-weight: 700; }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 12px;
+    border-bottom: 1px dotted var(--rule);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .check-item:hover { background: var(--bg-panel); }
+  .check-item.hidden { display: none; }
+
+  .check-box {
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--ink);
+    margin-top: 2px;
+    position: relative;
+    transition: all 0.15s;
+    border-radius: 2px;
+    background: var(--bg);
+  }
+  .check-item.done .check-box {
+    background: var(--rust);
+    border-color: var(--rust-deep);
+  }
+  .check-item.done .check-box::after {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+  }
+
+  .check-body { flex: 1; min-width: 0; }
+  .check-title {
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  .check-item.done .check-title {
+    text-decoration: line-through;
+    text-decoration-color: var(--rust);
+    color: var(--ink-mute);
+  }
+  .check-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-top: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .check-meta .tag-plan { color: var(--ink); font-weight: 700; }
+  .check-meta .tag-urgent {
+    display: inline-block;
+    padding: 2px 7px;
+    background: var(--rust);
+    color: #fff;
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    border-radius: 2px;
+  }
+  .check-meta .tag-handoff {
+    display: inline-block;
+    padding: 2px 7px;
+    background: var(--ink);
+    color: var(--bg);
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    border-radius: 2px;
+  }
+
+  .checklist-footer {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .checklist-reset {
+    background: transparent;
+    border: 1px solid var(--rule-strong);
+    color: var(--ink-mute);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+  .checklist-reset:hover {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  /* MONITOR LEDGER (slide 8) — uses .ledger-frame + .ledger table */
+  .type-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 2px;
+    border: 1px solid;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .type-pill.full   { color: var(--ink); border-color: var(--rule-strong); background: var(--bg-panel); }
+  .type-pill.excel  { color: var(--teal-deep); border-color: var(--teal); background: transparent; }
+
+  .closed-panel {
+    margin-top: 28px;
+    border: 1px solid var(--rule);
+    background: var(--bg-panel);
+    padding: 18px 22px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-left: 3px solid var(--teal);
+  }
+  .closed-panel .check {
+    display: inline-grid; place-items: center;
+    width: 22px; height: 22px;
+    background: var(--teal);
+    color: #fff;
+    font-weight: 700;
+    border-radius: 2px;
+    font-family: var(--mono);
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .closed-panel-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--teal-deep);
+    font-weight: 700;
+  }
+  .closed-panel-text {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--ink);
+  }
+  .closed-panel-text b { font-weight: 600; }
+
+  /* TAB NAV for detail slides */
+  .tab-bar {
+    display: flex; gap: 4px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--rule);
+    overflow-x: auto;
+  }
+  .tab-bar button {
+    background: transparent;
+    border: none;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+    transition: color 0.15s, border 0.15s;
+  }
+  .tab-bar button:hover { color: var(--ink); }
+  .tab-bar button.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 700;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  @media (max-width: 900px) {
+    .slide { padding: 28px 24px 80px; }
+    .cover-grid { grid-template-columns: 1fr; align-items: start; gap: 24px; }
+    .plan-grid { grid-template-columns: 1fr; gap: 24px; }
+    .triage-grid { grid-template-columns: 1fr; }
+    .week-grid { grid-template-columns: 100px 1fr; }
+  }
+
+  /* reveal animation on slide change */
+  .slide.active > * {
+    animation: rise 0.5s ease backwards;
+  }
+  .slide.active > *:nth-child(1) { animation-delay: 0.05s; }
+  .slide.active > *:nth-child(2) { animation-delay: 0.1s; }
+  .slide.active > *:nth-child(3) { animation-delay: 0.15s; }
+  .slide.active > *:nth-child(4) { animation-delay: 0.2s; }
+  .slide.active > *:nth-child(5) { animation-delay: 0.25s; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header>
+    <div class="brand">Caseload / Two-Week Brief</div>
+    <div class="meta">
+      <span id="slide-label">01 — Cover</span>
+      <span>Wed · Apr 22, 2026</span>
+    </div>
+  </header>
+
+  <main class="stage" id="stage">
+
+    <!-- SLIDE 1: COVER — Retro-Future Console -->
+    <section class="slide cover active" data-label="01 — Cover">
+      <div class="cover-inner">
+
+        <!-- Masthead -->
+        <header class="cover-mast">
+          <div class="cover-mast-left">
+            <span class="sigil" aria-hidden="true">N</span>
+            <span class="mast-title">nbi. weekly brief</span>
+            <span class="mast-stencil">
+              WB.026<span class="sep">/</span>CASELOAD LEDGER<span class="sep">/</span>REV. 2026-04-22
+            </span>
+          </div>
+          <div class="mast-folio">
+            FOLIO <b>№ 01 / 11</b>
+          </div>
+        </header>
+
+        <!-- Strapline + Gauges -->
+        <div class="cover-band">
+          <div class="strapline">
+            <div class="strapline-eye">
+              <span class="tick"></span>
+              TRANSMISSION 026 / FISCAL 2026 / WK 17–18
+            </div>
+            <h1 class="cover-h1">the next<br/><em>two weeks.</em></h1>
+            <p class="lede">
+              A working document — <b>caseload triage</b>, side-project output, and a live checklist that travels with you. Load a braindump, ship a brief, work the week.
+            </p>
+          </div>
+
+          <aside class="gauges" aria-label="Cycle summary">
+            <div class="gauge">
+              <span class="gauge-label">Active Plans</span>
+              <div class="gauge-row">
+                <span class="gauge-value">05</span>
+                <span class="gauge-arc" aria-hidden="true">
+                  <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i>
+                </span>
+              </div>
+              <span class="gauge-sub">Move this cycle</span>
+            </div>
+            <div class="gauge">
+              <span class="gauge-label">Monitor</span>
+              <div class="gauge-row">
+                <span class="gauge-value">06</span>
+                <span class="gauge-arc" aria-hidden="true">
+                  <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i>
+                </span>
+              </div>
+              <span class="gauge-sub">Off the burner</span>
+            </div>
+            <div class="gauge">
+              <span class="gauge-label">Side Projects</span>
+              <div class="gauge-row">
+                <span class="gauge-value">05</span>
+                <span class="gauge-arc" aria-hidden="true">
+                  <i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i>
+                </span>
+              </div>
+              <span class="gauge-sub">In flight</span>
+            </div>
+            <div class="gauge">
+              <span class="gauge-label">Days In Window</span>
+              <div class="gauge-row">
+                <span class="gauge-value">14</span>
+                <span class="gauge-arc" aria-hidden="true">
+                  <i class="on"></i><i></i><i></i><i></i><i></i><i></i>
+                </span>
+              </div>
+              <span class="gauge-sub">Apr 22 → May 06</span>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Operator strip -->
+        <div class="cover-strip">
+          <div class="cell">Operator <b>Joel</b></div>
+          <div class="cell">Role <b>Senior Data Consultant</b></div>
+          <div class="cell">Window <b>Apr 22 → May 06</b></div>
+          <div class="cell">Nav <b>← → · click dots</b></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 2: TRIAGE BOARD — Retro-Future Console -->
+    <section class="slide" data-label="02 — Triage Board">
+      <div class="eye">
+        <span class="tick"></span>
+        §02 / TRANSMISSION 026 / TRIAGE LEDGER
+      </div>
+      <h1 class="h-display">the <em>board.</em></h1>
+      <p class="lede-rf">
+        Eleven plans on the roster. You're hands-on for <b>five</b>. Six on monitor, one closed. One <b>coverage window</b> cuts across the cycle.
+      </p>
+
+      <div class="tb">
+
+        <!-- COVERAGE BEACON -->
+        <div class="beacon" role="note" aria-label="Coverage beacon">
+          <div class="beacon-icon">⚑</div>
+          <div class="beacon-body">
+            <div class="beacon-label">Coverage Beacon · OOO Apr 27 → May 01</div>
+            <div class="beacon-text">
+              <b>Haverhill</b> assets land 5/1 while you're out. <b>Callidi Tas</b> may unblock mid-week. Hand-off needed on both before you leave Friday.
+            </div>
+          </div>
+          <div class="beacon-meta">
+            Hand-off by<b>Fri · Apr 24</b>
+            Owner<b>TBD</b>
+          </div>
+        </div>
+
+        <!-- ACTIVE LEDGER -->
+        <div class="ledger-frame">
+          <div class="ledger-head">
+            <div><span class="live-dot">●</span>CH.02 // ACTIVE LEDGER</div>
+            <div class="right">RECORDS <b>05</b></div>
+          </div>
+          <table class="ledger">
+            <thead>
+              <tr>
+                <th>№</th>
+                <th>Plan</th>
+                <th>State</th>
+                <th>Blocked By</th>
+                <th>Effective</th>
+                <th>Next Move</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">01</td>
+                <td class="plan">Callidi Tas</td>
+                <td><span class="state waiting">Waiting</span></td>
+                <td class="blocked">Client · DOB / DOH</td>
+                <td class="eff">EOW</td>
+                <td class="next">Nudge client today; load participants + balances on receipt</td>
+              </tr>
+              <tr>
+                <td class="num">02</td>
+                <td class="plan">Haverhill School</td>
+                <td><span class="state coverage">Coverage</span></td>
+                <td class="blocked">Damien · Asset 5/1</td>
+                <td class="eff">5 / 01</td>
+                <td class="next">Close Damien list; write hand-off doc (base, AQT, outstanding)</td>
+              </tr>
+              <tr>
+                <td class="num">03</td>
+                <td class="plan">Pella SC</td>
+                <td><span class="state ramping">Ramping</span></td>
+                <td class="blocked">ADP · Deferral report</td>
+                <td class="eff">~ 2 wk</td>
+                <td class="next">Email new ADP rep; confirm whether base file is needed</td>
+              </tr>
+              <tr>
+                <td class="num">04</td>
+                <td class="plan">Cutting Edge Staffing</td>
+                <td><span class="state open">Open</span></td>
+                <td class="blocked">Self · Verify</td>
+                <td class="eff">6 / 01</td>
+                <td class="next">Check if base file already went for testing; build if not</td>
+              </tr>
+              <tr>
+                <td class="num">05</td>
+                <td class="plan">Int'l School of Denver</td>
+                <td><span class="state debate">Debate</span></td>
+                <td class="blocked">Internal alignment</td>
+                <td class="eff">7 / 01</td>
+                <td class="next">Push "give us the deferral file now"; prep analysis either way</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- MONITOR STRIP -->
+        <div class="monitor-strip">
+          <div class="monitor-strip-label">
+            <span class="tick"></span>
+            Monitor · Off the Burner · 06 records
+          </div>
+          <div class="chip-row">
+            <span class="chip">Prime Healthcare <span class="chip-date">8 / 01</span><span class="chip-note">pushed</span></span>
+            <span class="chip">Can-Am Bridges <span class="chip-date">10 / 01</span></span>
+            <span class="chip">Can-Am Buildings <span class="chip-date">10 / 01</span></span>
+            <span class="chip">Stout Co. <span class="chip-date">7 / 01</span><span class="chip-note">excel-wise</span></span>
+            <span class="chip">Bonnie Corp. <span class="chip-date">7 / 01</span><span class="chip-note">excel-wise</span></span>
+            <span class="chip">Leiby's Dairy <span class="chip-date">8 / 01</span><span class="chip-note">mtg canceled</span></span>
+          </div>
+        </div>
+
+        <!-- CLOSED LINE -->
+        <div class="closed-line">
+          <span class="check">✓</span>
+          Closed · <b>Episcopal</b> · off the list
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 3: CALLIDI TAS -->
+    <section class="slide plan" data-label="03 — Callidi Tas">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §03 / ACTIVE PLAN / TRANSMISSION 026
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">callidi <em>tas</em></h1>
+          <div class="plan-eff">Target Out By<b>EOW · 4 / 24</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state waiting">Waiting</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Blocked by</span><span class="meta-val">Client · DOB / DOH</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Loan flag</span><span class="meta-val">1 of 1 out of order</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">Blocked on client. Ready to pull the trigger the moment data lands.</p>
+
+      <div class="transmission">
+        <div class="transmission-label">Finding Worth Raising</div>
+        <div class="transmission-body">
+          The balance file from the client was <b>missing people</b>. Cross-checked by SSN — not a mapping error on our side. That's a <b>client-side data completeness</b> issue. Flag it.
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Open Threads</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">Participant Data</div>
+              <div class="thread-body">Waiting on client for DOB and date of hire (primary); address + remaining demographics (secondary). Money is invested and sitting — balances post once participants are in.</div>
+            </li>
+            <li>
+              <div class="thread-title">Loan Anomaly</div>
+              <div class="thread-body">One loan, one participant — out of order. Possible missing or miscoded payment. Loans were frozen then unfrozen; re-amortization may be needed. Scope is small.</div>
+            </li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Trigger Sequence</div>
+          <ol class="trigger-seq">
+            <li><span>Receive participant details from client</span></li>
+            <li><span>Load new participants</span></li>
+            <li><span>Apply balances to accounts</span></li>
+            <li><span>Resolve the loan discrepancy</span></li>
+            <li><span>Re-amortize if required → load loans</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="off-plate">
+        <div class="off-plate-label">Off Your Plate When</div>
+        <div class="off-plate-text">
+          Client delivers data → turnaround is <b>same-day to 48 hrs</b>. Target: off the list by end of this week.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: HAVERHILL -->
+    <section class="slide plan" data-label="04 — Haverhill School">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §04 / ACTIVE PLAN / TRANSMISSION 026
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">haverhill <em>school</em></h1>
+          <div class="plan-eff">Asset Load<b>5 / 01</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state coverage">Coverage</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Blocked by</span><span class="meta-val">Damien · Outstanding list</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">You</span><span class="meta-val">OOO Apr 27 → May 01</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">Cracks open next week. You won't be here when assets land.</p>
+
+      <div class="transmission">
+        <div class="transmission-label">Transition Note</div>
+        <div class="transmission-body">
+          Original contact had brain surgery; plan handed to a colleague who's been on it the whole time. <b>Not a disruptive swap</b> — continuity should hold.
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Done · This Cycle</div>
+          <ul class="thread-list">
+            <li><div class="thread-title">Base file loaded</div></li>
+            <li><div class="thread-title">Beth has everyone in, ran checks</div></li>
+            <li><div class="thread-title">AQT fixed so all participants show</div></li>
+            <li><div class="thread-title">Flags applied where needed</div></li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Remaining · Before You Leave</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">Damien follow-up</div>
+              <div class="thread-body">Confirm participants not in file: add or skip? Pull dates if add. Wrap by EOW.</div>
+            </li>
+            <li>
+              <div class="thread-title">Hand-off doc</div>
+              <div class="thread-body">Damien outstanding · base-file state · AQT config. Owner identified before Friday.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="handoff">
+        <div class="handoff-label">⚑ Hand-off Required</div>
+        <div class="handoff-text">
+          Identify coverage for the 5/1 asset load before you leave. Document <b>Damien outstanding</b>, base-file state, AQT config.
+        </div>
+        <div class="handoff-deadline">By<b>Fri · 4 / 24</b></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: PELLA SC -->
+    <section class="slide plan" data-label="05 — Pella SC">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §05 / ACTIVE PLAN / TRANSMISSION 026
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">pella <em>sc</em></h1>
+          <div class="plan-eff">Liquidation<b>~ 2 weeks</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state ramping">Ramping</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Blocked by</span><span class="meta-val">ADP · Deferral report</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Round</span><span class="meta-val">Two · pain points known</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">Round two. The pain points are known. The workaround is written.</p>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Why This Round Is Easier</div>
+          <ul class="thread-list">
+            <li><div class="thread-title">Population mostly already in our system</div></li>
+            <li><div class="thread-title">ADP records clean everywhere except deferrals</div></li>
+            <li><div class="thread-title">You know exactly where the deferral report lives</div></li>
+            <li><div class="thread-title">New ADP rep seems ready to move</div></li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Immediate Next Moves</div>
+          <ol class="trigger-seq">
+            <li><span>Email new ADP rep — request deferral report</span></li>
+            <li><span>Confirm whether a base file is needed</span></li>
+            <li><span>Stage the three-bucket split for liquidation</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="transmission">
+        <div class="transmission-label">The ADP Deferral Workaround</div>
+        <div class="transmission-body">
+          ADP can't reliably tell us who's <em>still</em> in default once marked "in default" inside the min → (max − 1) window. The play:
+          <ol>
+            <li>Load everyone at current % — <b>out of default</b></li>
+            <li>Identify the ambiguous set (in default, inside the window)</li>
+            <li>Client notifies those participants: auto-escalate won't apply, locked at current % unless they self-change</li>
+            <li>Protects participants first; us by extension</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: CUTTING EDGE -->
+    <section class="slide plan" data-label="06 — Cutting Edge">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §06 / ACTIVE PLAN / TRANSMISSION 026
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">cutting edge <em>staffing</em></h1>
+          <div class="plan-eff">Effective<b>6 / 01</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state open">Open</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Blocked by</span><span class="meta-val">Self · Verify base file</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Risk</span><span class="meta-val">Date may push</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">Client/vendor issue looked resolved. One verify step gates everything else.</p>
+
+      <div class="transmission">
+        <div class="transmission-label">First Check Before Anything Else</div>
+        <div class="transmission-body">
+          Verify whether the base file <b>already went out for testing</b> before rebuilding anything. Five minutes of looking saves a day of redoing.
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">If File Was Sent</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">Confirm test status with vendor</div>
+              <div class="thread-body">Surface any issues from their side; otherwise stand by.</div>
+            </li>
+            <li>
+              <div class="thread-title">Note the date for the cycle log</div>
+              <div class="thread-body">So next week's check doesn't repeat the question.</div>
+            </li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel-label">If Not Sent</div>
+          <ol class="trigger-seq">
+            <li><span>Build base file</span></li>
+            <li><span>Build payroll template</span></li>
+            <li><span>Send out — target EOW, realistic 1–2 days</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="off-plate">
+        <div class="off-plate-label">Off Your Plate When</div>
+        <div class="off-plate-text">
+          Base file + payroll template land with vendor for testing. <b>1–2 days of focused work</b>, not more.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: ISD DENVER -->
+    <section class="slide plan" data-label="07 — ISD Denver">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §07 / ACTIVE PLAN / TRANSMISSION 026
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">int'l school <em>of denver</em></h1>
+          <div class="plan-eff">Go-Live<b>7 / 01</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state debate">Debate</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Blocked by</span><span class="meta-val">Internal alignment</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Lift</span><span class="meta-val">Light · regardless of camp</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">Treated as a startup despite merger-ish origins. The internal debate is the real blocker — your work is light either way.</p>
+
+      <div class="transmission">
+        <div class="transmission-label">The Debate</div>
+        <div class="transmission-body">
+          No limited-access period. Two camps:
+          <ul style="list-style:none; padding-left:0;">
+            <li><b>Camp A —</b> Pure startup. No blackout. Clean launch at go-live.</li>
+            <li><b>Camp B —</b> Loading deferrals after the fact is extra work and sets a precedent.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Your Play · Either Camp</div>
+          <ol class="trigger-seq">
+            <li><span>Don't preload elections</span></li>
+            <li><span>Give participants a self-elect window</span></li>
+            <li><span>Client sends deferral file later</span></li>
+            <li><span>Import with 7/1 effective — self-entries override, no filtering</span></li>
+          </ol>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Question + Your Lift</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">If the file exists now, why wait?</div>
+              <div class="thread-body">Push for it early. Removes the post-launch cleanup, kills the precedent debate.</div>
+            </li>
+            <li>
+              <div class="thread-title">Your lift is light</div>
+              <div class="thread-body">Load census · default elections · process deferrals after. Prep the analysis package regardless of which camp wins.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: MONITOR -->
+    <section class="slide" data-label="08 — Monitor">
+      <div class="eye">
+        <span class="tick"></span>
+        §08 / MONITOR LEDGER / TRANSMISSION 026
+      </div>
+      <h1 class="h-display">off the <em>burner.</em></h1>
+      <p class="lede-rf">
+        Six plans intentionally not in the cycle. Kept visible so nothing drifts out of awareness — <b>nothing here moves this week</b>.
+      </p>
+
+      <div class="ledger-frame" style="margin-top:28px;">
+        <div class="ledger-head">
+          <div><span class="live-dot">●</span>CH.08 // MONITOR · BACK-BURNER</div>
+          <div class="right">RECORDS <b>06</b></div>
+        </div>
+        <table class="ledger">
+          <thead>
+            <tr>
+              <th>№</th>
+              <th>Plan</th>
+              <th>Type</th>
+              <th>Effective</th>
+              <th>Last Touch</th>
+              <th>Watch For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">01</td>
+              <td class="plan">Prime Healthcare / Central Maine</td>
+              <td><span class="type-pill full">Full</span></td>
+              <td class="eff">8 / 01</td>
+              <td class="blocked">Pushed off cycle</td>
+              <td class="next">Reschedule signal from client</td>
+            </tr>
+            <tr>
+              <td class="num">02</td>
+              <td class="plan">Can-Am Bridges</td>
+              <td><span class="type-pill full">Full</span></td>
+              <td class="eff">10 / 01</td>
+              <td class="blocked">Just started</td>
+              <td class="next">Initial scoping meeting</td>
+            </tr>
+            <tr>
+              <td class="num">03</td>
+              <td class="plan">Can-Am Buildings</td>
+              <td><span class="type-pill full">Full</span></td>
+              <td class="eff">10 / 01</td>
+              <td class="blocked">Just started</td>
+              <td class="next">Initial scoping meeting</td>
+            </tr>
+            <tr>
+              <td class="num">04</td>
+              <td class="plan">Stout Co.</td>
+              <td><span class="type-pill excel">Excel-Wise</span></td>
+              <td class="eff">7 / 01</td>
+              <td class="blocked">No meeting yet</td>
+              <td class="next">First sync · usually straightforward</td>
+            </tr>
+            <tr>
+              <td class="num">05</td>
+              <td class="plan">Bonnie Corp.</td>
+              <td><span class="type-pill excel">Excel-Wise</span></td>
+              <td class="eff">7 / 01</td>
+              <td class="blocked">Nothing active</td>
+              <td class="next">First sync</td>
+            </tr>
+            <tr>
+              <td class="num">06</td>
+              <td class="plan">Leiby's Dairy</td>
+              <td><span class="type-pill excel">Excel-Wise</span></td>
+              <td class="eff">8 / 01</td>
+              <td class="blocked">Mtg canceled today</td>
+              <td class="next">Reschedule</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="closed-panel">
+        <span class="check">✓</span>
+        <span class="closed-panel-label">Closed</span>
+        <span class="closed-panel-text"><b>Episcopal</b> — off the list this cycle. No further action.</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: PERSONAL LAB -->
+    <section class="slide" data-label="09 — The Lab">
+      <div class="eye">
+        <span class="tick"></span>
+        §09 / THE PERSONAL LAB / TRANSMISSION 026
+      </div>
+      <h1 class="h-display">the <em>lab.</em></h1>
+      <p class="lede-rf">
+        Tools I'm building. Some derived from real one-off work I'd otherwise do twice. <b>No deadlines.</b> They ship when they ship — usually fast.
+      </p>
+
+      <div class="lab-grid">
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state scaffold">Scaffold</span>
+            <span class="lab-card-num">№ 01</span>
+          </div>
+          <h4 class="lab-card-title">Plan Ops Dashboard</h4>
+          <p class="lab-card-pitch">A living version of this exact brief. Type a plan name, get status, blockers, next moves. The deck you're looking at — but self-serve, for the whole caseload.</p>
+          <div class="lab-derived">Derived from <b>this brief itself</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">HTML / JS</span>
+            <span class="lab-chip">no-build</span>
+            <span class="lab-chip">JSON-driven</span>
+            <span class="lab-chip">printable</span>
+          </div>
+        </div>
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state flight">In Flight</span>
+            <span class="lab-card-num">№ 02</span>
+          </div>
+          <h4 class="lab-card-title">Census Validator — Web</h4>
+          <p class="lab-card-pitch">Wrap the Python version in a browser UI. Drag a file in, see the checks, download the report. Ships the logic in a form anyone on the team can use.</p>
+          <div class="lab-derived">Derived from <b>existing Python tool</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">HTML form</span>
+            <span class="lab-chip">in-browser</span>
+            <span class="lab-chip">report export</span>
+          </div>
+        </div>
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state idea">Idea</span>
+            <span class="lab-card-num">№ 03</span>
+          </div>
+          <h4 class="lab-card-title">Deferral Ambiguity Analyzer</h4>
+          <p class="lab-card-pitch">Drop an ADP-style deferral export. Get the three buckets — clean, ambiguous, out-of-range — plus the client-facing notification list, ready to export. Generalizes the workaround.</p>
+          <div class="lab-derived">Derived from <b>Pella SC · ADP workaround</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">case study</span>
+            <span class="lab-chip">reusable</span>
+            <span class="lab-chip">client artifact</span>
+          </div>
+        </div>
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state idea">Idea</span>
+            <span class="lab-card-num">№ 04</span>
+          </div>
+          <h4 class="lab-card-title">Balance File Completeness Checker</h4>
+          <p class="lab-card-pitch">Cross-references a balance file against the participant master by SSN. Surfaces anyone with a balance who isn't in the system. Two minutes of running beats two days of finding out late.</p>
+          <div class="lab-derived">Derived from <b>Callidi Tas · missing-people finding</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">file diff</span>
+            <span class="lab-chip">SSN match</span>
+            <span class="lab-chip">pre-load gate</span>
+          </div>
+        </div>
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state idea">Idea</span>
+            <span class="lab-card-num">№ 05</span>
+          </div>
+          <h4 class="lab-card-title">Hand-off Doc Generator</h4>
+          <p class="lab-card-pitch">Structured form → clean hand-off doc. Base file state, AQT config, outstanding items, owner. So the OOO hand-off isn't a Friday-afternoon scramble every time.</p>
+          <div class="lab-derived">Derived from <b>this cycle · Haverhill + Callidi hand-offs</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">form → MD</span>
+            <span class="lab-chip">printable</span>
+            <span class="lab-chip">template</span>
+          </div>
+        </div>
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state idea">Idea</span>
+            <span class="lab-card-num">№ 06</span>
+          </div>
+          <h4 class="lab-card-title">Loan Anomaly Inspector</h4>
+          <p class="lab-card-pitch">Feed a loan history with payment events + freeze/unfreeze events. Get a timeline view, surfaced discrepancies, and a re-amortization flag with reasoning. Replaces the manual detective work.</p>
+          <div class="lab-derived">Derived from <b>Callidi Tas · out-of-order loan</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">timeline</span>
+            <span class="lab-chip">re-amort flag</span>
+            <span class="lab-chip">audit trail</span>
+          </div>
+        </div>
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state idea">Idea</span>
+            <span class="lab-card-num">№ 07</span>
+          </div>
+          <h4 class="lab-card-title">Onboarding Tracker — Web</h4>
+          <p class="lab-card-pitch">Phase-driven, browser-native version of the Excel + VBA + Visio tracker. No file passed around — visible across the team, read-only for stakeholders, same shape.</p>
+          <div class="lab-derived">Derived from <b>existing Excel + VBA + Visio tool</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">phases</span>
+            <span class="lab-chip">shareable</span>
+            <span class="lab-chip">stakeholder view</span>
+          </div>
+        </div>
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state scaffold">Scaffold</span>
+            <span class="lab-card-num">№ 08</span>
+          </div>
+          <h4 class="lab-card-title">Personal Lab — Index</h4>
+          <p class="lab-card-pitch">Single-page anchor for the whole lab. Each tool gets a tile — screenshot, one paragraph, link to demo. The thing you open when you want to remember what you've built.</p>
+          <div class="lab-derived">Derived from <b>everything above</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">static</span>
+            <span class="lab-chip">anchor</span>
+            <span class="lab-chip">easy to update</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 10: 14-DAY CYCLE -->
+    <section class="slide" data-label="10 — 14 Days">
+      <h3>§10 · cycle plan</h3>
+      <div class="eye">
+        <span class="eye-dot"></span>
+        <span>cycle · 026 · apr 22 → may 06</span>
+      </div>
+      <h1 class="h-display">fourteen <em>days.</em></h1>
+      <p class="lede-rf">Work on the left, <b>lab on the right</b>. Both columns move every day — the lab is a standing lane, not an afterthought.</p>
+
+      <div class="cycle-head">
+        <div class="ch-date">date</div>
+        <div class="ch-work"><span class="ch-tick work"></span>work</div>
+        <div class="ch-lab"><span class="ch-tick lab"></span>lab</div>
+      </div>
+
+      <div class="cycle-grid">
+
+        <div class="cycle-row today">
+          <div class="cycle-date">
+            <div class="cycle-day">Wed</div>
+            <div class="cycle-num">04·<em>22</em></div>
+            <span class="cycle-tag today">today</span>
+          </div>
+          <div class="cycle-work">
+            <ul class="cycle-list">
+              <li>Nudge Callidi Tas client — DOB / DOH on missing participants</li>
+              <li>Check whether Cutting Edge base file already went out for testing</li>
+              <li>Open the ISD "give us the file now" angle with team</li>
+            </ul>
+          </div>
+          <div class="cycle-lab">
+            <ul class="cycle-list">
+              <li>Scaffold Plan Ops Dashboard — list view + single-plan detail</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cycle-row">
+          <div class="cycle-date">
+            <div class="cycle-day">Thu</div>
+            <div class="cycle-num">04·<em>23</em></div>
+          </div>
+          <div class="cycle-work">
+            <ul class="cycle-list">
+              <li>Follow up with Damien — Haverhill participants-not-in-file list</li>
+              <li>Email new ADP rep re: Pella deferral report</li>
+              <li>If needed: build Cutting Edge base file + payroll template</li>
+            </ul>
+          </div>
+          <div class="cycle-lab">
+            <ul class="cycle-list">
+              <li class="muted">continue dashboard scaffold</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cycle-row">
+          <div class="cycle-date">
+            <div class="cycle-day">Fri</div>
+            <div class="cycle-num">04·<em>24</em></div>
+            <span class="cycle-tag handoff">hand-off</span>
+          </div>
+          <div class="cycle-work">
+            <ul class="cycle-list">
+              <li>Haverhill hand-off doc — base file, AQT config, Damien outstanding</li>
+              <li>Callidi Tas hand-off doc — loan status, pending client returns</li>
+              <li>Confirm coverage owner has access to both</li>
+            </ul>
+          </div>
+          <div class="cycle-lab">
+            <ul class="cycle-list">
+              <li>Ship Plan Ops Dashboard v0.1 — ugly-but-real</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cycle-row ooo-row">
+          <div class="cycle-date">
+            <div class="cycle-day">M–F</div>
+            <div class="cycle-num">04·<em>27</em> → 05·<em>01</em></div>
+            <span class="cycle-tag ooo">ooo</span>
+          </div>
+          <div class="cycle-work">
+            <ul class="cycle-list">
+              <li class="muted">out of office · coverage owns Haverhill 5/1 asset load</li>
+            </ul>
+          </div>
+          <div class="cycle-lab">
+            <ul class="cycle-list">
+              <li class="muted">time permitting: Census Validation web wrapper — minimum viable</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cycle-row">
+          <div class="cycle-date">
+            <div class="cycle-day">Mon</div>
+            <div class="cycle-num">05·<em>04</em></div>
+          </div>
+          <div class="cycle-work">
+            <ul class="cycle-list">
+              <li>Reconcile what happened while out — Haverhill, Callidi Tas</li>
+              <li>Pella SC: deferral report should be in hand — start three-bucket split</li>
+            </ul>
+          </div>
+          <div class="cycle-lab">
+            <ul class="cycle-list">
+              <li class="muted">—</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cycle-row">
+          <div class="cycle-date">
+            <div class="cycle-day">Tue</div>
+            <div class="cycle-num">05·<em>05</em></div>
+          </div>
+          <div class="cycle-work">
+            <ul class="cycle-list">
+              <li>Pella: prep ambiguous-participant list for client notification</li>
+            </ul>
+          </div>
+          <div class="cycle-lab">
+            <ul class="cycle-list">
+              <li>Deferral Ambiguity Analyzer — extract Pella workaround into tool</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cycle-row">
+          <div class="cycle-date">
+            <div class="cycle-day">Wed</div>
+            <div class="cycle-num">05·<em>06</em></div>
+            <span class="cycle-tag cycle-end">cycle end</span>
+          </div>
+          <div class="cycle-work">
+            <ul class="cycle-list">
+              <li>ISD: finalize deferral-timing position; push "give us the file now"</li>
+              <li>Write next-cycle brief · roll open items forward</li>
+            </ul>
+          </div>
+          <div class="cycle-lab">
+            <ul class="cycle-list">
+              <li>One-Pager Portfolio Site — stand up shell, slot in what exists</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 11: LIVE CHECKLIST -->
+    <section class="slide" data-label="11 — Checklist">
+      <h3>§11 · live checklist</h3>
+      <div class="checklist-wrap">
+
+        <div class="checklist-meta">
+          <div class="checklist-meta-left">
+            <div class="eye">
+              <span class="eye-dot"></span>
+              <span>state persists · click to tick · auto-saved</span>
+            </div>
+            <h1 class="h-display">tick it <em>down.</em></h1>
+            <p class="lede-rf">One flat list, filtered by plan. <b>Urgent</b> items are rust-tagged; hand-off items are ink-tagged. Reset at cycle end.</p>
+          </div>
+          <div class="progress-block">
+            <div class="progress-num"><span class="done" id="done-count">0</span><span class="total"> / <span id="total-count">0</span></span></div>
+            <div class="progress-label">ticked · of total</div>
+            <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
+          </div>
+        </div>
+
+        <div class="filter-bar" id="filter-bar">
+          <button class="filter-chip active" data-filter="all">all <span class="count" data-count="all">0</span></button>
+          <button class="filter-chip" data-filter="urgent">urgent <span class="count" data-count="urgent">0</span></button>
+          <button class="filter-chip" data-filter="callidi">callidi <span class="count" data-count="callidi">0</span></button>
+          <button class="filter-chip" data-filter="haverhill">haverhill <span class="count" data-count="haverhill">0</span></button>
+          <button class="filter-chip" data-filter="pella">pella <span class="count" data-count="pella">0</span></button>
+          <button class="filter-chip" data-filter="ces">cutting edge <span class="count" data-count="ces">0</span></button>
+          <button class="filter-chip" data-filter="isd">isd <span class="count" data-count="isd">0</span></button>
+          <button class="filter-chip" data-filter="lab">lab <span class="count" data-count="lab">0</span></button>
+        </div>
+
+        <div class="check-section" data-section="work">
+          <div class="check-section-head">
+            <span class="label">work · caseload</span>
+            <span class="count"><b id="work-done">0</b> / <span id="work-total">0</span></span>
+          </div>
+
+          <div class="check-item" data-id="cal-01" data-plan="callidi" data-urgent="true">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Callidi Tas — nudge client for DOB / DOH on missing participants</div>
+              <div class="check-meta"><span class="tag-plan">callidi tas</span><span class="tag-urgent">eow</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="cal-02" data-plan="callidi">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Callidi Tas — raise client data-completeness issue (balance file missing people)</div>
+              <div class="check-meta"><span class="tag-plan">callidi tas</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="cal-03" data-plan="callidi">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Callidi Tas — investigate out-of-order loan; determine re-amort need</div>
+              <div class="check-meta"><span class="tag-plan">callidi tas</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="cal-04" data-plan="callidi">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Callidi Tas — write hand-off doc (loan status, pending client returns)</div>
+              <div class="check-meta"><span class="tag-plan">callidi tas</span><span class="tag-handoff">hand-off</span></div>
+            </div>
+          </div>
+
+          <div class="check-item" data-id="hav-01" data-plan="haverhill" data-urgent="true">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Haverhill — follow up with Damien on participants not in the file</div>
+              <div class="check-meta"><span class="tag-plan">haverhill</span><span class="tag-urgent">eow</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="hav-02" data-plan="haverhill" data-urgent="true">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Haverhill — arrange coverage for 5/1 asset load (before OOO)</div>
+              <div class="check-meta"><span class="tag-plan">haverhill</span><span class="tag-urgent">before ooo</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="hav-03" data-plan="haverhill">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Haverhill — write hand-off doc (base file, AQT config, outstanding)</div>
+              <div class="check-meta"><span class="tag-plan">haverhill</span><span class="tag-handoff">hand-off</span></div>
+            </div>
+          </div>
+
+          <div class="check-item" data-id="pel-01" data-plan="pella">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Pella SC — email new ADP rep; request deferral report</div>
+              <div class="check-meta"><span class="tag-plan">pella sc</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="pel-02" data-plan="pella">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Pella SC — confirm whether base file is needed this cycle</div>
+              <div class="check-meta"><span class="tag-plan">pella sc</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="pel-03" data-plan="pella">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Pella SC — start three-bucket split once deferral report lands</div>
+              <div class="check-meta"><span class="tag-plan">pella sc</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="pel-04" data-plan="pella">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Pella SC — prep ambiguous-participant list for client notification</div>
+              <div class="check-meta"><span class="tag-plan">pella sc</span></div>
+            </div>
+          </div>
+
+          <div class="check-item" data-id="ces-01" data-plan="ces">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Cutting Edge — check if base file already went out for testing</div>
+              <div class="check-meta"><span class="tag-plan">cutting edge</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="ces-02" data-plan="ces">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Cutting Edge — if not sent, build base file + payroll template and send</div>
+              <div class="check-meta"><span class="tag-plan">cutting edge</span></div>
+            </div>
+          </div>
+
+          <div class="check-item" data-id="isd-01" data-plan="isd">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">ISD — raise the "client has deferral file now, why wait" question</div>
+              <div class="check-meta"><span class="tag-plan">isd</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="isd-02" data-plan="isd">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">ISD — prepare deferral analysis package for client contact</div>
+              <div class="check-meta"><span class="tag-plan">isd</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="check-section" data-section="lab">
+          <div class="check-section-head">
+            <span class="label">the lab</span>
+            <span class="count"><b id="lab-done">0</b> / <span id="lab-total">0</span></span>
+          </div>
+
+          <div class="check-item" data-id="lab-01" data-plan="lab">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Plan Ops Dashboard — scaffold list + single-plan detail view</div>
+              <div class="check-meta">№ 01 · in flight</div>
+            </div>
+          </div>
+          <div class="check-item" data-id="lab-02" data-plan="lab">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Plan Ops Dashboard — ship v0.1 (ugly-but-real)</div>
+              <div class="check-meta">№ 01 · in flight</div>
+            </div>
+          </div>
+          <div class="check-item" data-id="lab-03" data-plan="lab">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Census Validation Tool — minimum viable web wrapper</div>
+              <div class="check-meta">№ 02 · scaffold</div>
+            </div>
+          </div>
+          <div class="check-item" data-id="lab-04" data-plan="lab">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Deferral Ambiguity Analyzer — extract Pella workaround into reusable tool</div>
+              <div class="check-meta">№ 03 · derived</div>
+            </div>
+          </div>
+          <div class="check-item" data-id="lab-05" data-plan="lab">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">One-Pager Portfolio Site — stand up shell, slot in what exists</div>
+              <div class="check-meta">№ 05 · anchor</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="checklist-footer">
+          <span>cycle · 026 · apr 22 → may 06</span>
+          <button class="checklist-reset" id="checklist-reset">reset cycle</button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="footer">
+    <button id="prev-btn">← Prev</button>
+    <div class="dots" id="dots"></div>
+    <span class="kbd-hint">← → to navigate</span>
+    <button id="next-btn">Next →</button>
+  </nav>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsContainer = document.getElementById('dots');
+  const slideLabel = document.getElementById('slide-label');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  let current = 0;
+
+  // build dots
+  slides.forEach((s, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+    dot.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(dot);
+  });
+
+  function goTo(i) {
+    if (i < 0 || i >= slides.length) return;
+    slides[current].classList.remove('active');
+    dotsContainer.children[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    dotsContainer.children[current].classList.add('active');
+    slideLabel.textContent = slides[current].dataset.label;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === slides.length - 1;
+    // reset scroll of new slide
+    slides[current].scrollTop = 0;
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); goTo(current + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goTo(current - 1); }
+    if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    if (e.key === 'End') { e.preventDefault(); goTo(slides.length - 1); }
+  });
+
+  // initialize button state
+  prevBtn.disabled = true;
+
+  // TAB HANDLING (slide 6)
+  document.querySelectorAll('.tab-bar').forEach(bar => {
+    const buttons = bar.querySelectorAll('button');
+    const slide = bar.closest('.slide');
+    const panels = slide.querySelectorAll('.tab-panel');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        slide.querySelector(`.tab-panel[data-panel="${btn.dataset.tab}"]`).classList.add('active');
+      });
+    });
+  });
+
+  // LIVE CHECKLIST
+  const CHECKLIST_KEY = 'weekly-brief-checklist-026';
+  const checkItems = document.querySelectorAll('.check-item');
+  const doneCount = document.getElementById('done-count');
+  const totalCount = document.getElementById('total-count');
+  const progressFill = document.getElementById('progress-fill');
+  const workDoneEl = document.getElementById('work-done');
+  const workTotalEl = document.getElementById('work-total');
+  const labDoneEl = document.getElementById('lab-done');
+  const labTotalEl = document.getElementById('lab-total');
+  const filterBar = document.getElementById('filter-bar');
+  const resetBtn = document.getElementById('checklist-reset');
+
+  totalCount.textContent = checkItems.length;
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(CHECKLIST_KEY);
+      if (!raw) return;
+      const done = JSON.parse(raw);
+      if (!Array.isArray(done)) return;
+      const set = new Set(done);
+      checkItems.forEach(item => {
+        if (set.has(item.dataset.id)) item.classList.add('done');
+      });
+    } catch (e) { /* ignore */ }
+  }
+
+  function saveState() {
+    const done = Array.from(checkItems)
+      .filter(i => i.classList.contains('done'))
+      .map(i => i.dataset.id);
+    try { localStorage.setItem(CHECKLIST_KEY, JSON.stringify(done)); } catch (e) { /* ignore */ }
+  }
+
+  function updateCounts() {
+    const total = checkItems.length;
+    const done = document.querySelectorAll('.check-item.done').length;
+    doneCount.textContent = done;
+    progressFill.style.width = total ? ((done / total) * 100) + '%' : '0%';
+
+    const workItems = document.querySelectorAll('.check-section[data-section="work"] .check-item');
+    const workDone = document.querySelectorAll('.check-section[data-section="work"] .check-item.done');
+    workDoneEl.textContent = workDone.length;
+    workTotalEl.textContent = workItems.length;
+
+    const labItems = document.querySelectorAll('.check-section[data-section="lab"] .check-item');
+    const labDone = document.querySelectorAll('.check-section[data-section="lab"] .check-item.done');
+    labDoneEl.textContent = labDone.length;
+    labTotalEl.textContent = labItems.length;
+
+    // filter counts
+    const countFor = (predicate) => Array.from(checkItems).filter(predicate).length;
+    const counts = {
+      all: total,
+      urgent: countFor(i => i.dataset.urgent === 'true'),
+      callidi: countFor(i => i.dataset.plan === 'callidi'),
+      haverhill: countFor(i => i.dataset.plan === 'haverhill'),
+      pella: countFor(i => i.dataset.plan === 'pella'),
+      ces: countFor(i => i.dataset.plan === 'ces'),
+      isd: countFor(i => i.dataset.plan === 'isd'),
+      lab: countFor(i => i.dataset.plan === 'lab')
+    };
+    Object.keys(counts).forEach(k => {
+      const el = document.querySelector(`[data-count="${k}"]`);
+      if (el) el.textContent = counts[k];
+    });
+  }
+
+  function applyFilter(filter) {
+    checkItems.forEach(item => {
+      let show = false;
+      if (filter === 'all') show = true;
+      else if (filter === 'urgent') show = item.dataset.urgent === 'true';
+      else show = item.dataset.plan === filter;
+      item.classList.toggle('hidden', !show);
+    });
+    // hide section heads whose items are all hidden
+    document.querySelectorAll('.check-section').forEach(sec => {
+      const visible = sec.querySelectorAll('.check-item:not(.hidden)').length;
+      sec.style.display = visible ? '' : 'none';
+    });
+  }
+
+  checkItems.forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.toggle('done');
+      updateCounts();
+      saveState();
+    });
+  });
+
+  filterBar.addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-chip');
+    if (!btn) return;
+    filterBar.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilter(btn.dataset.filter);
+  });
+
+  resetBtn.addEventListener('click', () => {
+    if (!confirm('Reset all ticks for this cycle?')) return;
+    checkItems.forEach(i => i.classList.remove('done'));
+    try { localStorage.removeItem(CHECKLIST_KEY); } catch (e) { /* ignore */ }
+    updateCounts();
+  });
+
+  loadState();
+  updateCounts();
+</script>
+
+</body>
+</html>

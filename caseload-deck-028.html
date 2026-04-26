@@ -1,0 +1,3339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Weekly Brief · Cycle 028 · Apr 22 → May 06</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=JetBrains+Mono:wght@300;400;500;700&family=Major+Mono+Display&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Retro-future warm console palette */
+    --bg:           #ede6d3;
+    --bg-panel:     #e3dac3;
+    --bg-panel-2:   #d9cfb4;
+    --ink:          #1a1f1d;
+    --ink-soft:     #3c4541;
+    --ink-mute:     #6a6f69;
+    --rust:         #c65a2e;
+    --rust-deep:    #a04620;
+    --teal:         #2d8e8a;
+    --teal-deep:    #1f6562;
+    --butter:       #b8882e;
+    --butter-soft:  #d4a854;
+    --rule:         rgba(26,31,29,.18);
+    --rule-strong:  rgba(26,31,29,.32);
+    --rule-faint:   rgba(26,31,29,.08);
+    --field-bg:     #f5efde;
+
+    --scanline-color:   rgba(26,31,29,.35);
+    --scanline-opacity: .035;
+
+    --mono:    "Space Mono", "JetBrains Mono", ui-monospace, monospace;
+    --sans:    "DM Sans", system-ui, -apple-system, sans-serif;
+    --display: "Major Mono Display", "Space Mono", monospace;
+
+    /* Legacy aliases (kept so slides 2–10 keep rendering until redesigned) */
+    --paper:       var(--bg);
+    --paper-deep:  var(--bg-panel);
+    --accent:      var(--rust);
+    --accent-deep: var(--rust-deep);
+    --muted:       var(--ink-mute);
+    --ok:          var(--teal-deep);
+    --warn:        var(--butter);
+    --danger:      var(--rust);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow: hidden;
+  }
+
+  /* CRT scanline overlay */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg,
+      var(--scanline-color) 0px,
+      var(--scanline-color) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    opacity: var(--scanline-opacity);
+    pointer-events: none;
+    z-index: 100;
+    mix-blend-mode: multiply;
+  }
+
+  .app { position: relative; z-index: 2; height: 100vh; display: flex; flex-direction: column; }
+
+  /* HEADER */
+  header {
+    padding: 12px 28px;
+    border-bottom: 2px solid var(--rust);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono);
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.22em;
+    background: var(--bg-panel);
+  }
+  header .brand { font-weight: 700; color: var(--ink); letter-spacing: 0.28em; }
+  header .brand::before { content: "▪ "; color: var(--rust); }
+  header .meta { color: var(--ink-mute); }
+  header .meta span + span::before { content: " / "; color: var(--rust); margin: 0 4px; font-weight: 700; }
+
+  /* STAGE */
+  .stage {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    padding: 40px 64px 80px;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .slide.active {
+    opacity: 1; pointer-events: auto; transform: translateY(0);
+  }
+
+  .slide::-webkit-scrollbar { width: 6px; }
+  .slide::-webkit-scrollbar-track { background: transparent; }
+  .slide::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+
+  /* NAV */
+  nav.footer {
+    border-top: 1px solid var(--rule);
+    padding: 10px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--paper);
+  }
+  nav.footer .dots { display: flex; gap: 6px; }
+  nav.footer .dot {
+    width: 8px; height: 8px; border: 1px solid var(--ink);
+    cursor: pointer; transition: background 0.15s;
+    background: transparent;
+  }
+  nav.footer .dot.active { background: var(--accent); border-color: var(--accent); }
+  nav.footer .dot:hover { background: var(--ink); }
+  nav.footer button {
+    background: transparent; border: 1px solid var(--ink); color: var(--ink);
+    font: inherit; padding: 6px 14px; cursor: pointer; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: background 0.15s, color 0.15s;
+  }
+  nav.footer button:hover { background: var(--ink); color: var(--paper); }
+  nav.footer button:disabled { opacity: 0.3; cursor: not-allowed; }
+  nav.footer .kbd-hint { color: var(--muted); }
+
+  /* TYPOGRAPHY */
+  h1.display {
+    font-weight: 300;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+  }
+  h1.display em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  h2 {
+    font-weight: 600;
+    font-size: clamp(28px, 3.5vw, 44px);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    margin-bottom: 24px;
+  }
+
+  h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  p, li { font-size: 16px; line-height: 1.55; max-width: 72ch; }
+  .lede { font-size: 20px; line-height: 1.45; color: var(--ink); font-weight: 300; font-style: italic; }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .rule { height: 1px; background: var(--rule); margin: 24px 0; width: 100%; }
+  .rule.accent { background: var(--accent); height: 2px; width: 80px; margin: 16px 0; }
+
+  /* ============================================================
+     COVER — Retro-Future Console
+     ============================================================ */
+  .cover {
+    padding: 0 !important;
+    overflow-y: auto;
+  }
+  .cover-inner {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+
+  /* Masthead */
+  .cover-mast {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 18px 40px;
+    background: var(--bg-panel);
+    position: relative;
+  }
+  .cover-mast::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -2px;
+    height: 2px;
+    background: var(--rust);
+  }
+  .cover-mast-left {
+    display: flex; align-items: center; gap: 18px; min-width: 0;
+  }
+  .sigil {
+    width: 38px; height: 38px;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--display);
+    font-size: 17.5px;
+    color: var(--ink);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .sigil::after {
+    content: "";
+    position: absolute; inset: 3px;
+    border: 1px solid var(--rule);
+    border-radius: 50%;
+  }
+  .mast-title {
+    font-family: var(--display);
+    font-size: 19px;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    text-transform: lowercase;
+    white-space: nowrap;
+  }
+  .mast-stencil {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 4px 10px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .mast-stencil .sep { color: var(--rust); margin: 0 6px; font-weight: 700; }
+  .mast-folio {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .mast-folio b { color: var(--ink); font-weight: 700; }
+
+  /* Strapline + gauges band */
+  .cover-band {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) auto;
+    gap: 48px;
+    align-items: center;
+    padding: 56px 40px;
+  }
+  .strapline { min-width: 0; }
+  .strapline-eye {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .strapline-eye .tick {
+    display: inline-block;
+    width: 22px; height: 1px;
+    background: var(--rust);
+  }
+  .strapline h1.cover-h1 {
+    font-family: var(--display);
+    font-size: clamp(42px, 6.4vw, 88px);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    margin: 0 0 22px;
+    line-height: 1.05;
+    text-transform: lowercase;
+    font-weight: 400;
+  }
+  .strapline h1.cover-h1 em {
+    font-style: normal;
+    color: var(--rust);
+  }
+  .strapline .lede {
+    font-family: var(--sans);
+    font-style: normal;
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-size: 17px;
+    line-height: 1.55;
+    max-width: 56ch;
+  }
+  .strapline .lede b {
+    color: var(--ink);
+    font-weight: 600;
+    border-bottom: 1px dotted var(--rust);
+  }
+
+  /* Gauge stack */
+  .gauges {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(150px, 180px));
+    gap: 12px;
+  }
+  .gauge {
+    border: 1px solid var(--rule-strong);
+    background: var(--bg-panel);
+    padding: 12px 14px 14px;
+    display: flex; flex-direction: column; gap: 6px;
+    position: relative;
+    border-radius: 2px;
+  }
+  .gauge::before {
+    content: "";
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 10px; height: 10px;
+    border-top: 1.5px solid var(--rust);
+    border-left: 1.5px solid var(--rust);
+  }
+  .gauge::after {
+    content: "";
+    position: absolute;
+    bottom: -1px; right: -1px;
+    width: 10px; height: 10px;
+    border-bottom: 1.5px solid var(--rust);
+    border-right: 1.5px solid var(--rust);
+  }
+  .gauge-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .gauge-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 8px;
+  }
+  .gauge-value {
+    font-family: var(--mono);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .gauge-arc {
+    display: flex; gap: 2px;
+    align-items: flex-end;
+    height: 18px;
+  }
+  .gauge-arc i {
+    display: block;
+    width: 3px;
+    background: var(--rule-strong);
+    border-radius: 1px;
+  }
+  .gauge-arc i.on { background: var(--teal); }
+  .gauge-arc i:nth-child(1) { height: 30%; }
+  .gauge-arc i:nth-child(2) { height: 45%; }
+  .gauge-arc i:nth-child(3) { height: 60%; }
+  .gauge-arc i:nth-child(4) { height: 75%; }
+  .gauge-arc i:nth-child(5) { height: 90%; }
+  .gauge-arc i:nth-child(6) { height: 100%; }
+  .gauge-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  /* Operator strip — bottom of cover */
+  .cover-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    background: var(--bg);
+  }
+  .cover-strip .cell {
+    padding: 16px 24px;
+    border-right: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .cover-strip .cell:last-child { border-right: none; }
+  .cover-strip .cell b {
+    display: block;
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    margin-top: 4px;
+  }
+
+  /* ============================================================
+     REUSABLE — Retro-Future display + eye + lede
+     ============================================================ */
+  .eye {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .eye .tick {
+    display: inline-block;
+    width: 22px; height: 1px;
+    background: var(--rust);
+  }
+  .h-display {
+    font-family: var(--display);
+    font-size: clamp(36px, 5.2vw, 64px);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    margin: 0 0 18px;
+    line-height: 1.05;
+    text-transform: lowercase;
+    font-weight: 400;
+  }
+  .h-display em { font-style: normal; color: var(--rust); }
+  .lede-rf {
+    font-family: var(--sans);
+    font-style: normal;
+    font-weight: 400;
+    color: var(--ink-soft);
+    font-size: 17px;
+    line-height: 1.5;
+    max-width: 64ch;
+    margin: 0;
+  }
+  .lede-rf b {
+    color: var(--ink);
+    font-weight: 600;
+    border-bottom: 1px dotted var(--rust);
+  }
+
+  /* ============================================================
+     TRIAGE BOARD (slide 2)
+     ============================================================ */
+  .tb {
+    margin-top: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* Coverage Beacon */
+  .beacon {
+    position: relative;
+    border: 1px solid var(--rust);
+    background: var(--bg-panel);
+    padding: 20px 24px 22px 30px;
+    border-radius: 2px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 26px;
+    align-items: flex-start;
+  }
+  .beacon::before {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 4px;
+    background: var(--rust);
+  }
+  .beacon-icon {
+    font-family: var(--display);
+    font-size: 56px;
+    color: var(--rust);
+    line-height: 0.9;
+    padding-top: 2px;
+  }
+
+  /* Post-wire variant — teal instead of rust */
+  .beacon.post-wire { border-color: var(--teal); }
+  .beacon.post-wire::before { background: var(--teal); }
+  .beacon.post-wire .beacon-icon { color: var(--teal); }
+  .beacon.post-wire .beacon-label { color: var(--teal-deep); }
+  .beacon.post-wire .beacon-plan .beacon-due { color: var(--teal-deep); }
+  .beacon-body { min-width: 0; }
+  .beacon-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .beacon-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .beacon-item { max-width: none; }
+  .beacon-plan {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    line-height: 1.3;
+  }
+  .beacon-plan .beacon-due {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--rust);
+    font-weight: 700;
+  }
+  .beacon-desc {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    padding-left: 14px;
+    margin-top: 3px;
+    border-left: 2px solid var(--rule);
+    max-width: none;
+  }
+  .beacon-desc b { color: var(--ink); font-weight: 600; }
+
+  /* Ledger frame */
+  .ledger-frame {
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    background: var(--bg);
+  }
+  .ledger-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 16px;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--rule-strong);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .ledger-head .live-dot {
+    color: var(--rust);
+    margin-right: 6px;
+  }
+  .ledger-head .right { color: var(--ink-mute); }
+  .ledger-head .right b { color: var(--ink); font-weight: 700; }
+
+  table.ledger {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  table.ledger th {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule-strong);
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 500;
+    background: var(--bg);
+  }
+  table.ledger td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--rule-faint);
+    color: var(--ink);
+    vertical-align: middle;
+  }
+  table.ledger tbody tr:last-child td { border-bottom: none; }
+  table.ledger tbody tr:hover td { background: rgba(45,142,138,.06); }
+  table.ledger td.num {
+    color: var(--ink-mute);
+    width: 36px;
+  }
+  table.ledger td.plan {
+    font-family: var(--sans);
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  table.ledger td.blocked {
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  table.ledger td.eff {
+    color: var(--ink);
+    white-space: nowrap;
+    font-weight: 700;
+  }
+  table.ledger td.next {
+    font-family: var(--sans);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  /* State pills */
+  .state {
+    display: inline-block;
+    padding: 3px 9px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 2px;
+    border: 1px solid;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .state.coverage { background: var(--rust); color: #fff; border-color: var(--rust-deep); }
+  .state.waiting  { background: var(--butter); color: #fff; border-color: var(--butter); }
+  .state.ramping  { background: var(--teal); color: #fff; border-color: var(--teal-deep); }
+  .state.open     { background: transparent; color: var(--ink); border-color: var(--ink); }
+  .state.debate   { background: var(--butter-soft); color: var(--ink); border-color: var(--butter); }
+  /* Plan lifecycle stages */
+  .state.onboard  { background: transparent; color: var(--ink-mute); border-color: var(--ink-mute); }
+  .state.intake   { background: var(--butter-soft); color: var(--ink); border-color: var(--butter); }
+  .state.validate { background: var(--butter); color: #fff; border-color: var(--butter); }
+  .state.prep     { background: var(--rust); color: #fff; border-color: var(--rust-deep); }
+  .state.wrap     { background: var(--teal); color: #fff; border-color: var(--teal-deep); }
+  .state.complete { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  /* Uniform stage-pill width inside the active ledger */
+  table.ledger .state {
+    min-width: 108px;
+    text-align: center;
+  }
+  /* Lab project states */
+  .state.flight   { background: var(--teal); color: #fff; border-color: var(--teal-deep); }
+  .state.ready    { background: var(--rust); color: #fff; border-color: var(--rust-deep, #9a4420); }
+  .state.scaffold { background: transparent; color: var(--butter); border-color: var(--butter); }
+  .state.idea     { background: transparent; color: var(--ink-mute); border-color: var(--ink-mute); }
+  .state.shipped  { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .state.folded   { background: transparent; color: var(--ink-mute); border-color: var(--ink-mute); opacity: 0.7; text-decoration: line-through; }
+
+  /* Monitor strip */
+  .monitor-strip {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .monitor-strip-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .monitor-strip-label .tick {
+    display: inline-block;
+    width: 22px; height: 1px;
+    background: var(--ink-mute);
+  }
+  .chip-row {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .chip {
+    display: inline-flex; align-items: baseline; gap: 8px;
+    padding: 6px 12px;
+    border: 1px solid var(--rule-strong);
+    background: var(--bg-panel);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    border-radius: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  .chip .chip-date {
+    color: var(--ink-mute);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .chip .chip-note {
+    color: var(--ink-mute);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  /* Closed line */
+  .closed-line {
+    display: flex; align-items: center; gap: 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding-top: 4px;
+  }
+  .closed-line .check {
+    display: inline-grid; place-items: center;
+    width: 18px; height: 18px;
+    background: var(--teal);
+    color: #fff;
+    font-weight: 700;
+    border-radius: 2px;
+  }
+  .closed-line b { color: var(--ink); font-weight: 700; }
+
+  /* ============================================================
+     PLAN DETAIL — Retro-Future Console (slides 3–7)
+     ============================================================ */
+  .slide.plan { padding: 44px 72px 80px; }
+
+  .plan-head { margin-bottom: 32px; }
+
+  .plan-display-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .plan-h1 {
+    font-family: var(--display);
+    font-size: clamp(40px, 5.4vw, 72px);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    line-height: 1;
+    text-transform: lowercase;
+    font-weight: 400;
+    margin: 0;
+  }
+  .plan-h1 em { font-style: normal; color: var(--rust); }
+
+  .plan-eff {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-align: right;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+  .plan-eff b {
+    display: block;
+    color: var(--ink);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .plan-meta-strip {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    flex-wrap: wrap;
+  }
+  .plan-meta-strip .meta-label { color: var(--ink-mute); }
+  .plan-meta-strip .meta-val { color: var(--ink); font-weight: 700; letter-spacing: 0.1em; margin-left: 4px; }
+  .plan-meta-strip .meta-sep { color: var(--rust); font-weight: 700; opacity: 0.7; }
+
+  .plan-lede {
+    font-family: var(--sans);
+    font-size: 19px;
+    line-height: 1.45;
+    color: var(--ink);
+    font-weight: 400;
+    font-style: normal;
+    max-width: 70ch;
+    margin: 0 0 36px;
+  }
+
+  /* TRANSMISSION — finding / note panel */
+  .transmission {
+    position: relative;
+    border: 1px solid var(--rust);
+    background: var(--bg-panel);
+    padding: 22px 26px 22px 30px;
+    border-radius: 2px;
+    margin-bottom: 36px;
+  }
+  .transmission::before {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 4px;
+    background: var(--rust);
+  }
+  .transmission-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .transmission-label::before {
+    content: "⚑";
+    font-family: var(--display);
+    font-size: 14px;
+  }
+  .transmission-body {
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .transmission-body b { font-weight: 600; }
+  .transmission-body em { color: var(--rust); font-style: italic; }
+  .transmission-body ol,
+  .transmission-body ul {
+    margin: 10px 0 0;
+    padding-left: 22px;
+    font-size: 14.5px;
+    line-height: 1.65;
+  }
+  .transmission-body ol li,
+  .transmission-body ul li { margin: 4px 0; max-width: none; }
+
+  /* PANEL — bracketed bordered card */
+  .panel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .panel {
+    position: relative;
+    border: 1px solid var(--rule-strong);
+    background: var(--bg);
+    padding: 22px 24px 24px;
+    border-radius: 2px;
+  }
+  .panel::before, .panel::after {
+    content: "";
+    position: absolute;
+    width: 10px; height: 10px;
+  }
+  .panel::before {
+    top: -1px; left: -1px;
+    border-top: 1.5px solid var(--rust);
+    border-left: 1.5px solid var(--rust);
+  }
+  .panel::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 1.5px solid var(--rust);
+    border-right: 1.5px solid var(--rust);
+  }
+  .panel-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  /* THREAD LIST */
+  .thread-list { list-style: none; padding: 0; margin: 0; }
+  .thread-list li {
+    padding: 12px 0;
+    border-bottom: 1px dotted var(--rule);
+  }
+  .thread-list li:first-child { padding-top: 0; }
+  .thread-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .thread-title {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    line-height: 1.35;
+  }
+  .thread-title::before {
+    content: "▸";
+    color: var(--rust);
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .thread-body {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    padding-left: 18px;
+    margin-top: 4px;
+    max-width: none;
+  }
+
+  /* TRIGGER SEQUENCE — numbered with arrows */
+  .trigger-seq {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: seq;
+  }
+  .trigger-seq li {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 14px;
+    align-items: baseline;
+    padding: 11px 0;
+    border-bottom: 1px dotted var(--rule);
+    counter-increment: seq;
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.4;
+    max-width: none;
+  }
+  .trigger-seq li:first-child { padding-top: 0; }
+  .trigger-seq li:last-child { border-bottom: none; padding-bottom: 0; }
+  .trigger-seq li::before {
+    content: counter(seq, decimal-leading-zero);
+    font-family: var(--mono);
+    color: var(--rust);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    font-variant-numeric: tabular-nums;
+  }
+  .trigger-seq li::after {
+    content: "→";
+    color: var(--ink-mute);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  /* OFF-PLATE strip — teal exit condition */
+  .off-plate {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+    align-items: center;
+    padding: 18px 22px;
+    background: var(--bg-panel);
+    border-left: 3px solid var(--teal);
+    border-radius: 2px;
+  }
+  .off-plate-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--teal-deep);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .off-plate-text {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .off-plate-text b { font-weight: 600; }
+
+  /* PLAN TIMELINE — horizontal key-dates strip under panel grid */
+  .plan-timeline {
+    position: relative;
+    margin: 0 0 32px;
+    padding: 20px 28px 22px;
+    background: var(--bg-panel);
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+  }
+  .plan-timeline::before,
+  .plan-timeline::after {
+    content: "";
+    position: absolute;
+    width: 10px; height: 10px;
+  }
+  .plan-timeline::before {
+    top: -1px; left: -1px;
+    border-top: 1.5px solid var(--rust);
+    border-left: 1.5px solid var(--rust);
+  }
+  .plan-timeline::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 1.5px solid var(--rust);
+    border-right: 1.5px solid var(--rust);
+  }
+  .plan-timeline-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 22px;
+  }
+  .plan-timeline-track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    align-items: start;
+    position: relative;
+    padding: 0 6px;
+  }
+  .plan-timeline-track::before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    left: calc(100% / var(--count) / 2 + 6px);
+    right: calc(100% / var(--count) / 2 + 6px);
+    height: 1px;
+    background: var(--rule-strong);
+    z-index: 0;
+  }
+  .plan-timeline-event {
+    text-align: center;
+    position: relative;
+    padding-top: 22px;
+    z-index: 1;
+  }
+  .plan-timeline-event::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--rule-strong);
+    border: 2px solid var(--bg-panel);
+  }
+  .plan-timeline-event.done::before {
+    background: var(--ink-mute);
+  }
+  .plan-timeline-event.today::before {
+    background: var(--rust);
+    width: 16px; height: 16px;
+    top: -2px;
+    box-shadow: 0 0 0 4px rgba(198,90,46,0.15);
+  }
+  .plan-timeline-event.upcoming::before {
+    background: transparent;
+    border: 2px solid var(--teal);
+  }
+  .plan-timeline-event.risk::before {
+    background: var(--butter);
+    border-color: var(--butter);
+  }
+  .plan-timeline-date {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .plan-timeline-event.today .plan-timeline-date {
+    color: var(--rust);
+  }
+  .plan-timeline-event.upcoming .plan-timeline-date {
+    color: var(--teal-deep);
+  }
+  .plan-timeline-event.risk .plan-timeline-date {
+    color: var(--butter);
+  }
+  .plan-timeline-caption {
+    font-family: var(--sans);
+    font-size: 12.5px;
+    color: var(--ink);
+    margin-top: 5px;
+    line-height: 1.35;
+    padding: 0 4px;
+    max-width: none;
+  }
+  .plan-timeline-event.done .plan-timeline-caption {
+    color: var(--ink-mute);
+  }
+
+  /* HAND-OFF strip — dark, urgent */
+  .handoff {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 24px;
+    align-items: center;
+    padding: 18px 22px;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 2px;
+  }
+  .handoff-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--rust);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .handoff-text {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--bg);
+    line-height: 1.5;
+  }
+  .handoff-text b { color: #fff; font-weight: 600; }
+  .handoff-deadline {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--bg-panel);
+    text-align: right;
+    line-height: 1.4;
+  }
+  .handoff-deadline b { color: #fff; font-weight: 700; display: block; font-size: 14px; margin-top: 2px; }
+
+  /* CHECKLIST */
+  .checklist-wrap {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+  .checklist-meta {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .progress-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+  }
+  .progress-num .done { color: var(--accent); }
+  .progress-num .total { color: var(--muted); }
+
+  .check-section { margin-top: 28px; }
+  .check-section h3 {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    display: flex; justify-content: space-between;
+  }
+  .check-section h3 span { color: var(--accent); }
+
+  .check-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 10px 8px;
+    border-bottom: 1px dotted var(--paper-deep);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .check-item:hover { background: var(--paper-deep); }
+  .check-box {
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--ink);
+    margin-top: 3px;
+    position: relative;
+    transition: all 0.15s;
+  }
+  .check-item.done .check-box {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .check-item.done .check-box::after {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+  }
+  .check-body { flex: 1; }
+  .check-title { font-size: 15px; line-height: 1.4; }
+  .check-item.done .check-title {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+  .check-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+  .check-meta .tag-plan { color: var(--ink); }
+  .check-meta .tag-urgent { color: var(--accent); }
+
+  /* ============================================================
+     PERSONAL LAB (slide 9)
+     ============================================================ */
+  .lab-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-top: 28px;
+  }
+
+  .lab-card {
+    position: relative;
+    border: 1px solid var(--rule-strong);
+    background: var(--bg);
+    padding: 20px 22px 22px;
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+  }
+  .lab-card::before, .lab-card::after {
+    content: "";
+    position: absolute;
+    width: 10px; height: 10px;
+  }
+  .lab-card::before {
+    top: -1px; left: -1px;
+    border-top: 1.5px solid var(--rust);
+    border-left: 1.5px solid var(--rust);
+  }
+  .lab-card::after {
+    bottom: -1px; right: -1px;
+    border-bottom: 1.5px solid var(--rust);
+    border-right: 1.5px solid var(--rust);
+  }
+
+  .lab-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .lab-card-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .lab-card-title {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 19px;
+    color: var(--ink);
+    line-height: 1.2;
+    margin: 0 0 8px;
+    letter-spacing: -0.005em;
+  }
+
+  .lab-card-pitch {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin: 0 0 14px;
+    max-width: none;
+  }
+
+  .lab-derived {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    line-height: 1.4;
+  }
+  .lab-derived::before {
+    content: "↳";
+    color: var(--rust);
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .lab-derived b {
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+  }
+
+  .lab-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px dotted var(--rule);
+  }
+  .lab-chip {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 3px 8px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: var(--bg-panel);
+  }
+
+  /* ============================================================
+     14-DAY CYCLE PLAN (slide 10)
+     ============================================================ */
+  .cycle-head {
+    display: grid;
+    grid-template-columns: 160px 1fr 1fr;
+    margin-top: 28px;
+    background: var(--bg-panel);
+    border-top: 1px solid var(--rule);
+    border-bottom: 2px solid var(--rust);
+  }
+  .cycle-head > div {
+    padding: 12px 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+  .cycle-head .ch-date { border-right: 1px solid var(--rule); color: var(--ink); }
+  .cycle-head .ch-work { border-right: 1px solid var(--rule); }
+  .cycle-head .ch-tick {
+    display: inline-block;
+    width: 16px; height: 1px;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  .cycle-head .ch-tick.work { background: var(--ink); }
+  .cycle-head .ch-tick.lab { background: var(--rust); }
+
+  .cycle-grid {
+    display: grid;
+    grid-template-columns: 160px 1fr 1fr;
+  }
+  .cycle-row { display: contents; }
+
+  .cycle-date,
+  .cycle-work,
+  .cycle-lab {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .cycle-date {
+    border-right: 1px solid var(--rule);
+    background: var(--bg);
+    font-family: var(--mono);
+  }
+  .cycle-work { border-right: 1px solid var(--rule); }
+  .cycle-lab  { background: rgba(45,142,138,.04); }
+
+  .cycle-day {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .cycle-num {
+    font-family: var(--display);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+    line-height: 1;
+    margin: 8px 0 12px;
+    font-variant-numeric: tabular-nums;
+    text-transform: lowercase;
+  }
+  .cycle-num em { color: var(--rust); font-style: normal; }
+  .cycle-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 2px;
+    border: 1px solid;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .cycle-tag.today      { background: var(--rust); color: #fff; border-color: var(--rust-deep); }
+  .cycle-tag.handoff    { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .cycle-tag.ooo        { background: var(--butter); color: #fff; border-color: var(--butter); }
+  .cycle-tag.cycle-end  { background: var(--teal); color: #fff; border-color: var(--teal-deep); }
+
+  .cycle-list { list-style: none; padding: 0; margin: 0; }
+  .cycle-list li {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.45;
+    padding: 5px 0 5px 18px;
+    position: relative;
+    max-width: none;
+  }
+  .cycle-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    top: 5px;
+    color: var(--rust);
+    font-weight: 700;
+  }
+  .cycle-list li.muted {
+    color: var(--ink-mute);
+    font-style: italic;
+  }
+  .cycle-empty {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    opacity: 0.5;
+  }
+
+  /* TODAY row emphasis */
+  .cycle-row.today > .cycle-date {
+    background: var(--bg-panel);
+    box-shadow: inset 4px 0 0 var(--rust);
+  }
+  .cycle-row.today > .cycle-work,
+  .cycle-row.today > .cycle-lab {
+    background: rgba(198,90,46,.04);
+  }
+
+  /* OOO row emphasis */
+  .cycle-row.ooo-row > .cycle-date,
+  .cycle-row.ooo-row > .cycle-work,
+  .cycle-row.ooo-row > .cycle-lab {
+    background: rgba(184,136,46,.07);
+  }
+  .cycle-row.ooo-row > .cycle-date {
+    box-shadow: inset 4px 0 0 var(--butter);
+  }
+
+  /* ============================================================
+     LIVE CHECKLIST (slide 11)
+     ============================================================ */
+  .checklist-wrap {
+    max-width: 940px;
+    margin: 0 auto;
+  }
+  .checklist-meta {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: end;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--rust);
+  }
+  .checklist-meta-left .h-display { margin-bottom: 14px; }
+  .checklist-meta-left .lede-rf { margin: 0; max-width: 56ch; }
+
+  .progress-block {
+    text-align: right;
+    min-width: 220px;
+  }
+  .progress-num {
+    font-family: var(--mono);
+    font-size: 42px;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .progress-num .done { color: var(--rust); }
+  .progress-num .total { color: var(--ink-mute); font-weight: 400; }
+  .progress-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-top: 6px;
+  }
+  .progress-bar {
+    width: 220px;
+    height: 4px;
+    background: var(--rule-strong);
+    margin-top: 12px;
+    margin-left: auto;
+    position: relative;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    background: var(--rust);
+    transition: width 0.25s ease;
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+  .filter-chip {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    background: var(--bg);
+    border: 1px solid var(--rule-strong);
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+  .filter-chip:hover { background: var(--bg-panel); color: var(--ink); }
+  .filter-chip.active {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .filter-chip .count {
+    color: var(--ink-mute);
+    margin-left: 6px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .filter-chip.active .count { color: var(--bg-panel); }
+
+  .check-section { margin-top: 32px; }
+  .check-section:first-of-type { margin-top: 0; }
+
+  .check-section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule-strong);
+    margin-bottom: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+  .check-section-head .label { color: var(--ink); font-weight: 700; }
+  .check-section-head .label::before {
+    content: "";
+    display: inline-block;
+    width: 16px; height: 1px;
+    background: var(--rust);
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  .check-section-head .count {
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+  }
+  .check-section-head .count b { color: var(--rust); font-weight: 700; }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 12px;
+    border-bottom: 1px dotted var(--rule);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .check-item:hover { background: var(--bg-panel); }
+  .check-item.hidden { display: none; }
+
+  .check-box {
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--ink);
+    margin-top: 2px;
+    position: relative;
+    transition: all 0.15s;
+    border-radius: 2px;
+    background: var(--bg);
+  }
+  .check-item.done .check-box {
+    background: var(--rust);
+    border-color: var(--rust-deep);
+  }
+  .check-item.done .check-box::after {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+  }
+
+  .check-body { flex: 1; min-width: 0; }
+  .check-title {
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  .check-item.done .check-title {
+    text-decoration: line-through;
+    text-decoration-color: var(--rust);
+    color: var(--ink-mute);
+  }
+  .check-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-top: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .check-meta .tag-plan { color: var(--ink); font-weight: 700; }
+  .check-meta .tag-urgent {
+    display: inline-block;
+    padding: 2px 7px;
+    background: var(--rust);
+    color: #fff;
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    border-radius: 2px;
+  }
+  .check-meta .tag-handoff {
+    display: inline-block;
+    padding: 2px 7px;
+    background: var(--ink);
+    color: var(--bg);
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    border-radius: 2px;
+  }
+
+  .checklist-footer {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .checklist-reset {
+    background: transparent;
+    border: 1px solid var(--rule-strong);
+    color: var(--ink-mute);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+  .checklist-reset:hover {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  /* MONITOR LEDGER (slide 8) — uses .ledger-frame + .ledger table */
+  .type-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 2px;
+    border: 1px solid;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .type-pill.full   { color: var(--ink); border-color: var(--rule-strong); background: var(--bg-panel); }
+  .type-pill.excel  { color: var(--teal-deep); border-color: var(--teal); background: transparent; }
+
+  .closed-panel {
+    margin-top: 28px;
+    border: 1px solid var(--rule);
+    background: var(--bg-panel);
+    padding: 18px 22px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-left: 3px solid var(--teal);
+  }
+  .closed-panel .check {
+    display: inline-grid; place-items: center;
+    width: 22px; height: 22px;
+    background: var(--teal);
+    color: #fff;
+    font-weight: 700;
+    border-radius: 2px;
+    font-family: var(--mono);
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .closed-panel-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--teal-deep);
+    font-weight: 700;
+  }
+  .closed-panel-text {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--ink);
+  }
+  .closed-panel-text b { font-weight: 600; }
+
+  /* ============================================================
+     FLAGS (slide 8) — auto-derived registry signals
+     ============================================================ */
+  .tele-wrap { max-width: 1080px; margin: 0 auto; }
+  .tele-stack { display: flex; flex-direction: column; gap: 22px; margin-top: 28px; }
+
+  .tele-panel {
+    border: 1px solid var(--rule);
+    background: var(--bg-panel);
+    position: relative;
+    padding: 18px 22px 16px;
+  }
+  .tele-panel::before,
+  .tele-panel::after {
+    content: "";
+    position: absolute;
+    width: 10px; height: 10px;
+    border: 1.5px solid var(--rust);
+  }
+  .tele-panel::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+  .tele-panel::after  { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+  .tele-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 10px;
+    margin-bottom: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+  .tele-panel-head .label { color: var(--ink); font-weight: 700; }
+  .tele-panel-head .label::before {
+    content: "";
+    display: inline-block;
+    width: 16px; height: 1px;
+    background: var(--rust);
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  .tele-panel-head .count {
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+  }
+  .tele-panel-head .count b { color: var(--rust); font-weight: 700; }
+
+  .tele-row {
+    display: grid;
+    grid-template-columns: 110px 1fr auto;
+    gap: 14px;
+    padding: 8px 0;
+    border-bottom: 1px dotted var(--rule);
+    align-items: baseline;
+  }
+  .tele-row:last-child { border-bottom: none; }
+  .tele-key {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .tele-body {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .tele-body em { color: var(--rust); font-style: normal; font-weight: 500; }
+  .tele-body .ask {
+    display: block;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 3px;
+    padding-left: 14px;
+    border-left: 2px solid var(--rust);
+  }
+  .tele-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .tele-sev {
+    display: inline-block;
+    padding: 2px 7px;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 2px;
+    border: 1px solid;
+    margin-left: 8px;
+    line-height: 1.4;
+  }
+  .tele-sev.crit { background: var(--rust); color: #fff; border-color: var(--rust-deep); }
+  .tele-sev.warn { background: var(--butter); color: #fff; border-color: var(--butter); }
+  .tele-sev.ok   { background: transparent; color: var(--teal-deep); border-color: var(--teal); }
+
+  .tele-empty {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding: 6px 0;
+    opacity: 0.6;
+  }
+
+  /* TAB NAV for detail slides */
+  .tab-bar {
+    display: flex; gap: 4px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--rule);
+    overflow-x: auto;
+  }
+  .tab-bar button {
+    background: transparent;
+    border: none;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+    transition: color 0.15s, border 0.15s;
+  }
+  .tab-bar button:hover { color: var(--ink); }
+  .tab-bar button.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 700;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  @media (max-width: 900px) {
+    .slide { padding: 28px 24px 80px; }
+    .cover-grid { grid-template-columns: 1fr; align-items: start; gap: 24px; }
+    .plan-grid { grid-template-columns: 1fr; gap: 24px; }
+    .triage-grid { grid-template-columns: 1fr; }
+    .week-grid { grid-template-columns: 100px 1fr; }
+  }
+
+  /* reveal animation on slide change */
+  .slide.active > * {
+    animation: rise 0.5s ease backwards;
+  }
+  .slide.active > *:nth-child(1) { animation-delay: 0.05s; }
+  .slide.active > *:nth-child(2) { animation-delay: 0.1s; }
+  .slide.active > *:nth-child(3) { animation-delay: 0.15s; }
+  .slide.active > *:nth-child(4) { animation-delay: 0.2s; }
+  .slide.active > *:nth-child(5) { animation-delay: 0.25s; }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header>
+    <div class="brand">Caseload / Two-Week Brief</div>
+    <div class="meta">
+      <span id="slide-label">01 — Cover</span>
+      <span>Wed · Apr 22, 2026</span>
+    </div>
+  </header>
+
+  <main class="stage" id="stage">
+
+    <!-- SLIDE 1: COVER — Retro-Future Console -->
+    <section class="slide cover active" data-label="01 — Cover">
+      <div class="cover-inner">
+
+        <!-- Masthead -->
+        <header class="cover-mast">
+          <div class="cover-mast-left">
+            <span class="sigil" aria-hidden="true">N</span>
+            <span class="mast-title">nbi. weekly brief</span>
+            <span class="mast-stencil">
+              WB.028<span class="sep">/</span>CASELOAD LEDGER<span class="sep">/</span>REV. 2026-04-22
+            </span>
+          </div>
+          <div class="mast-folio">
+            FOLIO <b>№ 01 / 10</b>
+          </div>
+        </header>
+
+        <!-- Strapline + Gauges -->
+        <div class="cover-band">
+          <div class="strapline">
+            <div class="strapline-eye">
+              <span class="tick"></span>
+              TRANSMISSION 028 / FISCAL 2026 / WK 17–18
+            </div>
+            <h1 class="cover-h1">coverage <em>cycle.</em></h1>
+            <p class="lede">
+              Two weeks, <b>one OOO in the middle</b>, and <b>two wires landing during it</b>. Pella and Haverhill both hit 5/1 — the Monday I'm back. The work this cycle is hand-off quality: get the coverage pack right, stage the post-wire cleanup, hold projects in their lane.
+            </p>
+          </div>
+
+          <aside class="gauges" aria-label="Cycle summary">
+            <div class="gauge">
+              <span class="gauge-label">Active Plans</span>
+              <div class="gauge-row">
+                <span class="gauge-value">04</span>
+                <span class="gauge-arc" aria-hidden="true">
+                  <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i>
+                </span>
+              </div>
+              <span class="gauge-sub">Move this cycle</span>
+            </div>
+            <div class="gauge">
+              <span class="gauge-label">Monitor</span>
+              <div class="gauge-row">
+                <span class="gauge-value">06</span>
+                <span class="gauge-arc" aria-hidden="true">
+                  <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i>
+                </span>
+              </div>
+              <span class="gauge-sub">Off the burner</span>
+            </div>
+            <div class="gauge">
+              <span class="gauge-label">OOO</span>
+              <div class="gauge-row">
+                <span class="gauge-value">05</span>
+                <span class="gauge-arc" aria-hidden="true">
+                  <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i>
+                </span>
+              </div>
+              <span class="gauge-sub">Apr 27 → May 01</span>
+            </div>
+            <div class="gauge">
+              <span class="gauge-label">Window</span>
+              <div class="gauge-row">
+                <span class="gauge-value">14</span>
+                <span class="gauge-arc" aria-hidden="true">
+                  <i class="on"></i><i></i><i></i><i></i><i></i><i></i>
+                </span>
+              </div>
+              <span class="gauge-sub">Apr 22 → May 06</span>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Operator strip -->
+        <div class="cover-strip">
+          <div class="cell">Operator <b>Joel</b></div>
+          <div class="cell">Role <b>Senior Data Consultant</b></div>
+          <div class="cell">Window <b>Apr 22 → May 06</b></div>
+          <div class="cell">Nav <b>← → · click dots</b></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 2: TRIAGE BOARD — Retro-Future Console -->
+    <section class="slide" data-label="02 — Triage Board">
+      <div class="eye">
+        <span class="tick"></span>
+        §02 / TRANSMISSION 028 / TRIAGE LEDGER
+      </div>
+      <h1 class="h-display">the <em>board.</em></h1>
+      <p class="lede-rf">
+        <b>Four</b> plans need hands this cycle. <b>Two wires</b> land on <b>5/1</b> — mid-OOO. One plan wrapping up, one still in intake. <b>Six</b> more on monitor. Coverage pack is the through-line.
+      </p>
+
+      <div class="tb">
+
+        <!-- PRE-WIRE BEACON -->
+        <div class="beacon" role="note" aria-label="Pre-wire beacon">
+          <div class="beacon-icon">▲</div>
+          <div class="beacon-body">
+            <div class="beacon-label">Pre-Wire Beacon · Going live this cycle · 02</div>
+            <ul class="beacon-list">
+              <li class="beacon-item">
+                <div class="beacon-plan">
+                  Pella SC
+                  <span class="beacon-due">Wire 5 / 01</span>
+                </div>
+                <div class="beacon-desc">
+                  Wire hits Friday, <b>mid-OOO</b>. Records side should be easy — population already in our system. <b>Open thread:</b> get the deferral report from the new ADP rep before the 27th so coverage isn't chasing it.
+                </div>
+              </li>
+              <li class="beacon-item">
+                <div class="beacon-plan">
+                  Haverhill (Havern)
+                  <span class="beacon-due">Wire 5 / 01</span>
+                </div>
+                <div class="beacon-desc">
+                  Assets inbound 5/1, same day as Pella, <b>during OOO</b>. Base file loaded, AQT flags placed. <b>Open thread:</b> Damien's missing participants still need a final sweep before the wire lands. Hand-off doc is the lever.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- POST-WIRE BEACON (none this cycle) -->
+        <div class="beacon post-wire" role="note" aria-label="Post-wire beacon">
+          <div class="beacon-icon">◉</div>
+          <div class="beacon-body">
+            <div class="beacon-label">Post-Wire Beacon · Cleanup in-flight · 01</div>
+            <ul class="beacon-list">
+              <li class="beacon-item">
+                <div class="beacon-plan">
+                  Callidi Tas
+                  <span class="beacon-due">Close target 5 / 06</span>
+                </div>
+                <div class="beacon-desc">
+                  Asset transfer done 4/10. Still blocked on client data (DOB + DOH for the missing-people group) and the one out-of-order loan. Close target: end of this cycle.
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ACTIVE LEDGER -->
+        <div class="ledger-frame">
+          <div class="ledger-head">
+            <div><span class="live-dot">●</span>CH.02 // ACTIVE LEDGER</div>
+            <div class="right">RECORDS <b>04</b></div>
+          </div>
+          <table class="ledger">
+            <thead>
+              <tr>
+                <th>№</th>
+                <th>Plan</th>
+                <th>Stage</th>
+                <th>Ball with</th>
+                <th>Due</th>
+                <th>Next step</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">01</td>
+                <td class="plan">Pella SC</td>
+                <td><span class="state prep">Preparation</span></td>
+                <td class="blocked">ADP rep</td>
+                <td class="eff">May 1</td>
+                <td class="next">Get deferral report pre-OOO; confirm base-file need</td>
+              </tr>
+              <tr>
+                <td class="num">02</td>
+                <td class="plan">Haverhill (Havern)</td>
+                <td><span class="state prep">Preparation</span></td>
+                <td class="blocked">Damien</td>
+                <td class="eff">May 1</td>
+                <td class="next">Close Damien list pre-OOO; prep coverage pack</td>
+              </tr>
+              <tr>
+                <td class="num">03</td>
+                <td class="plan">Callidi Tas</td>
+                <td><span class="state wrap">Wrapping Up</span></td>
+                <td class="blocked">Client · Me</td>
+                <td class="eff">May 6</td>
+                <td class="next">Nudge DOB/DOH; decide loan re-amort; archive</td>
+              </tr>
+              <tr>
+                <td class="num">04</td>
+                <td class="plan">Int'l School of Denver</td>
+                <td><span class="state intake">Intake</span></td>
+                <td class="blocked">Client · Team</td>
+                <td class="eff">Jul 1</td>
+                <td class="next">Ask for deferral file now; write policy framing</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- MONITOR STRIP -->
+        <div class="monitor-strip">
+          <div class="monitor-strip-label">
+            <span class="tick"></span>
+            Monitor · Off the Burner · 06 records
+          </div>
+          <div class="chip-row">
+            <span class="chip">Stoutco <span class="chip-date">7 / 01</span><span class="chip-note">client mtg next wk</span></span>
+            <span class="chip">Bonnier <span class="chip-date">7 / 01</span><span class="chip-note">quiet</span></span>
+            <span class="chip">Leiby's Dairy <span class="chip-date">8 / 01</span></span>
+            <span class="chip">Prime Healthcare <span class="chip-date">8 / 01</span><span class="chip-note">on hold</span></span>
+            <span class="chip">Canam Bridges <span class="chip-date">10 / 01</span></span>
+            <span class="chip">Canam Buildings <span class="chip-date">10 / 01</span></span>
+          </div>
+        </div>
+
+        <!-- CLOSED LINE -->
+        <div class="closed-line">
+          <span class="check">✓</span>
+          Closed last cycle · <b>mapping-validator folded into data-parser</b> · decision logged
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 3: PELLA SC — POST-EFF CLEANUP -->
+    <section class="slide plan" data-label="03 — Pella SC">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §03 / ACTIVE PLAN / TRANSMISSION 028
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">pella <em>sc</em></h1>
+          <div class="plan-eff">Effective<b>5 / 01 · EFF − 9</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state prep">Preparation</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Ball with</span><span class="meta-val">ADP rep</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Wire</span><span class="meta-val">5 / 01 · mid-OOO</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">
+        Wire lands Friday <b>5/1</b>, the middle of OOO. Records side is easy — population already sits in our system. The lever this week is <b>getting the ADP deferral report pre-OOO</b> so coverage isn't chasing it. New ADP rep seems ready; name + email need to be captured.
+      </p>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Pre-OOO · This Week</div>
+          <ol class="trigger-seq">
+            <li><span>Email ADP rep · request deferral report</span></li>
+            <li><span>Confirm if base file is needed</span></li>
+            <li><span>Apply deferral workaround · three buckets staged</span></li>
+            <li><span>Coverage pack — what hits during OOO, what holds</span></li>
+          </ol>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Post-Wire · Back in Office</div>
+          <ol class="trigger-seq">
+            <li><span>Reconcile first payroll (EFF + 3 · 5 / 04)</span></li>
+            <li><span>Notify client plan is live</span></li>
+            <li><span>Schedule 30-day review</span></li>
+            <li><span>Confirm three-bucket deferral split landed correctly</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="plan-timeline" style="--count: 5;">
+        <div class="plan-timeline-label">Timeline · Key Dates</div>
+        <div class="plan-timeline-track">
+          <div class="plan-timeline-event today">
+            <div class="plan-timeline-date">4 / 22 · Today</div>
+            <div class="plan-timeline-caption">ADP push pre-OOO</div>
+          </div>
+          <div class="plan-timeline-event upcoming">
+            <div class="plan-timeline-date">4 / 27 → 5 / 01</div>
+            <div class="plan-timeline-caption">OOO · coverage holds</div>
+          </div>
+          <div class="plan-timeline-event risk">
+            <div class="plan-timeline-date">5 / 01</div>
+            <div class="plan-timeline-caption">Wire · mid-OOO</div>
+          </div>
+          <div class="plan-timeline-event upcoming">
+            <div class="plan-timeline-date">5 / 04</div>
+            <div class="plan-timeline-caption">First payroll</div>
+          </div>
+          <div class="plan-timeline-event upcoming">
+            <div class="plan-timeline-date">5 / 08</div>
+            <div class="plan-timeline-caption">30-day review set</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="off-plate">
+        <div class="off-plate-label">Off Your Plate When</div>
+        <div class="off-plate-text">
+          Deferral report in hand + liquidation complete + load runs clean through OOO. Post-wire chain closes by <b>5 / 15</b>.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: HAVERHILL (HAVERN) — POST-EFF CLEANUP -->
+    <section class="slide plan" data-label="04 — Haverhill">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §04 / ACTIVE PLAN / TRANSMISSION 028
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">haverhill <em>(havern)</em></h1>
+          <div class="plan-eff">Effective<b>5 / 01 · EFF − 9</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state prep">Preparation</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Ball with</span><span class="meta-val">Damien</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Wire</span><span class="meta-val">5 / 01 · mid-OOO</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">
+        Assets inbound <b>5/1</b>, same day as Pella, landing mid-OOO. Base file loaded, Beth got everyone in, AQT fix explained, flags placed. <b>Damien's missing-participant thread</b> is the only open piece — add backdated or skip into the 30-day review. Contact change already absorbed (original had brain surgery, backup's been on the plan the whole time).
+      </p>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Pre-OOO · This Week</div>
+          <ol class="trigger-seq">
+            <li><span>Follow up with Damien · close missing-participants thread</span></li>
+            <li><span>Confirm AQT config holds through wire</span></li>
+            <li><span>Hand-off doc generated · coverage owns 5/1</span></li>
+            <li><span>Quick note to backup contact · set expectations</span></li>
+          </ol>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Post-Wire · Back in Office</div>
+          <ol class="trigger-seq">
+            <li><span>Reconcile first payroll (EFF + 3 · 5 / 04)</span></li>
+            <li><span>Notify client plan is live</span></li>
+            <li><span>Schedule 30-day review</span></li>
+            <li><span>Final files reconcile from prior RK (WIRE + 7)</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="plan-timeline" style="--count: 5;">
+        <div class="plan-timeline-label">Timeline · Key Dates</div>
+        <div class="plan-timeline-track">
+          <div class="plan-timeline-event today">
+            <div class="plan-timeline-date">4 / 22 · Today</div>
+            <div class="plan-timeline-caption">Damien push pre-OOO</div>
+          </div>
+          <div class="plan-timeline-event upcoming">
+            <div class="plan-timeline-date">4 / 27 → 5 / 01</div>
+            <div class="plan-timeline-caption">OOO · coverage holds</div>
+          </div>
+          <div class="plan-timeline-event risk">
+            <div class="plan-timeline-date">5 / 01</div>
+            <div class="plan-timeline-caption">Wire · mid-OOO</div>
+          </div>
+          <div class="plan-timeline-event upcoming">
+            <div class="plan-timeline-date">5 / 04</div>
+            <div class="plan-timeline-caption">First payroll</div>
+          </div>
+          <div class="plan-timeline-event upcoming">
+            <div class="plan-timeline-date">5 / 08</div>
+            <div class="plan-timeline-caption">WIRE + 7 final files</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="off-plate">
+        <div class="off-plate-label">Off Your Plate When</div>
+        <div class="off-plate-text">
+          Assets loaded post-wire, reconciliation clean, Damien thread closed. Target: <b>5 / 15</b>. Hand-off required during OOO.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: CALLIDI TAS — FINAL WRAP -->
+    <section class="slide plan" data-label="05 — Callidi Tas">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §05 / ACTIVE PLAN / TRANSMISSION 028
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">callidi <em>tas</em></h1>
+          <div class="plan-eff">Effective<b>4 / 01 · EFF + 21</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state wrap">Wrapping Up</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Ball with</span><span class="meta-val">Client · Me</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Status</span><span class="meta-val">Data gap · loan flag</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">
+        Asset transfer done <b>4/10</b>. Still blocked on client for <b>DOB + DOH</b> on the participants who were in the transfer but not in our system — I cross-checked SSNs myself; the gap is real and worth flagging as a client data-completeness issue. Separate: one <b>out-of-order loan</b> needs a final read. Target: off the plate by <b>5/06</b>.
+      </p>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Open Threads</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">Missing-people data</div>
+              <div class="thread-body">Nudge client for DOB/DOH on the gap group. Flag as transmission-worthy — their balance file was incomplete.</div>
+            </li>
+            <li>
+              <div class="thread-title">Loan anomaly</div>
+              <div class="thread-body">Payment either logged-not-made or made-not-logged. Loan's been frozen/unfrozen before — may need a re-amortize. One participant, one loan, contained.</div>
+            </li>
+          </ul>
+        </div>
+        <div class="panel">
+          <div class="panel-label">Archive Sequence</div>
+          <ol class="trigger-seq">
+            <li><span>Close data gap · participants loaded</span></li>
+            <li><span>Resolve loan flag · re-amort or document</span></li>
+            <li><span>Confirm 30-day review on calendar</span></li>
+            <li><span>Archive next cycle</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="plan-timeline" style="--count: 5;">
+        <div class="plan-timeline-label">Timeline · Key Dates</div>
+        <div class="plan-timeline-track">
+          <div class="plan-timeline-event done">
+            <div class="plan-timeline-date">4 / 01</div>
+            <div class="plan-timeline-caption">EFF date</div>
+          </div>
+          <div class="plan-timeline-event done">
+            <div class="plan-timeline-date">4 / 10</div>
+            <div class="plan-timeline-caption">Asset transfer</div>
+          </div>
+          <div class="plan-timeline-event today">
+            <div class="plan-timeline-date">4 / 22 · Today</div>
+            <div class="plan-timeline-caption">Two threads open</div>
+          </div>
+          <div class="plan-timeline-event risk">
+            <div class="plan-timeline-date">Pre-OOO</div>
+            <div class="plan-timeline-caption">Resolve both · hand off clean</div>
+          </div>
+          <div class="plan-timeline-event upcoming">
+            <div class="plan-timeline-date">5 / 06</div>
+            <div class="plan-timeline-caption">Off plate target</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="off-plate">
+        <div class="off-plate-label">Off Your Plate When</div>
+        <div class="off-plate-text">
+          Data gap closed, loan flag resolved, 30-day review on calendar. Target: end of this cycle, <b>5 / 06</b>.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: ISD DENVER — RAMPING -->
+    <section class="slide plan" data-label="06 — ISD Denver">
+      <div class="plan-head">
+        <div class="eye">
+          <span class="tick"></span>
+          §06 / ACTIVE PLAN / TRANSMISSION 028
+        </div>
+        <div class="plan-display-row">
+          <h1 class="plan-h1">int'l school <em>of denver</em></h1>
+          <div class="plan-eff">Go-Live<b>7 / 01 · EFF − 70</b></div>
+        </div>
+        <div class="plan-meta-strip">
+          <span class="state intake">Intake</span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Ball with</span><span class="meta-val">Client · Team</span></span>
+          <span class="meta-sep">/</span>
+          <span><span class="meta-label">Scope</span><span class="meta-val">Partial · census · elections · deferrals</span></span>
+        </div>
+      </div>
+
+      <p class="plan-lede">
+        Merger being treated as a startup. Limited-access window waived — nothing loaded at go-live, participants self-elect, client's deferral file imports over the top via effective-dated precedence. Two internal camps disagree on whether this sets a bad precedent. <b>Question worth raising:</b> if the client already has the deferral file, ask for it now — no stated reason to wait.
+      </p>
+
+      <div class="panel-grid">
+        <div class="panel">
+          <div class="panel-label">Your Play · Either Camp</div>
+          <ol class="trigger-seq">
+            <li><span>Don't preload elections</span></li>
+            <li><span>Give participants a self-elect window</span></li>
+            <li><span>Import deferral file with 7/1 effective</span></li>
+            <li><span>Self-entries override · no filtering needed</span></li>
+          </ol>
+        </div>
+        <div class="panel">
+          <div class="panel-label">This Cycle · Moves</div>
+          <ul class="thread-list">
+            <li>
+              <div class="thread-title">Push the early-file question</div>
+              <div class="thread-body">One direct ask to the team this week. Write the framing first so the conversation lands.</div>
+            </li>
+            <li>
+              <div class="thread-title">Prep analysis package</div>
+              <div class="thread-body">Either camp wins, the lift is the same. Stage it now so go-live is mechanical.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="plan-timeline" style="--count: 5;">
+        <div class="plan-timeline-label">Timeline · Key Dates</div>
+        <div class="plan-timeline-track">
+          <div class="plan-timeline-event today">
+            <div class="plan-timeline-date">4 / 22 · Today</div>
+            <div class="plan-timeline-caption">Intake · debate open</div>
+          </div>
+          <div class="plan-timeline-event risk">
+            <div class="plan-timeline-date">Pre-OOO</div>
+            <div class="plan-timeline-caption">Push for deferral file</div>
+          </div>
+          <div class="plan-timeline-event upcoming">
+            <div class="plan-timeline-date">5 / 06</div>
+            <div class="plan-timeline-caption">Analysis package staged</div>
+          </div>
+          <div class="plan-timeline-event upcoming">
+            <div class="plan-timeline-date">6 / 15</div>
+            <div class="plan-timeline-caption">Final scope lock</div>
+          </div>
+          <div class="plan-timeline-event upcoming">
+            <div class="plan-timeline-date">7 / 01</div>
+            <div class="plan-timeline-caption">Go-live</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="off-plate">
+        <div class="off-plate-label">Off Your Plate When</div>
+        <div class="off-plate-text">
+          Internal debate resolved + analysis package staged. Target: <b>this cycle</b>.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: MONITOR -->
+    <section class="slide" data-label="07 — Monitor">
+      <div class="eye">
+        <span class="tick"></span>
+        §07 / MONITOR LEDGER / TRANSMISSION 028
+      </div>
+      <h1 class="h-display">off the <em>burner.</em></h1>
+      <p class="lede-rf">
+        Six plans intentionally held out of the cycle. Kept visible so nothing drifts out of awareness — <b>Stoutco</b> has a client meeting on calendar and is the most likely to surface. Everything else stays quiet through OOO.
+      </p>
+
+      <div class="ledger-frame" style="margin-top:28px;">
+        <div class="ledger-head">
+          <div><span class="live-dot">●</span>CH.07 // MONITOR · BACK-BURNER</div>
+          <div class="right">RECORDS <b>06</b></div>
+        </div>
+        <table class="ledger">
+          <thead>
+            <tr>
+              <th>№</th>
+              <th>Plan</th>
+              <th>Effective</th>
+              <th>Last Touch</th>
+              <th>Watch For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">01</td>
+              <td class="plan">Stoutco</td>
+              <td class="eff">7 / 01</td>
+              <td class="blocked">Mtg on calendar · next wk</td>
+              <td class="next">First client sync · expect base-file ask after</td>
+            </tr>
+            <tr>
+              <td class="num">02</td>
+              <td class="plan">Bonnier Corporation</td>
+              <td class="eff">7 / 01</td>
+              <td class="blocked">Quiet</td>
+              <td class="next">Client signal · no event in this cycle</td>
+            </tr>
+            <tr>
+              <td class="num">03</td>
+              <td class="plan">Leiby's Dairy</td>
+              <td class="eff">8 / 01</td>
+              <td class="blocked">Quiet</td>
+              <td class="next">Reschedule prior canceled mtg</td>
+            </tr>
+            <tr>
+              <td class="num">04</td>
+              <td class="plan">Prime Healthcare</td>
+              <td class="eff">8 / 01</td>
+              <td class="blocked">On hold by client</td>
+              <td class="next">Restart signal · revisit cycle 029</td>
+            </tr>
+            <tr>
+              <td class="num">05</td>
+              <td class="plan">Canam Bridges</td>
+              <td class="eff">10 / 01</td>
+              <td class="blocked">Future · day-1 informal</td>
+              <td class="next">Nothing until early summer</td>
+            </tr>
+            <tr>
+              <td class="num">06</td>
+              <td class="plan">Canam Buildings</td>
+              <td class="eff">10 / 01</td>
+              <td class="blocked">Future · day-1 informal</td>
+              <td class="next">Nothing until early summer</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="closed-panel">
+        <span class="check">✓</span>
+        <span class="closed-panel-label">Recently Closed</span>
+        <span class="closed-panel-text">Decision logged: <b>mapping-validator folded into data-parser</b> — not a standalone project going forward.</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: THE LAB — pulled from /projects folder -->
+    <section class="slide" data-label="08 — The Lab">
+      <div class="eye">
+        <span class="tick"></span>
+        §08 / THE PERSONAL LAB / TRANSMISSION 028
+      </div>
+      <h1 class="h-display">the <em>lab.</em></h1>
+      <p class="lede-rf">
+        Tools I'm building on the side, pulled from the <b>projects/</b> folder. <b>Two in flight</b>, one <b>ready to ship</b> pending a small blocker, four <b>ideas</b> in the wings, one folded. This cycle's directive: <b>function over style</b> — Data Parser is the test bed, Anthony demo this Friday unlocks TA Brain's TC section.
+      </p>
+
+      <div class="lab-grid">
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state flight">In Flight</span>
+            <span class="lab-card-num">№ 01</span>
+          </div>
+          <h4 class="lab-card-title">TA Brain</h4>
+          <p class="lab-card-pitch">Never-off-the-list. This cycle: <b>add more animations</b> for processes that don't have them yet, table "better placement" work. <b>Concepts page redesign</b> — pull it apart, cleaner categorization without over-categorizing. Search needs a <b>backslash command palette</b> (same pattern as NBI Tracker). Anthony demo <b>Friday</b> to open TC section.</p>
+          <div class="lab-derived">Derived from <b>daily reference need · live at work</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">more animations</span>
+            <span class="lab-chip">concepts redesign</span>
+            <span class="lab-chip">/ command palette</span>
+            <span class="lab-chip">anthony fri</span>
+          </div>
+        </div>
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state flight">In Flight</span>
+            <span class="lab-card-num">№ 02</span>
+          </div>
+          <h4 class="lab-card-title">Data Parser</h4>
+          <p class="lab-card-pitch">Functionality at <b>~100%</b>. Style iteration is done — <b>function only</b> from here. Open call: kill the summary report or tighten it. Either way, need <b>better test files</b> than the synthetic set. Rule for the cycle: really lock in on correctness, no more design passes.</p>
+          <div class="lab-derived">Derived from <b>recurring file diffs · one-off scripts</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">function over style</span>
+            <span class="lab-chip">test files needed</span>
+            <span class="lab-chip">absorbs mapping-validator</span>
+          </div>
+        </div>
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state ready">Ready to Ship</span>
+            <span class="lab-card-num">№ 03</span>
+          </div>
+          <h4 class="lab-card-title">NBI Search</h4>
+          <p class="lab-card-pitch">Design locked. <b>Loving the design.</b> One blocker: the file picker. Direction this cycle — skip the picker entirely. Hard-code the file (or the path) and give it a <b>refresh button</b>. Goal is zero-click launch: open the app, it's already got the data.</p>
+          <div class="lab-derived">Derived from <b>repeat plan-lookup task</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">hard-code + refresh</span>
+            <span class="lab-chip">zero-click launch</span>
+            <span class="lab-chip">design locked</span>
+          </div>
+        </div>
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state idea">Idea</span>
+            <span class="lab-card-num">№ 04</span>
+          </div>
+          <h4 class="lab-card-title">Persistent Brain Rollout</h4>
+          <p class="lab-card-pitch">The Weekly Digest system itself as a product. <b>Grassroots rollout</b> — show it working on my own caseload, let other folks ask for it rather than pitching it cold. This brief is the demo.</p>
+          <div class="lab-derived">Derived from <b>this brief · live instance</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">system as product</span>
+            <span class="lab-chip">grassroots</span>
+            <span class="lab-chip">demo-driven</span>
+          </div>
+        </div>
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state idea">Idea</span>
+            <span class="lab-card-num">№ 05</span>
+          </div>
+          <h4 class="lab-card-title">TA Brain · TC Section</h4>
+          <p class="lab-card-pitch">Add a Transamerica-facing section to TA Brain. <b>Depends on Anthony buy-in</b> — path in is a data-safety demo that shows the approach is sound before asking for scope.</p>
+          <div class="lab-derived">Derived from <b>TA Brain · adjacent expansion</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">depends: Anthony</span>
+            <span class="lab-chip">data-safety demo</span>
+          </div>
+        </div>
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state idea">Idea</span>
+            <span class="lab-card-num">№ 06</span>
+          </div>
+          <h4 class="lab-card-title">Excel → App Pipeline</h4>
+          <p class="lab-card-pitch">The ongoing pattern: Excel one-offs keep showing up, and rebuilding them as small apps compounds. Not a single project — a standing lane for converting repeatable Excel work into shareable tools.</p>
+          <div class="lab-derived">Derived from <b>pattern across past Excel builds</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">pattern</span>
+            <span class="lab-chip">conversion lane</span>
+          </div>
+        </div>
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state idea">Idea</span>
+            <span class="lab-card-num">№ 07</span>
+          </div>
+          <h4 class="lab-card-title">App Portfolio Site</h4>
+          <p class="lab-card-pitch">A future dashboard landing page — one place to find every side-app I've built. Sits upstream of the individual tools. No rush; makes more sense once more of them are real.</p>
+          <div class="lab-derived">Derived from <b>lab growth · needs a front door</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">index</span>
+            <span class="lab-chip">shareable</span>
+          </div>
+        </div>
+
+        <div class="lab-card">
+          <div class="lab-card-head">
+            <span class="state folded">Folded</span>
+            <span class="lab-card-num">№ 08</span>
+          </div>
+          <h4 class="lab-card-title">Mapping Validator</h4>
+          <p class="lab-card-pitch">Killed as a standalone — the logic lives inside <b>Data Parser</b> now. Kept on the board as a pointer so the history doesn't disappear: this was the idea that got absorbed, not abandoned.</p>
+          <div class="lab-derived">Folded into <b>Data Parser</b></div>
+          <div class="lab-chips">
+            <span class="lab-chip">killed standalone</span>
+            <span class="lab-chip">lives inside data-parser</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="closed-panel" style="margin-top:26px;">
+        <span class="check">✦</span>
+        <span class="closed-panel-label">Suggestions</span>
+        <span class="closed-panel-text">
+          Two worth flagging from this cycle's work: (1) <b>Post-Wire Checklist Tool</b> — the EFF+3 / EFF+7 / WIRE+7 / WIRE+14 chain is now manual on two plans, worth a small tracker. (2) <b>Loan Timeline Inspector</b> — the Callidi out-of-order loan is the exact shape of a reusable tool. Both sit one braindump away from being real project cards.
+        </span>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: 14-DAY CYCLE -->
+    <section class="slide" data-label="09 — 14 Days">
+      <h3>§09 · cycle plan</h3>
+      <div class="eye">
+        <span class="eye-dot"></span>
+        <span>cycle · 028 · apr 22 → may 06</span>
+      </div>
+      <h1 class="h-display">fourteen <em>days.</em></h1>
+      <p class="lede-rf">Work on the left, <b>lab on the right</b>. Three work days to hand off clean, <b>five OOO days</b> in the middle, three days to land on return. Pella + Haverhill wires fire <b>5/1 · mid-OOO</b> — coverage owns the week.</p>
+
+      <div class="cycle-head">
+        <div class="ch-date">date</div>
+        <div class="ch-work"><span class="ch-tick work"></span>work</div>
+        <div class="ch-lab"><span class="ch-tick lab"></span>lab</div>
+      </div>
+
+      <div class="cycle-grid">
+
+        <div class="cycle-row today">
+          <div class="cycle-date">
+            <div class="cycle-day">Wed</div>
+            <div class="cycle-num">04·<em>22</em></div>
+            <span class="cycle-tag today">today</span>
+          </div>
+          <div class="cycle-work">
+            <ul class="cycle-list">
+              <li>Pella — email ADP rep for deferral report (capture name + email)</li>
+              <li>Haverhill — follow up with Damien on missing-participant list</li>
+              <li>Callidi — nudge client for DOB/DOH on the gap group</li>
+              <li>ISD — draft the "get the file earlier" framing; one paragraph</li>
+            </ul>
+          </div>
+          <div class="cycle-lab">
+            <ul class="cycle-list">
+              <li>TA Brain — start the concepts-page breakout pass</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cycle-row">
+          <div class="cycle-date">
+            <div class="cycle-day">Thu</div>
+            <div class="cycle-num">04·<em>23</em></div>
+          </div>
+          <div class="cycle-work">
+            <ul class="cycle-list">
+              <li>Pella — confirm base-file need; apply deferral workaround staging</li>
+              <li>Haverhill — AQT config sanity-check before wire</li>
+              <li>Callidi — loan history review; make re-amort call</li>
+            </ul>
+          </div>
+          <div class="cycle-lab">
+            <ul class="cycle-list">
+              <li>NBI Search — swap file-picker for hard-code + refresh button</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cycle-row">
+          <div class="cycle-date">
+            <div class="cycle-day">Fri</div>
+            <div class="cycle-num">04·<em>24</em></div>
+          </div>
+          <div class="cycle-work">
+            <ul class="cycle-list">
+              <li>Coverage pack — generate hand-off doc for Pella + Haverhill</li>
+              <li>ISD — send framing + ask for the deferral file now</li>
+              <li>EOW posture — what's locked, what coverage owns</li>
+            </ul>
+          </div>
+          <div class="cycle-lab">
+            <ul class="cycle-list">
+              <li>Anthony demo — data-safety walkthrough · target TC section unlock</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cycle-row ooo-row">
+          <div class="cycle-date">
+            <div class="cycle-day">Mon → Fri</div>
+            <div class="cycle-num">04·<em>27</em> → 05·<em>01</em></div>
+            <span class="cycle-tag ooo">ooo</span>
+          </div>
+          <div class="cycle-work">
+            <ul class="cycle-list">
+              <li><b>Out of office.</b> Coverage owns the board.</li>
+              <li>Pella + Haverhill wires fire <b>Fri 5/01</b> — mid-OOO.</li>
+              <li>Hand-off pack is the operating document — directives over plans.</li>
+              <li>Escalate only: phone is on for wire-day exceptions.</li>
+            </ul>
+          </div>
+          <div class="cycle-lab">
+            <ul class="cycle-list">
+              <li class="muted">lab dark · no commits</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cycle-row">
+          <div class="cycle-date">
+            <div class="cycle-day">Mon</div>
+            <div class="cycle-num">05·<em>04</em></div>
+          </div>
+          <div class="cycle-work">
+            <ul class="cycle-list">
+              <li>Back in office — read coverage hand-back notes</li>
+              <li>Pella + Haverhill — first payroll reconcile (EFF + 3)</li>
+              <li>Notify both clients plan is live</li>
+            </ul>
+          </div>
+          <div class="cycle-lab">
+            <ul class="cycle-list">
+              <li>Data Parser — spin up a real test-file set from this week's loads</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cycle-row">
+          <div class="cycle-date">
+            <div class="cycle-day">Tue</div>
+            <div class="cycle-num">05·<em>05</em></div>
+          </div>
+          <div class="cycle-work">
+            <ul class="cycle-list">
+              <li>Pella + Haverhill — outstanding items pass; build punch lists</li>
+              <li>Callidi — final archive pass if threads closed</li>
+              <li>Stoutco — pre-meeting sync prep for next week</li>
+            </ul>
+          </div>
+          <div class="cycle-lab">
+            <ul class="cycle-list">
+              <li>TA Brain — wire the slash command palette to search</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cycle-row">
+          <div class="cycle-date">
+            <div class="cycle-day">Wed</div>
+            <div class="cycle-num">05·<em>06</em></div>
+            <span class="cycle-tag cycle-end">cycle end</span>
+          </div>
+          <div class="cycle-work">
+            <ul class="cycle-list">
+              <li>Pella + Haverhill — schedule 30-day reviews (EFF + 7)</li>
+              <li>ISD — read on client response; plan next-cycle push</li>
+              <li>Cycle-end sweep · compile next brief · roll open items</li>
+            </ul>
+          </div>
+          <div class="cycle-lab">
+            <ul class="cycle-list">
+              <li>Data Parser — decide: kill summary report, or tighten</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SLIDE 10: LIVE CHECKLIST -->
+    <section class="slide" data-label="10 — Checklist">
+      <h3>§10 · live checklist</h3>
+      <div class="checklist-wrap">
+
+        <div class="checklist-meta">
+          <div class="checklist-meta-left">
+            <div class="eye">
+              <span class="eye-dot"></span>
+              <span>state persists · click to tick · auto-saved</span>
+            </div>
+            <h1 class="h-display">tick it <em>down.</em></h1>
+            <p class="lede-rf">One flat list, filtered by plan. <b>Urgent</b> items are rust-tagged; hand-off items are ink-tagged. Reset at cycle end.</p>
+          </div>
+          <div class="progress-block">
+            <div class="progress-num"><span class="done" id="done-count">0</span><span class="total"> / <span id="total-count">0</span></span></div>
+            <div class="progress-label">ticked · of total</div>
+            <div class="progress-bar"><div class="progress-bar-fill" id="progress-fill"></div></div>
+          </div>
+        </div>
+
+        <div class="filter-bar" id="filter-bar">
+          <button class="filter-chip active" data-filter="all">all <span class="count" data-count="all">0</span></button>
+          <button class="filter-chip" data-filter="urgent">urgent <span class="count" data-count="urgent">0</span></button>
+          <button class="filter-chip" data-filter="pella">pella <span class="count" data-count="pella">0</span></button>
+          <button class="filter-chip" data-filter="haverhill">haverhill <span class="count" data-count="haverhill">0</span></button>
+          <button class="filter-chip" data-filter="callidi">callidi <span class="count" data-count="callidi">0</span></button>
+          <button class="filter-chip" data-filter="isd">isd <span class="count" data-count="isd">0</span></button>
+          <button class="filter-chip" data-filter="monitor">monitor <span class="count" data-count="monitor">0</span></button>
+          <button class="filter-chip" data-filter="lab">lab <span class="count" data-count="lab">0</span></button>
+        </div>
+
+        <div class="check-section" data-section="work">
+          <div class="check-section-head">
+            <span class="label">work · caseload</span>
+            <span class="count"><b id="work-done">0</b> / <span id="work-total">0</span></span>
+          </div>
+
+          <div class="check-item" data-id="pel-01" data-plan="pella" data-urgent="true">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Pella — email ADP rep for deferral report · capture name + email</div>
+              <div class="check-meta"><span class="tag-plan">pella sc</span><span class="tag-urgent">today</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="pel-02" data-plan="pella">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Pella — confirm whether a base file is needed</div>
+              <div class="check-meta"><span class="tag-plan">pella sc</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="pel-03" data-plan="pella">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Pella — stage three-bucket deferral workaround before OOO</div>
+              <div class="check-meta"><span class="tag-plan">pella sc</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="pel-04" data-plan="pella" data-handoff="true">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Pella — hand-off doc for wire day (5/1 mid-OOO)</div>
+              <div class="check-meta"><span class="tag-plan">pella sc</span><span class="tag-handoff">hand-off</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="pel-05" data-plan="pella">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Pella — first payroll reconcile on return (EFF + 3 · 5/04)</div>
+              <div class="check-meta"><span class="tag-plan">pella sc</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="pel-06" data-plan="pella">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Pella — schedule 30-day review (5/08 target)</div>
+              <div class="check-meta"><span class="tag-plan">pella sc</span></div>
+            </div>
+          </div>
+
+          <div class="check-item" data-id="hav-01" data-plan="haverhill" data-urgent="true">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Haverhill — follow up with Damien on missing-participant list</div>
+              <div class="check-meta"><span class="tag-plan">haverhill</span><span class="tag-urgent">today</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="hav-02" data-plan="haverhill">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Haverhill — AQT config sanity-check before wire</div>
+              <div class="check-meta"><span class="tag-plan">haverhill</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="hav-03" data-plan="haverhill" data-handoff="true">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Haverhill — hand-off doc for wire day (5/1 mid-OOO)</div>
+              <div class="check-meta"><span class="tag-plan">haverhill</span><span class="tag-handoff">hand-off</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="hav-04" data-plan="haverhill">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Haverhill — first payroll reconcile on return (EFF + 3 · 5/04)</div>
+              <div class="check-meta"><span class="tag-plan">haverhill</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="hav-05" data-plan="haverhill">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Haverhill — WIRE + 7 final files from prior RK (5/08)</div>
+              <div class="check-meta"><span class="tag-plan">haverhill</span></div>
+            </div>
+          </div>
+
+          <div class="check-item" data-id="cal-01" data-plan="callidi" data-urgent="true">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Callidi — nudge client for DOB + DOH on missing-people group</div>
+              <div class="check-meta"><span class="tag-plan">callidi tas</span><span class="tag-urgent">today</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="cal-02" data-plan="callidi">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Callidi — review loan history; make re-amort call</div>
+              <div class="check-meta"><span class="tag-plan">callidi tas</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="cal-03" data-plan="callidi">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Callidi — flag client data-completeness issue (transmission-worthy)</div>
+              <div class="check-meta"><span class="tag-plan">callidi tas</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="cal-04" data-plan="callidi">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Callidi — archive pass by 5/06 · confirm 30-day review on cal</div>
+              <div class="check-meta"><span class="tag-plan">callidi tas</span></div>
+            </div>
+          </div>
+
+          <div class="check-item" data-id="isd-01" data-plan="isd" data-urgent="true">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">ISD — write "get the deferral file earlier" framing (one paragraph)</div>
+              <div class="check-meta"><span class="tag-plan">isd</span><span class="tag-urgent">today</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="isd-02" data-plan="isd">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">ISD — send the ask to the team before OOO</div>
+              <div class="check-meta"><span class="tag-plan">isd</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="isd-03" data-plan="isd">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">ISD — stage analysis package (either camp, same lift)</div>
+              <div class="check-meta"><span class="tag-plan">isd</span></div>
+            </div>
+          </div>
+
+          <div class="check-item" data-id="mon-01" data-plan="monitor">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Stoutco — pre-meeting sync prep (client mtg next week after return)</div>
+              <div class="check-meta"><span class="tag-plan">stoutco</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="mon-02" data-plan="monitor">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Monitor sweep — anyone silent? Leiby's especially (meeting canceled before)</div>
+              <div class="check-meta"><span class="tag-plan">monitor</span></div>
+            </div>
+          </div>
+          <div class="check-item" data-id="mon-03" data-plan="monitor">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Cycle-end registry sweep on 5/06</div>
+              <div class="check-meta"><span class="tag-plan">monitor</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="check-section" data-section="lab">
+          <div class="check-section-head">
+            <span class="label">the lab</span>
+            <span class="count"><b id="lab-done">0</b> / <span id="lab-total">0</span></span>
+          </div>
+
+          <div class="check-item" data-id="lab-01" data-plan="lab">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">TA Brain — start concepts-page breakout pass</div>
+              <div class="check-meta">№ 01 · in flight</div>
+            </div>
+          </div>
+          <div class="check-item" data-id="lab-02" data-plan="lab">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">TA Brain — wire slash-command palette to search</div>
+              <div class="check-meta">№ 01 · in flight</div>
+            </div>
+          </div>
+          <div class="check-item" data-id="lab-03" data-plan="lab">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">TA Brain — look for new animation opportunities</div>
+              <div class="check-meta">№ 01 · in flight</div>
+            </div>
+          </div>
+          <div class="check-item" data-id="lab-04" data-plan="lab" data-urgent="true">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Anthony — schedule Friday demo · data-safety walkthrough</div>
+              <div class="check-meta">№ 01 / 05 · this week</div>
+            </div>
+          </div>
+          <div class="check-item" data-id="lab-05" data-plan="lab">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">NBI Search — replace file-picker with hard-code + refresh button</div>
+              <div class="check-meta">№ 03 · ready to ship</div>
+            </div>
+          </div>
+          <div class="check-item" data-id="lab-06" data-plan="lab">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Data Parser — build golden-set of real test input files</div>
+              <div class="check-meta">№ 02 · in flight</div>
+            </div>
+          </div>
+          <div class="check-item" data-id="lab-07" data-plan="lab">
+            <div class="check-box"></div>
+            <div class="check-body">
+              <div class="check-title">Data Parser — decide: kill summary report or tighten it</div>
+              <div class="check-meta">№ 02 · in flight</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="checklist-footer">
+          <span>cycle · 028 · apr 22 → may 06 · OOO 4/27 → 5/01</span>
+          <button class="checklist-reset" id="checklist-reset">reset cycle</button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="footer">
+    <button id="prev-btn">← Prev</button>
+    <div class="dots" id="dots"></div>
+    <span class="kbd-hint">← → to navigate</span>
+    <button id="next-btn">Next →</button>
+  </nav>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsContainer = document.getElementById('dots');
+  const slideLabel = document.getElementById('slide-label');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  let current = 0;
+
+  // build dots
+  slides.forEach((s, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+    dot.addEventListener('click', () => goTo(i));
+    dotsContainer.appendChild(dot);
+  });
+
+  function goTo(i) {
+    if (i < 0 || i >= slides.length) return;
+    slides[current].classList.remove('active');
+    dotsContainer.children[current].classList.remove('active');
+    current = i;
+    slides[current].classList.add('active');
+    dotsContainer.children[current].classList.add('active');
+    slideLabel.textContent = slides[current].dataset.label;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === slides.length - 1;
+    // reset scroll of new slide
+    slides[current].scrollTop = 0;
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); goTo(current + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goTo(current - 1); }
+    if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    if (e.key === 'End') { e.preventDefault(); goTo(slides.length - 1); }
+  });
+
+  // initialize button state
+  prevBtn.disabled = true;
+
+  // TAB HANDLING (slide 6)
+  document.querySelectorAll('.tab-bar').forEach(bar => {
+    const buttons = bar.querySelectorAll('button');
+    const slide = bar.closest('.slide');
+    const panels = slide.querySelectorAll('.tab-panel');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        slide.querySelector(`.tab-panel[data-panel="${btn.dataset.tab}"]`).classList.add('active');
+      });
+    });
+  });
+
+  // LIVE CHECKLIST
+  const CHECKLIST_KEY = 'weekly-brief-checklist-028';
+  const checkItems = document.querySelectorAll('.check-item');
+  const doneCount = document.getElementById('done-count');
+  const totalCount = document.getElementById('total-count');
+  const progressFill = document.getElementById('progress-fill');
+  const workDoneEl = document.getElementById('work-done');
+  const workTotalEl = document.getElementById('work-total');
+  const labDoneEl = document.getElementById('lab-done');
+  const labTotalEl = document.getElementById('lab-total');
+  const filterBar = document.getElementById('filter-bar');
+  const resetBtn = document.getElementById('checklist-reset');
+
+  totalCount.textContent = checkItems.length;
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(CHECKLIST_KEY);
+      if (!raw) return;
+      const done = JSON.parse(raw);
+      if (!Array.isArray(done)) return;
+      const set = new Set(done);
+      checkItems.forEach(item => {
+        if (set.has(item.dataset.id)) item.classList.add('done');
+      });
+    } catch (e) { /* ignore */ }
+  }
+
+  function saveState() {
+    const done = Array.from(checkItems)
+      .filter(i => i.classList.contains('done'))
+      .map(i => i.dataset.id);
+    try { localStorage.setItem(CHECKLIST_KEY, JSON.stringify(done)); } catch (e) { /* ignore */ }
+  }
+
+  function updateCounts() {
+    const total = checkItems.length;
+    const done = document.querySelectorAll('.check-item.done').length;
+    doneCount.textContent = done;
+    progressFill.style.width = total ? ((done / total) * 100) + '%' : '0%';
+
+    const workItems = document.querySelectorAll('.check-section[data-section="work"] .check-item');
+    const workDone = document.querySelectorAll('.check-section[data-section="work"] .check-item.done');
+    workDoneEl.textContent = workDone.length;
+    workTotalEl.textContent = workItems.length;
+
+    const labItems = document.querySelectorAll('.check-section[data-section="lab"] .check-item');
+    const labDone = document.querySelectorAll('.check-section[data-section="lab"] .check-item.done');
+    labDoneEl.textContent = labDone.length;
+    labTotalEl.textContent = labItems.length;
+
+    // filter counts
+    const countFor = (predicate) => Array.from(checkItems).filter(predicate).length;
+    const counts = {
+      all: total,
+      urgent: countFor(i => i.dataset.urgent === 'true'),
+      pella: countFor(i => i.dataset.plan === 'pella'),
+      haverhill: countFor(i => i.dataset.plan === 'haverhill'),
+      callidi: countFor(i => i.dataset.plan === 'callidi'),
+      isd: countFor(i => i.dataset.plan === 'isd'),
+      monitor: countFor(i => i.dataset.plan === 'monitor' || ['stoutco','bonnier'].includes(i.dataset.plan)),
+      lab: countFor(i => i.dataset.plan === 'lab')
+    };
+    Object.keys(counts).forEach(k => {
+      const el = document.querySelector(`[data-count="${k}"]`);
+      if (el) el.textContent = counts[k];
+    });
+  }
+
+  function applyFilter(filter) {
+    checkItems.forEach(item => {
+      let show = false;
+      if (filter === 'all') show = true;
+      else if (filter === 'urgent') show = item.dataset.urgent === 'true';
+      else if (filter === 'monitor') show = item.dataset.plan === 'monitor';
+      else show = item.dataset.plan === filter;
+      item.classList.toggle('hidden', !show);
+    });
+    // hide section heads whose items are all hidden
+    document.querySelectorAll('.check-section').forEach(sec => {
+      const visible = sec.querySelectorAll('.check-item:not(.hidden)').length;
+      sec.style.display = visible ? '' : 'none';
+    });
+  }
+
+  checkItems.forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.toggle('done');
+      updateCounts();
+      saveState();
+    });
+  });
+
+  filterBar.addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-chip');
+    if (!btn) return;
+    filterBar.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilter(btn.dataset.filter);
+  });
+
+  resetBtn.addEventListener('click', () => {
+    if (!confirm('Reset all ticks for this cycle?')) return;
+    checkItems.forEach(i => i.classList.remove('done'));
+    try { localStorage.removeItem(CHECKLIST_KEY); } catch (e) { /* ignore */ }
+    updateCounts();
+  });
+
+  loadState();
+  updateCounts();
+</script>
+
+</body>
+</html>
