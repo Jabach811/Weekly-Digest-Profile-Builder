@@ -9,7 +9,7 @@ day1: TBD
 effective_date: TBD
 asset_transfer_date: TBD
 tags: [eds-source-fix, payroll-issue, residual-dividends, touchy-client, ops-on-self]
-last_mentioned: 2026-04-24
+last_mentioned: 2026-04-26
 first_logged: 2026-04-24
 ---
 
@@ -42,11 +42,25 @@ first_logged: 2026-04-24
 - Transmission-worthy: client is "very, very touchy" — communication
   posture should assume scrutiny.
 
+### 2026-04-26
+
+- Source issue still active. Joel calling it "stay up on the COCC
+  source issue." No explicit statement that the EDS fix landed — status
+  uncertain.
+- **Follow up with Michelle** to check status and see if anything else
+  is needed. May be an opportunity to learn more about the routing
+  process directly.
+- **Next moves:** Self · follow up with Michelle on source status; Self
+  · verify whether EDS fix applied; continue monitoring residual
+  dividends.
+- **Off-ramp:** unchanged — EDS fixed + payroll file clean + dividends
+  applied.
+
 ### Open Items
 
 - [ ] ⚠ Capture COCC case number, day1, effective_date, asset transfer
   date — none currently on file.
-- [ ] Fix EDS source-routing (Joel · target 4/24 or early 4/27).
+- [ ] Follow up with Michelle on EDS source-routing fix status.
 - [ ] Re-verify payroll file post-fix (no other sources receiving
   misallocated funds).
 - [ ] Prep procedure for residual-dividend application with Beth.

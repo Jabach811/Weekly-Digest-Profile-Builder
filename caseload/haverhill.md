@@ -8,7 +8,7 @@ day1: 2026-03-01
 effective_date: 2026-05-01
 asset_transfer_date: 2026-05-01
 tags: [contact-change, coverage-needed, ramping, pre-wire-clean]
-last_mentioned: 2026-04-24
+last_mentioned: 2026-04-26
 first_logged: 2026-04-22
 ---
 
@@ -38,9 +38,27 @@ first_logged: 2026-04-22
   asset load + post-wire recon during OOO 4/27 → 5/1.
 - **Off-ramp:** post-wire recon clean.
 
+### 2026-04-26
+
+- **NBI system was down** end of last week — new field broke the service
+  company-wide. Beth tried to send the NBI status email (census + 
+  elections) but could not. Joel taking ownership.
+- Before sending: **double-check that every participant was uploaded and
+  elections were defaulted.** Not 100% confident on completeness yet.
+- **Coverage urgency re-emphasized.** Wire arrives 5/1 during OOO. Must
+  arrange proper coverage "early, early, early on." Today is 4/27 —
+  this is now a same-day priority.
+- **Next moves:** Self · double-check participants + elections; Self ·
+  send NBI status email once confirmed; Self · lock down coverage for
+  5/1 wire today.
+- **Off-ramp:** post-wire recon clean.
+
 ### Open Items
 
-- [ ] Beth · send NBI status email.
-- [ ] Hand-off doc owed to coverage before OOO starts (4/27).
+- [ ] Self · verify all participants uploaded and elections defaulted
+  (pre-send check).
+- [ ] Self · send NBI status email (census + elections) — Beth tried,
+  NBI was down; Joel owns this now.
+- [ ] Lock down coverage for 5/1 wire — same-day priority (today 4/27).
 - [ ] Post-OOO · reconcile asset load, close loop with backup contact.
 - [x] (2026-04-24) Base file loaded / AQT fix explained / flags placed.

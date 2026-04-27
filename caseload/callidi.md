@@ -8,7 +8,7 @@ day1: 2026-01-01
 effective_date: 2026-04-01
 asset_transfer_date: 2026-04-10
 tags: [loan-issue, asset-transfer, paychex, post-balance-load]
-last_mentioned: 2026-04-24
+last_mentioned: 2026-04-26
 first_logged: 2026-04-22
 ---
 
@@ -99,6 +99,27 @@ first_logged: 2026-04-22
   feedback beyond enabling Analyze. Joel flagged it as fixable. Logged
   as a small lab-candidate in profile/identity.md.
 
+### 2026-04-26
+
+- **Loan diagnosis advanced.** XKB/XKC still not landing in Transact
+  Detail. Joel's working theory: **case number issue** causing a silent
+  error — Informatica returns "success" but the records don't hit the
+  tables. This is the same silent-error pattern that usually signals a
+  bad case number in the parameter file or import file. Lean toward the
+  import file as culprit. Need to verify and fix.
+- **NBI status email — Haverhill (census + elections):** NBI system was
+  down end of last week (company-wide; new field broke the service). Beth
+  tried to send, couldn't. Joel taking ownership. Wants to double-check
+  all participants uploaded and elections defaulted before sending.
+- **NBI status email — Callidi (participant balances):** need to send this
+  once NBI is back up so the plan can proceed.
+- Update loan import procedures / best-practices doc once the case number
+  issue is confirmed — flag the silent-error pattern explicitly.
+- **Next moves:** Self · diagnose XKB/XKC case-number theory in import
+  file; Self · re-run loans once fixed; Self · send NBI status emails
+  (Haverhill first, then Callidi) after double-check.
+- **Off-ramp:** loans land + elections processed → off the plate.
+
 ### Open Items
 
 - [x] (2026-04-24) **Informatica down** — resolved company-wide ~10:57.
@@ -106,10 +127,15 @@ first_logged: 2026-04-22
   sequence.
 - [x] (2026-04-24) Post participant balances.
 - [x] (2026-04-24) Reverse the 999-00-0000 dummy account.
-- [ ] Diagnose the XKB/XKC loans not landing in Transact Detail —
-  pull Earl in Monday if not solved EOD.
+- [ ] Diagnose XKB/XKC not landing in Transact Detail — working theory
+  is case number issue in import file (silent "success" error pattern).
+  Pull Earl in if not resolved quickly.
 - [ ] Re-run / process loans once XKB/XKC is resolved.
-- [ ] Beth · process elections Monday.
+- [ ] Beth · process elections once loans land.
+- [ ] Send NBI status email for Callidi (participant balances) once NBI
+  system is back up.
+- [ ] Update loan import procedures / best-practices: flag the
+  silent-error / case-number pattern explicitly.
 - [ ] ⚠ Confirm whether the older 4/22 "loan order — frozen/unfrozen,
   re-amortize" issue is the same as the XKB/XKC issue or still
   separate. See contradictions/2026-04-24.md.

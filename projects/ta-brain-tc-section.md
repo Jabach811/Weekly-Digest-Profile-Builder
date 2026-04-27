@@ -6,7 +6,7 @@ tags: [ui, expansion]
 flags: [blocked-on-anthony-buyin, blocked-on-data-safety-demo, dependency-stalled]
 people: [anthony]
 depends_on: [ta-brain]
-last_mentioned: 2026-04-24
+last_mentioned: 2026-04-26
 first_logged: 2026-04-22
 ---
 
@@ -47,7 +47,19 @@ Land the follow-up demo (tracked in
   TC-section unlock is now waiting on a *follow-up* demo with more
   prep, not the original one.
 
+### 2026-04-26
+
+- Follow-up demo with Anthony not yet scheduled. Joel: "nail down this
+  week." App is in better shape than the original demo date.
+- Joel mentioned there's TC data somewhere internally ("I know they've
+  got something out there") — worth starting to mine for it once
+  Anthony gives the green light, so the section can be wired up fast.
+- **Next moves:** nail down Anthony meeting (tracked in ta-brain.md);
+  start identifying where TC data lives internally.
+
 ## Open Items
 
-- [ ] Land follow-up demo (tracked in ta-brain.md).
+- [ ] Land follow-up demo this week (tracked in ta-brain.md).
 - [ ] Re-evaluate TC-section unlock after follow-up demo lands.
+- [ ] Begin scoping where TC data lives internally — ready to build
+      fast once Anthony approves.

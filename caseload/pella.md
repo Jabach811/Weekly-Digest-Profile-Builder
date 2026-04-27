@@ -8,7 +8,7 @@ day1: 2026-03-01
 effective_date: 2026-05-01
 asset_transfer_date: 2026-05-01
 tags: [adp, deferral-workaround, ramping, contact-chasing]
-last_mentioned: 2026-04-24
+last_mentioned: 2026-04-26
 first_logged: 2026-04-22
 ---
 
@@ -44,12 +44,24 @@ first_logged: 2026-04-22
 - **Off-ramp:** unchanged — deferral report in hand + liquidation
   complete → load and move on.
 
+### 2026-04-26
+
+- Contact still not locked down. 4/24 target was missed. Joel said
+  explicitly: "I did this last time, and it burned me. So let's make
+  sure that we go in there, we get that good contact." Burning contact
+  is a known failure mode for Pella-class plans.
+- Blackout / liquidation imminent (5/1). Deferral report is still
+  outstanding. Need word from a real contact this week.
+- **Next moves:** Self · find actual Pella-side contact (confirm or
+  replace Sally); Self · ping contact to push ADP for deferral report
+  this week, no exceptions.
+- **Off-ramp:** unchanged — deferral report in hand + liquidation
+  complete.
+
 ### Open Items
 
-- [ ] Confirm Pella-side contact name (tentative: Sally) and email by
-  EOD 4/24.
-- [ ] Ping Sally to push ADP for the deferral report on 4/24 or, if
-  missed, first thing 4/27. Do not roll this to next cycle.
-- [ ] Log ADP rep's name + email once surfaced (still missing from
-  4/22).
+- [ ] Find and confirm Pella-side contact (4/24 deadline missed —
+  escalate now; blackout 5/1).
+- [ ] Ping contact to push ADP for deferral report this week.
+- [ ] Log ADP rep's name + email (still missing).
 - [ ] Confirm whether a base file is required.

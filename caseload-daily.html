@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Daily · 2026-04-26 · Caseload + Projects</title>
+<title>Daily · 2026-04-27 · Caseload + Projects</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -686,8 +686,8 @@
 
 <header class="mast">
   <div class="mast-row">
-    <div class="mast-brand">daily<span class="accent">.</span><span class="sub">caseload + projects · sun 2026-04-26</span></div>
-    <div class="mast-pill"><b>day before OOO</b> <span class="dot">·</span> 4 active plans <span class="dot">·</span> 4 in-flight projects</div>
+    <div class="mast-brand">daily<span class="accent">.</span><span class="sub">caseload + projects · mon 2026-04-27</span></div>
+    <div class="mast-pill"><b>OOO day 1</b> <span class="dot">·</span> 7 active plans <span class="dot">·</span> 4 in-flight projects</div>
     <div class="mast-counter"><b id="counter-done">0</b> / <b id="counter-total">0</b> done</div>
   </div>
   <div class="progress"><div class="progress-fill" id="progress-fill"></div></div>
@@ -698,12 +698,12 @@
   <!-- LEDE -->
   <section class="lede">
     <div class="lede-eye"><span class="tick"></span>day sheet · derived from caseload/*.md + projects/*.md</div>
-    <h1 class="lede-h">pre-wire week. <em>OOO starts tomorrow.</em></h1>
+    <h1 class="lede-h">OOO day one. <em>Monday cleanup window.</em></h1>
     <p class="lede-p">
-      <b>Two 5/1 wires</b> land mid-OOO (Haverhill assets, Pella liquidation). Callidi
-      moved Friday — Informatica is back, balances loaded — but XKB/XKC loans still
-      need diagnosis Monday. Hand-off doc to coverage is the single thing this
-      weekend can't end without.
+      <b>OOO started today.</b> Two 5/1 wires still inbound (Haverhill assets, Pella liquidation).
+      Callidi XKB/XKC loan diagnosis starts now — case-number theory, pull Earl if needed.
+      Pella contact is 3 days overdue. NBI was down all of last week; status emails owed
+      for Haverhill and Callidi. Lock down Haverhill coverage before anything else moves.
     </p>
   </section>
 
@@ -717,99 +717,99 @@
   <div class="nudge">
     <div class="nudge-grid" id="nudge-grid">
 
-      <div class="nudge-item" data-nudge="handoff">
+      <div class="nudge-item" data-nudge="coverage">
         <div class="nudge-marker sev-o">●</div>
         <div class="nudge-body">
-          <b>Hand-off doc owed before 4/27 OOO.</b> Coverage owns the 5/1 Haverhill asset load + post-wire recon. Write today or first-thing tomorrow morning.
+          <b>Lock down Haverhill coverage today.</b> OOO started. 5/1 wire lands in 4 days mid-OOO. Coverage arrangement is a same-day priority — can't slip.
           <div class="nudge-why">
-            <span class="why-tag t-date">date · 1d</span>
+            <span class="why-tag t-date">date · 4d</span>
             <span class="why-tag t-seq">sequencing</span>
             <span class="why-tag t-people">→ coverage</span>
           </div>
         </div>
-        <div class="nudge-x" data-x="handoff" title="dismiss">×</div>
+        <div class="nudge-x" data-x="coverage" title="dismiss">×</div>
       </div>
 
       <div class="nudge-item" data-nudge="callidi">
-        <div class="nudge-marker sev-o">●</div>
+        <div class="nudge-marker sev-r">●</div>
         <div class="nudge-body">
-          <b>Callidi target slipped (was EOW 4/24).</b> Informatica resolved 4/26; balances loaded. XKB/XKC loans + Beth elections are the only remaining trigger — Monday.
+          <b>Callidi loans overdue (3d).</b> XKB/XKC case-number theory — diagnose in import file today. Pull Earl if not resolved quickly. Beth processes elections once loans land.
           <div class="nudge-why">
-            <span class="why-tag t-overdue">overdue · 2d</span>
-            <span class="why-tag t-date">date · mon</span>
-            <span class="why-tag t-people">→ Earl, Beth</span>
+            <span class="why-tag t-overdue">overdue · 3d</span>
+            <span class="why-tag t-people">→ Earl · Beth</span>
           </div>
         </div>
         <div class="nudge-x" data-x="callidi" title="dismiss">×</div>
       </div>
 
-      <div class="nudge-item" data-nudge="contradictions">
-        <div class="nudge-marker sev-o">●</div>
+      <div class="nudge-item" data-nudge="pella">
+        <div class="nudge-marker sev-r">●</div>
         <div class="nudge-body">
-          <b>5 open contradictions in <code>contradictions/2026-04-24.md</code></b> — banyan case-number collision, callidi DOB/DOH closure, tmg vesting-fix pivot, callidi loan identity (XKB/XKC vs frozen-loan), NBI ambiguity. Block clean state.
+          <b>Pella contact 3 days overdue — blackout 5/1 in 4 days.</b> Joel: "I did this last time and it burned me." Find and confirm the real contact today; push ADP for the deferral report this week.
           <div class="nudge-why">
-            <span class="why-tag t-contra">contradiction · 5</span>
-            <span class="why-tag t-seq">decisions</span>
+            <span class="why-tag t-overdue">overdue · 3d</span>
+            <span class="why-tag t-date">date · 4d</span>
+            <span class="why-tag t-people">→ Sally (tentative)</span>
+          </div>
+        </div>
+        <div class="nudge-x" data-x="pella" title="dismiss">×</div>
+      </div>
+
+      <div class="nudge-item" data-nudge="contradictions">
+        <div class="nudge-marker sev-r">●</div>
+        <div class="nudge-body">
+          <b>4 open contradictions in <code>contradictions/2026-04-24.md</code></b> — banyan case-number collision, callidi DOB/DOH, tmg vesting-fix pivot, callidi loan identity. (NBI ambiguity resolved 4/26.)
+          <div class="nudge-why">
+            <span class="why-tag t-contra">contradiction · 4</span>
+            <span class="why-tag t-seq">decisions needed</span>
           </div>
         </div>
         <div class="nudge-x" data-x="contradictions" title="dismiss">×</div>
       </div>
 
-      <div class="nudge-item" data-nudge="wires">
-        <div class="nudge-marker sev-y">●</div>
+      <div class="nudge-item" data-nudge="nbi-emails">
+        <div class="nudge-marker sev-o">●</div>
         <div class="nudge-body">
-          <b>Two 5/1 wires this week.</b> Haverhill assets inbound (full scope). Pella liquidation (5/1) still depends on the ADP deferral report.
+          <b>NBI status emails owed.</b> System was down all last week — Beth couldn't send. Pre-check participants + elections (Haverhill), then send. Also Callidi participant balances email.
           <div class="nudge-why">
-            <span class="why-tag t-date">date · 5d</span>
-            <span class="why-tag t-seq">two plans</span>
+            <span class="why-tag t-date">date · today</span>
+            <span class="why-tag t-seq">pre-check first</span>
+            <span class="why-tag t-people">→ Haverhill · Callidi</span>
           </div>
         </div>
-        <div class="nudge-x" data-x="wires" title="dismiss">×</div>
-      </div>
-
-      <div class="nudge-item" data-nudge="sally">
-        <div class="nudge-marker sev-y">●</div>
-        <div class="nudge-body">
-          <b>Pella ADP deferral report still in the air.</b> Group-email approach hasn't gotten a response. Confirm Sally's name + email, push her to bang on ADP directly Monday morning.
-          <div class="nudge-why">
-            <span class="why-tag t-people">→ Sally (tentative)</span>
-            <span class="why-tag t-date">date · 5d</span>
-          </div>
-        </div>
-        <div class="nudge-x" data-x="sally" title="dismiss">×</div>
-      </div>
-
-      <div class="nudge-item" data-nudge="nbi">
-        <div class="nudge-marker sev-y">●</div>
-        <div class="nudge-body">
-          <b>NBI mention is ambiguous.</b> "Trouble pushing my update out" could be the <code>nbi-search</code> deploy or the Haverhill NBI status email. Resolve before Monday.
-          <div class="nudge-why">
-            <span class="why-tag t-contra">contradiction</span>
-            <span class="why-tag t-flag">flag · push-stuck</span>
-          </div>
-        </div>
-        <div class="nudge-x" data-x="nbi" title="dismiss">×</div>
+        <div class="nudge-x" data-x="nbi-emails" title="dismiss">×</div>
       </div>
 
       <div class="nudge-item" data-nudge="tabrain">
         <div class="nudge-marker sev-y">●</div>
         <div class="nudge-body">
-          <b>TA Brain demo underdelivered (4/24).</b> Post-demo "quick thumb" feedback email still owed. Light touch on Selina, Smith, Dave Slope channels — they came; keep them warm.
+          <b>Anthony demo follow-up — nail down this week.</b> First one underdelivered 4/24. App is better now; reserve prep time. TC section unlock depends on this.
           <div class="nudge-why">
             <span class="why-tag t-flag">flag · demo-underdelivered</span>
-            <span class="why-tag t-people">→ Selina · Smith · Dave Slope</span>
+            <span class="why-tag t-people">→ Anthony</span>
           </div>
         </div>
         <div class="nudge-x" data-x="tabrain" title="dismiss">×</div>
       </div>
 
+      <div class="nudge-item" data-nudge="selina">
+        <div class="nudge-marker sev-y">●</div>
+        <div class="nudge-body">
+          <b>Selina — get training materials this week</b> to start building onboarding/training process. Named explicitly in 4/26 morning memo.
+          <div class="nudge-why">
+            <span class="why-tag t-people">→ Selina</span>
+          </div>
+        </div>
+        <div class="nudge-x" data-x="selina" title="dismiss">×</div>
+      </div>
+
       <div class="nudge-item" data-nudge="stale">
         <div class="nudge-marker sev-g">●</div>
         <div class="nudge-body">
-          <b>Stale (≥4 days):</b> data-parser hasn't moved since 4/22 — golden-set test files still owed. persistent-brain-rollout idle since 4/22 — needs a candidate teammate.
+          <b>Stale active plans (≥3 days):</b> ISD (5d, partial-scope), Banyan (3d, early access 5/14 approaching), TMG (3d, YOS load was Monday's plan).
           <div class="nudge-why">
-            <span class="why-tag t-stale">stale · 4d</span>
-            <span class="why-tag t-seq">touch or close</span>
+            <span class="why-tag t-stale">stale · 3–5d</span>
+            <span class="why-tag t-seq">check or close</span>
           </div>
         </div>
         <div class="nudge-x" data-x="stale" title="dismiss">×</div>
@@ -820,7 +820,7 @@
 
   <!-- AT-A-GLANCE -->
   <div class="sec-h">
-    <div class="sec-h-title"><span class="glyph">▤</span> at a glance <span class="count">4 active</span></div>
+    <div class="sec-h-title"><span class="glyph">▤</span> at a glance <span class="count">hot 4</span></div>
     <div class="sec-h-actions">
       <span class="pill-btn filter-chip is-active" data-filter="all">all</span>
       <span class="pill-btn filter-chip" data-filter="caseload">caseload</span>
@@ -832,31 +832,21 @@
     <div class="glance">
       <div class="glance-top">
         <span class="glance-name">Haverhill</span>
-        <span class="state ramping">ramping</span>
+        <span class="state ramping">active</span>
       </div>
-      <div class="glance-blocker">blocked · self / OOO coverage</div>
-      <div class="glance-next">Pre-wire clean. NBI status email + hand-off doc owed. 5/1 wire mid-OOO.</div>
+      <div class="glance-blocker">blocked · coverage + NBI email</div>
+      <div class="glance-next">Lock down coverage today. Pre-check participants + elections; then send NBI status email. 5/1 wire OOO day 4.</div>
       <div class="glance-meta">EFF <b>5/01</b> · WIRE <b>5/01</b></div>
     </div>
 
     <div class="glance">
       <div class="glance-top">
         <span class="glance-name">Pella SC</span>
-        <span class="state ramping">ramping</span>
+        <span class="state ramping">active</span>
       </div>
-      <div class="glance-blocker">blocked · ADP / deferral report</div>
-      <div class="glance-next">Confirm Sally; push ADP Monday. Liquidation 5/1 — moves only when report lands.</div>
+      <div class="glance-blocker">blocked · contact (overdue) + deferral report</div>
+      <div class="glance-next">Contact 3d overdue. Find real contact today; push ADP for deferral report this week. Blackout 5/1.</div>
       <div class="glance-meta">EFF <b>5/01</b> · WIRE <b>5/01</b></div>
-    </div>
-
-    <div class="glance">
-      <div class="glance-top">
-        <span class="glance-name">ISD Denver</span>
-        <span class="state debate">debate</span>
-      </div>
-      <div class="glance-blocker">blocked · policy / deferral workflow</div>
-      <div class="glance-next">Deliver clean analysis package. Raise the "get the file earlier" question with client.</div>
-      <div class="glance-meta">EFF <b>7/01</b> · SCOPE <b>partial</b></div>
     </div>
 
     <div class="glance">
@@ -864,9 +854,19 @@
         <span class="glance-name">Callidi Tas</span>
         <span class="state ramping">ramping</span>
       </div>
-      <div class="glance-blocker">blocked · XKB/XKC loans</div>
-      <div class="glance-next">Balances loaded 4/26. Diagnose XKB/XKC w/ Earl Monday; Beth processes elections.</div>
+      <div class="glance-blocker">blocked · XKB/XKC loans (case-number theory)</div>
+      <div class="glance-next">Diagnose import file case-number issue now. Pull Earl if stuck. Beth processes elections once loans land. NBI email owed.</div>
       <div class="glance-meta">EFF <b>4/01</b> · WIRE <b>4/10</b> · TARGET <b>was 4/24</b></div>
+    </div>
+
+    <div class="glance">
+      <div class="glance-top">
+        <span class="glance-name">COCC</span>
+        <span class="state ramping">active</span>
+      </div>
+      <div class="glance-blocker">blocked · source routing / Michelle</div>
+      <div class="glance-next">Follow up with Michelle on EDS fix status. Residual dividends landing this week — apply with Beth once in.</div>
+      <div class="glance-meta">EFF <b>TBD</b> · WIRE <b>TBD</b></div>
     </div>
 
   </div>
@@ -884,14 +884,15 @@
       <div class="group-h">
         <div class="group-name">Haverhill <span class="case">TA069932-00051</span></div>
         <div class="group-tags">
-          <span class="flag-tag warn">contact-change</span>
           <span class="flag-tag warn">coverage-needed</span>
+          <span class="flag-tag warn">contact-change</span>
           <span class="flag-tag">pre-wire-clean</span>
         </div>
       </div>
       <ul class="checks">
-        <li class="check"><input type="checkbox" data-id="hav-1"><label data-for="hav-1"><span class="ping pin">→ Beth</span>Send NBI status email.</label></li>
-        <li class="check"><input type="checkbox" data-id="hav-2"><label data-for="hav-2"><span class="ping">→ coverage</span>Hand-off doc owed before OOO starts.<span class="due">due 4/27</span></label></li>
+        <li class="check"><input type="checkbox" data-id="hav-2"><label data-for="hav-2"><span class="ping pin">→ coverage</span>Lock down coverage for 5/1 wire — same-day priority.<span class="due overdue">today</span></label></li>
+        <li class="check"><input type="checkbox" data-id="hav-5"><label data-for="hav-5">Verify all participants uploaded and elections defaulted (pre-send check before NBI email).</label></li>
+        <li class="check"><input type="checkbox" data-id="hav-1"><label data-for="hav-1"><span class="ping">→ Joel</span>Send NBI status email (census + elections) — Beth tried, NBI was down; Joel owns now.</label></li>
         <li class="check"><input type="checkbox" data-id="hav-3"><label data-for="hav-3">Post-OOO · reconcile asset load, close loop with backup contact.</label></li>
       </ul>
     </div>
@@ -900,33 +901,16 @@
       <div class="group-h">
         <div class="group-name">Pella SC <span class="case">QK63283-00052</span></div>
         <div class="group-tags">
-          <span class="flag-tag warn">deferral-workaround</span>
           <span class="flag-tag warn">contact-chasing</span>
+          <span class="flag-tag warn">deferral-workaround</span>
           <span class="flag-tag">adp</span>
         </div>
       </div>
       <ul class="checks">
-        <li class="check"><input type="checkbox" data-id="pel-1"><label data-for="pel-1">Confirm Pella-side contact name (tentative: <span class="ping">→ Sally</span>) and email.<span class="due overdue">slipped 4/24</span></label></li>
-        <li class="check"><input type="checkbox" data-id="pel-2"><label data-for="pel-2"><span class="ping pin">→ Sally</span>Push ADP for the deferral report Monday morning. <em>Do not roll to next cycle.</em></label></li>
-        <li class="check"><input type="checkbox" data-id="pel-3"><label data-for="pel-3">Log ADP rep's name + email once surfaced (still missing from 4/22).</label></li>
+        <li class="check"><input type="checkbox" data-id="pel-1"><label data-for="pel-1">Find and confirm Pella-side contact (4/24 deadline missed — escalate now).<span class="due overdue">3d overdue</span></label></li>
+        <li class="check"><input type="checkbox" data-id="pel-2"><label data-for="pel-2"><span class="ping">→ contact</span>Ping contact to push ADP for deferral report this week. <em>Blackout 5/1 — no report, no load.</em></label></li>
+        <li class="check"><input type="checkbox" data-id="pel-3"><label data-for="pel-3">Log ADP rep's name + email once surfaced (still missing).</label></li>
         <li class="check"><input type="checkbox" data-id="pel-4"><label data-for="pel-4">Confirm whether a base file is required.</label></li>
-      </ul>
-    </div>
-
-    <div class="group" data-group="isd">
-      <div class="group-h">
-        <div class="group-name">ISD Denver <span class="case">TA069932-00056</span></div>
-        <div class="group-tags">
-          <span class="flag-tag">startup</span>
-          <span class="flag-tag">partial-scope</span>
-          <span class="flag-tag warn">policy-debate</span>
-        </div>
-      </div>
-      <ul class="checks">
-        <li class="check"><input type="checkbox" data-id="isd-1"><label data-for="isd-1">Deliver clean analysis package on the deferral workflow.</label></li>
-        <li class="check"><input type="checkbox" data-id="isd-2"><label data-for="isd-2">Raise the "get the file earlier" question with the client — no stated reason to wait.</label></li>
-        <li class="check"><input type="checkbox" data-id="isd-3"><label data-for="isd-3">Surface the precedent debate for broader policy discussion (multiple incoming plans hit the same shape).</label></li>
-        <li class="check"><input type="checkbox" data-id="isd-4"><label data-for="isd-4">Confirm partial-scope boundaries with the team (no payroll, no wire).</label></li>
       </ul>
     </div>
 
@@ -940,12 +924,89 @@
         </div>
       </div>
       <ul class="checks">
-        <li class="check"><input type="checkbox" data-id="cal-1"><label data-for="cal-1"><span class="warn">⚠</span><span class="ping pin">→ Earl</span>Diagnose XKB/XKC loans not landing in Transact Detail. Pull Earl in Monday if not solved EOD.<span class="due">due mon</span></label></li>
-        <li class="check"><input type="checkbox" data-id="cal-2"><label data-for="cal-2">Re-run / process loans once XKB/XKC is resolved.</label></li>
-        <li class="check"><input type="checkbox" data-id="cal-3"><label data-for="cal-3"><span class="ping pin">→ Beth</span>Process elections Monday.<span class="due">due mon</span></label></li>
-        <li class="check"><input type="checkbox" data-id="cal-4"><label data-for="cal-4"><span class="warn">⚠</span>Confirm whether 4/22 "frozen/unfrozen / re-amortize" loan issue is the same as XKB/XKC, or still separate. <em>(contradiction)</em></label></li>
-        <li class="check"><input type="checkbox" data-id="cal-5"><label data-for="cal-5"><span class="warn">⚠</span>Confirm DOB/DOH from client is fully resolved (balances staged anyway). <em>(contradiction)</em></label></li>
+        <li class="check"><input type="checkbox" data-id="cal-1"><label data-for="cal-1"><span class="ping pin">→ Earl</span>Diagnose XKB/XKC not in Transact Detail — case-number theory in import file. Pull Earl if stuck.<span class="due overdue">3d overdue</span></label></li>
+        <li class="check"><input type="checkbox" data-id="cal-2"><label data-for="cal-2">Re-run / process loans once XKB/XKC resolved.</label></li>
+        <li class="check"><input type="checkbox" data-id="cal-3"><label data-for="cal-3"><span class="ping pin">→ Beth</span>Process elections once loans land.</label></li>
+        <li class="check"><input type="checkbox" data-id="cal-7"><label data-for="cal-7">Send NBI status email for Callidi (participant balances) — once NBI system confirmed back up.</label></li>
+        <li class="check"><input type="checkbox" data-id="cal-8"><label data-for="cal-8">Update loan import procedures / best-practices: flag the silent-error / case-number pattern.</label></li>
+        <li class="check"><input type="checkbox" data-id="cal-4"><label data-for="cal-4"><span class="warn">⚠</span>Confirm whether 4/22 frozen/unfrozen loan issue is same as XKB/XKC or separate. <em>(contradiction)</em></label></li>
+        <li class="check"><input type="checkbox" data-id="cal-5"><label data-for="cal-5"><span class="warn">⚠</span>Confirm DOB/DOH from client is fully resolved. <em>(contradiction)</em></label></li>
         <li class="check"><input type="checkbox" data-id="cal-6"><label data-for="cal-6">Surface balance-file completeness issue up the chain. <em>(transmission-worthy)</em></label></li>
+      </ul>
+    </div>
+
+    <div class="group" data-group="cocc">
+      <div class="group-h">
+        <div class="group-name">COCC <span class="case">TBD</span></div>
+        <div class="group-tags">
+          <span class="flag-tag warn">eds-source-fix</span>
+          <span class="flag-tag warn">touchy-client</span>
+          <span class="flag-tag">residual-dividends</span>
+        </div>
+      </div>
+      <ul class="checks">
+        <li class="check"><input type="checkbox" data-id="coc-1"><label data-for="coc-1"><span class="ping">→ Michelle</span>Follow up with Michelle on EDS source-routing fix status.</label></li>
+        <li class="check"><input type="checkbox" data-id="coc-2"><label data-for="coc-2">Re-verify payroll file post-fix (no other sources receiving misallocated funds).</label></li>
+        <li class="check"><input type="checkbox" data-id="coc-3"><label data-for="coc-3"><span class="ping pin">→ Beth</span>Prep residual-dividend application procedure with Beth.</label></li>
+        <li class="check"><input type="checkbox" data-id="coc-4"><label data-for="coc-4">Apply residual dividends once they land (expected this week).<span class="due">due this week</span></label></li>
+        <li class="check"><input type="checkbox" data-id="coc-5"><label data-for="coc-5"><span class="warn">⚠</span>Capture COCC case number, day1, effective_date, asset transfer date — none on file.</label></li>
+        <li class="check"><input type="checkbox" data-id="coc-6"><label data-for="coc-6">Capture screenshots through the residual-dividend run for slide-creator pipeline.</label></li>
+      </ul>
+    </div>
+
+    <div class="group" data-group="isd">
+      <div class="group-h">
+        <div class="group-name">ISD Denver <span class="case">TA069932-00056</span></div>
+        <div class="group-tags">
+          <span class="flag-tag">startup</span>
+          <span class="flag-tag">partial-scope</span>
+          <span class="flag-tag warn">policy-debate</span>
+          <span class="flag-tag t-stale">stale · 5d</span>
+        </div>
+      </div>
+      <ul class="checks">
+        <li class="check"><input type="checkbox" data-id="isd-1"><label data-for="isd-1">Deliver clean analysis package on the deferral workflow.</label></li>
+        <li class="check"><input type="checkbox" data-id="isd-2"><label data-for="isd-2">Raise the "get the file earlier" question with the client — no stated reason to wait.</label></li>
+        <li class="check"><input type="checkbox" data-id="isd-3"><label data-for="isd-3">Surface the precedent debate for broader policy discussion (multiple incoming plans hit the same shape).</label></li>
+        <li class="check"><input type="checkbox" data-id="isd-4"><label data-for="isd-4">Confirm partial-scope boundaries with the team (no payroll, no wire).</label></li>
+      </ul>
+    </div>
+
+    <div class="group" data-group="banyan">
+      <div class="group-h">
+        <div class="group-name">Banyan <span class="case">TBD</span></div>
+        <div class="group-tags">
+          <span class="flag-tag warn">case-number-collision</span>
+          <span class="flag-tag">limited-access · 5/14</span>
+          <span class="flag-tag t-stale">stale · 3d</span>
+        </div>
+      </div>
+      <ul class="checks">
+        <li class="check"><input type="checkbox" data-id="ban-1"><label data-for="ban-1"><span class="warn">⚠</span>Confirm true case number — claimed QK63283-00099 but collides with canam-br. <em>(contradiction)</em></label></li>
+        <li class="check"><input type="checkbox" data-id="ban-2"><label data-for="ban-2">Confirm display name: Banyan Treatment Centers vs. Cutting Edge Staffing.</label></li>
+        <li class="check"><input type="checkbox" data-id="ban-3"><label data-for="ban-3"><span class="ping pin">→ Beth</span>Load limited access census file.</label></li>
+        <li class="check"><input type="checkbox" data-id="ban-4"><label data-for="ban-4"><span class="ping pin">→ Beth</span>Default investment elections.</label></li>
+        <li class="check"><input type="checkbox" data-id="ban-5"><label data-for="ban-5"><span class="ping pin">→ Beth</span>Run Julius's consolidated-row query to audit the load.</label></li>
+        <li class="check"><input type="checkbox" data-id="ban-6"><label data-for="ban-6">Schedule post-early-access activity-monitoring queries for week of 5/27.<span class="due">due before 5/27</span></label></li>
+        <li class="check"><input type="checkbox" data-id="ban-7"><label data-for="ban-7">Post-wire (6/1) reconciliation plan.</label></li>
+      </ul>
+    </div>
+
+    <div class="group" data-group="tmg">
+      <div class="group-h">
+        <div class="group-name">TMG <span class="case">TBD</span></div>
+        <div class="group-tags">
+          <span class="flag-tag warn">re-opened</span>
+          <span class="flag-tag">vesting-fix</span>
+          <span class="flag-tag t-stale">stale · 3d</span>
+        </div>
+      </div>
+      <ul class="checks">
+        <li class="check"><input type="checkbox" data-id="tmg-3"><label data-for="tmg-3">Finalize self-calculated YOS file and load — today was the Monday plan.<span class="due overdue">due today</span></label></li>
+        <li class="check"><input type="checkbox" data-id="tmg-4"><label data-for="tmg-4">Verify vesting flips correctly for the ~300 impacted participants.</label></li>
+        <li class="check"><input type="checkbox" data-id="tmg-6"><label data-for="tmg-6"><span class="ping">→ Ruby</span>Prep "single-case, no harm, fixed" talk-track for Ruby / WTW.</label></li>
+        <li class="check"><input type="checkbox" data-id="tmg-5"><label data-for="tmg-5">Investigate why some participants weren't flagged at 0% vesting — root cause after fix.</label></li>
+        <li class="check"><input type="checkbox" data-id="tmg-1"><label data-for="tmg-1"><span class="warn">⚠</span>Confirm / fill in TMG case number (still TBD).</label></li>
       </ul>
     </div>
 
@@ -966,12 +1027,11 @@
         <div class="group-tags">
           <span class="flag-tag alert">push-stuck</span>
           <span class="flag-tag alert">ship-blocker · file-picker</span>
-          <span class="flag-tag warn">ambiguous-with-haverhill-nbi</span>
         </div>
       </div>
       <ul class="checks">
-        <li class="check"><input type="checkbox" data-id="nbi-1"><label data-for="nbi-1"><span class="warn">⚠</span>Confirm whether 4/24 "trouble pushing my update out" refers to this app or the Haverhill NBI status email. <em>(contradiction)</em></label></li>
-        <li class="check"><input type="checkbox" data-id="nbi-2"><label data-for="nbi-2">If app: diagnose what's blocking the push Monday; resolve.</label></li>
+        <li class="check is-done"><input type="checkbox" data-id="nbi-1" checked><label data-for="nbi-1"><span class="warn">⚠</span>NBI ambiguity resolved 4/26 — external NBI system (email outage), not this app. Push-stuck is app-only. <em>(resolved)</em></label></li>
+        <li class="check"><input type="checkbox" data-id="nbi-2"><label data-for="nbi-2">Diagnose what's blocking the push; resolve.</label></li>
         <li class="check"><input type="checkbox" data-id="nbi-3"><label data-for="nbi-3">Replace file-picker with hard-coded / config-loaded path.</label></li>
         <li class="check"><input type="checkbox" data-id="nbi-4"><label data-for="nbi-4">Wire refresh button.</label></li>
         <li class="check"><input type="checkbox" data-id="nbi-5"><label data-for="nbi-5">Decide whether path is literal or config-driven.</label></li>
@@ -988,10 +1048,12 @@
         </div>
       </div>
       <ul class="checks">
-        <li class="check"><input type="checkbox" data-id="tab-1"><label data-for="tab-1"><span class="ping pin">→ attendees</span>Send post-demo "quick thumb" feedback email. <em>Highest priority of the project group.</em></label></li>
-        <li class="check"><input type="checkbox" data-id="tab-2"><label data-for="tab-2"><span class="ping">→ Anthony</span>Schedule follow-up TC-section demo with reserved prep time (first one underdelivered).</label></li>
+        <li class="check"><input type="checkbox" data-id="tab-2"><label data-for="tab-2"><span class="ping pin">→ Anthony</span>Nail down follow-up TC-section demo this week — reserved prep time required.<span class="due">this week</span></label></li>
+        <li class="check"><input type="checkbox" data-id="tab-7"><label data-for="tab-7"><span class="ping pin">→ Selina</span>Get training materials to start building onboarding/training process.<span class="due">this week</span></label></li>
+        <li class="check"><input type="checkbox" data-id="tab-1"><label data-for="tab-1"><span class="ping">→ attendees</span>Send post-demo "quick thumb" feedback email (still owed from 4/24).</label></li>
         <li class="check"><input type="checkbox" data-id="tab-3"><label data-for="tab-3"><span class="ping">→ Selina · Smith · Dave Slope</span>Light-touch maintenance on open channels.</label></li>
-        <li class="check"><input type="checkbox" data-id="tab-4"><label data-for="tab-4">Find more places to add animation (current placement OK; need <em>more</em>, not better).</label></li>
+        <li class="check"><input type="checkbox" data-id="tab-8"><label data-for="tab-8">Continue building pitch deck / showcase sites.</label></li>
+        <li class="check"><input type="checkbox" data-id="tab-4"><label data-for="tab-4">Find more places to add animation.</label></li>
         <li class="check"><input type="checkbox" data-id="tab-5"><label data-for="tab-5">Redesign concepts page layout (reads as one blur — lighter categorization).</label></li>
         <li class="check"><input type="checkbox" data-id="tab-6"><label data-for="tab-6">Add <code>/</code> command palette to search (NBI-Tracker pattern).</label></li>
       </ul>
@@ -1006,10 +1068,10 @@
         </div>
       </div>
       <ul class="checks">
-        <li class="check"><input type="checkbox" data-id="slc-1"><label data-for="slc-1">Run the 4/24 Calidus screenshots through the current pipeline to surface gaps. <em>Joel: "really want to do that this cycle."</em></label></li>
-        <li class="check"><input type="checkbox" data-id="slc-2"><label data-for="slc-2">Tune worksheet → slide template (callouts, "important to remember" pull-quotes, numbered procedure steps).</label></li>
-        <li class="check"><input type="checkbox" data-id="slc-3"><label data-for="slc-3">Capture COCC residual-dividend run screenshots next week and feed them through.</label></li>
-        <li class="check"><input type="checkbox" data-id="slc-4"><label data-for="slc-4">Decide whether this becomes its own dashboard tile (app-portfolio-site) or stays a private operator tool.</label></li>
+        <li class="check"><input type="checkbox" data-id="slc-1"><label data-for="slc-1">Run the 4/24 Calidus screenshots through the current pipeline to surface gaps.</label></li>
+        <li class="check"><input type="checkbox" data-id="slc-2"><label data-for="slc-2">Tune worksheet → slide template (callouts, pull-quotes, numbered procedure steps).</label></li>
+        <li class="check"><input type="checkbox" data-id="slc-3"><label data-for="slc-3">Capture COCC residual-dividend run screenshots and feed them through.</label></li>
+        <li class="check"><input type="checkbox" data-id="slc-4"><label data-for="slc-4">Decide whether this becomes its own dashboard tile or stays a private operator tool.</label></li>
       </ul>
     </div>
 
@@ -1018,7 +1080,7 @@
         <div class="group-name">data-parser <span class="state flight" style="margin-left:6px">flight</span></div>
         <div class="group-tags">
           <span class="flag-tag warn">needs-test-coverage</span>
-          <span class="flag-tag">stale · 4d</span>
+          <span class="flag-tag">stale · 5d</span>
         </div>
       </div>
       <ul class="checks">
@@ -1036,19 +1098,19 @@
   </div>
   <div class="burner">
     <div class="burner-row">
-      <div class="burner-name">excel-to-app-pipeline</div>
+      <div class="burner-name">ta-brain-tc-section</div>
       <span class="state idea">idea</span>
-      <div class="burner-next">Pattern-tracker. Catalog the next conversion candidate when one surfaces.</div>
+      <div class="burner-next">Land follow-up Anthony demo this week (tracked in ta-brain). Begin scoping where TC data lives.</div>
     </div>
     <div class="burner-row">
       <div class="burner-name">persistent-brain-rollout</div>
       <span class="state idea">idea</span>
-      <div class="burner-next">Pick a candidate teammate for the mock profile. <em>Stale since 4/22.</em></div>
+      <div class="burner-next">Pick a candidate teammate for the mock profile. Stale since 4/22.</div>
     </div>
     <div class="burner-row">
-      <div class="burner-name">ta-brain-tc-section</div>
+      <div class="burner-name">excel-to-app-pipeline</div>
       <span class="state idea">idea</span>
-      <div class="burner-next">Land follow-up Anthony demo (tracked in ta-brain) with materially more prep. Dependency stalled.</div>
+      <div class="burner-next">Pattern-tracker. Catalog the next conversion candidate when one surfaces.</div>
     </div>
     <div class="burner-row">
       <div class="burner-name">app-portfolio-site</div>
@@ -1062,19 +1124,21 @@
     <div class="sec-h-title"><span class="glyph">▷</span> the week ahead <span class="count">mon → fri</span></div>
   </div>
   <div class="radar">
-    <div class="day next">
-      <div class="day-label">mon · tomorrow</div>
+    <div class="day today">
+      <div class="day-label">mon · today</div>
       <div class="day-num">27</div>
-      <div class="day-event alert"><span class="e-tag">OOO</span>OOO starts</div>
-      <div class="day-event warn"><span class="e-tag">due</span>Hand-off doc</div>
-      <div class="day-event"><span class="e-tag">callidi</span>Earl · XKB/XKC</div>
+      <div class="day-event alert"><span class="e-tag">OOO</span>OOO day 1</div>
+      <div class="day-event warn"><span class="e-tag">haverhill</span>Lock down coverage</div>
+      <div class="day-event warn"><span class="e-tag">callidi</span>Earl · XKB/XKC</div>
       <div class="day-event"><span class="e-tag">callidi</span>Beth · elections</div>
-      <div class="day-event"><span class="e-tag">pella</span>Sally · push ADP</div>
+      <div class="day-event"><span class="e-tag">pella</span>Find contact · push ADP</div>
+      <div class="day-event"><span class="e-tag">tmg</span>Load YOS</div>
     </div>
-    <div class="day">
+    <div class="day next">
       <div class="day-label">tue</div>
       <div class="day-num">28</div>
       <div class="day-event"><span class="e-tag">OOO</span>—</div>
+      <div class="day-event"><span class="e-tag">cocc</span>Residual divs · watch</div>
     </div>
     <div class="day">
       <div class="day-label">wed</div>
@@ -1097,7 +1161,7 @@
 
   <!-- FOOTER -->
   <footer>
-    <div class="src">source · <b>caseload/*.md</b> + <b>projects/*.md</b> + <b>contradictions/2026-04-24.md</b> · sheet for 2026-04-26</div>
+    <div class="src">source · <b>caseload/*.md</b> + <b>projects/*.md</b> + <b>contradictions/2026-04-24.md</b> · sheet for 2026-04-27</div>
     <div><span class="reset" id="reset-day">↺ reset day</span></div>
   </footer>
 
@@ -1105,7 +1169,7 @@
 
 <script>
 (function () {
-  var DAY_KEY = 'caseload-daily:2026-04-26';
+  var DAY_KEY = 'caseload-daily:2026-04-27';
   var KEY_CHECKS    = DAY_KEY + ':checks';
   var KEY_DISMISSED = DAY_KEY + ':dismissed';
   var KEY_HIDDEN    = DAY_KEY + ':hidden';
